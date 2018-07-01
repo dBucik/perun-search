@@ -29,7 +29,8 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public Vo getVo(Long id) throws DatabaseIntegrityException {
+    public Vo getVo(Long id, boolean withAttrs) throws DatabaseIntegrityException {
+        //TODO: change query
         String query = "SELECT to_jsonb(t) || " +
                 "jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS vo " +
                 "FROM vos t " +
@@ -47,18 +48,18 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<Vo> getVosByName(String name) {
+    public List<Vo> getVosByName(String name, boolean withAttrs) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
-    public Vo getVoByShortName(String shortName) throws DatabaseIntegrityException {
+    public Vo getVoByShortName(String shortName, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE upper(t.short_name) = upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{shortName}, MAPPER);
@@ -70,7 +71,7 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<Vo> getVosByShortName(String shortName) {
+    public List<Vo> getVosByShortName(String shortName, boolean withAttrs) {
         shortName = '%' + shortName + '%';
         String where = "WHERE upper(t.short_name) LIKE upper(?)";
         String query = queryBuilder(where);
@@ -79,14 +80,15 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<Vo> getVos() {
-        String query = queryBuilder(null);
+    public List<Vo> getVos(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        Vo vo = getVo(id);
+        //TODO: improve
+        Vo vo = getVo(id, true);
         List<Attribute> result = new ArrayList<>();
         if (attrs == null) {
             result.add(new Attribute("id", vo.getId().toString()));
@@ -100,8 +102,9 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<Vo> getVosWithAttrs(List<InputAttribute> attrs) {
-        List<Vo> vos = getVos();
+    public List<Vo> getVosWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
+        //TODO: improve
+        List<Vo> vos = getVos(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
 
         vos.removeIf(vo -> {
@@ -112,13 +115,19 @@ public class VoDAOImpl implements VoDAO {
         return vos;
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check table names
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS vo ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS vo ");
+        }
         query.append("FROM vos t ");
-        query.append("JOIN vo_attr_values av ON av.vo_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN vo_attr_values av ON av.vo_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

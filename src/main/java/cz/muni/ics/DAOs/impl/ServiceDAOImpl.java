@@ -29,9 +29,9 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public Service getService(Long id) throws DatabaseIntegrityException {
+    public Service getService(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -43,23 +43,24 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<Service> getServicesByName(String name) {
+    public List<Service> getServicesByName(String name, boolean withAttrs) {
         String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
-    public List<Service> getServices() {
-        String query = queryBuilder(null);
+    public List<Service> getServices(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        Service service = getService(id);
+        //TODO: improve
+        Service service = getService(id, true);
         List<Attribute> result = new ArrayList<>();
 
         if (attrs == null) {
@@ -75,9 +76,9 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<Service> getServicesWithAttrs(List<InputAttribute> attrs) {
+    public List<Service> getServicesWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
         //TODO improve
-        List<Service> services = getServices();
+        List<Service> services = getServices(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
 
         services.removeIf(service -> {
@@ -89,20 +90,26 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<Service> getServicesOfOwner(Long ownerId) {
+    public List<Service> getServicesOfOwner(Long ownerId, boolean withAttrs) {
         String where = "WHERE t.owner_id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {ownerId}, MAPPER);
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check table names
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS service ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS service ");
+        }
         query.append("FROM services t ");
-        query.append("JOIN service_required_attrs av ON av.service_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN service_required_attrs av ON av.service_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

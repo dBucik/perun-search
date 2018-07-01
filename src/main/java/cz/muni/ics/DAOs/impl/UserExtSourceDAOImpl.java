@@ -29,9 +29,9 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     }
 
     @Override
-    public UserExtSource getUserExtSource(Long id) throws DatabaseIntegrityException {
+    public UserExtSource getUserExtSource(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -42,15 +42,16 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     }
 
     @Override
-    public List<UserExtSource> getUserExtSources() {
-        String query = queryBuilder(null);
+    public List<UserExtSource> getUserExtSources(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        UserExtSource userExtSource = getUserExtSource(id);
+        //TODO: improve
+        UserExtSource userExtSource = getUserExtSource(id, true);
         List<Attribute> result = new ArrayList<>();
         if (attrs == null) {
             result.add(new Attribute("id", userExtSource.getId().toString()));
@@ -67,8 +68,9 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     }
 
     @Override
-    public List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs) {
-        List<UserExtSource> userExtSources = getUserExtSources();
+    public List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
+        //TODO: improve
+        List<UserExtSource> userExtSources = getUserExtSources(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
         userExtSources.removeIf(extSource -> {
             assert filter != null;
@@ -79,37 +81,43 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     }
 
     @Override
-    public List<UserExtSource> getUserExtSourcesOfUser(Long userId) {
+    public List<UserExtSource> getUserExtSourcesOfUser(Long userId, boolean withAttrs) {
         String where = "WHERE t.user_id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {userId}, MAPPER);
     }
 
     @Override
-    public List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId) {
+    public List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId, boolean withAttrs) {
         String where = "WHERE t.ext_source_id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {extSourceId}, MAPPER);
     }
 
     @Override
-    public List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt) {
+    public List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt, boolean withAttrs) {
         loginExt = '%' + loginExt + '%';
         String where = "WHERE upper(t.login_ext) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {loginExt}, MAPPER);
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check table names
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS userExtSource ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS userExtSource ");
+        }
         query.append("FROM user_ext_sources t ");
-        query.append("JOIN user_ext_source_attr_values av ON av.user_ext_source_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN user_ext_source_attr_values av ON av.user_ext_source_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

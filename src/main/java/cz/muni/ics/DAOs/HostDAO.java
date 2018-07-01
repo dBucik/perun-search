@@ -15,24 +15,27 @@ public interface HostDAO {
     /**
      * Get Host specified by ID.
      * @param id id of Host
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Host or null if not such found.
      * @throws DatabaseIntegrityException More than one Host with same ID found.
      */
-    Host getHost(Long id) throws DatabaseIntegrityException;
+    Host getHost(Long id, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get Hosts with HOSTNAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param hostname Hostname of Host
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    List<Host> getHostsByHostname(String hostname);
+    List<Host> getHostsByHostname(String hostname, boolean withAttrs);
 
     /**
      * Get all Hosts.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    List<Host> getHosts();
+    List<Host> getHosts(boolean withAttrs);
 
     /**
      * Get attributes of Host specified by ID.
@@ -47,7 +50,8 @@ public interface HostDAO {
      * Get Hosts that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Hosts
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    List<Host> getHostsWithAttrs(List<InputAttribute> attrs);
+    List<Host> getHostsWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
 }

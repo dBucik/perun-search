@@ -15,24 +15,27 @@ public interface GroupDAO {
     /**
      * Get Group specified by ID.
      * @param id id of Group
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Group or null if not such found.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      */
-    Group getGroup(Long id) throws DatabaseIntegrityException;
+    Group getGroup(Long id, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get Groups withe NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of Group
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    List<Group> getGroupsByName(String name);
+    List<Group> getGroupsByName(String name, boolean withAttrs);
 
     /**
      * Get all Groups.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    List<Group> getGroups();
+    List<Group> getGroups(boolean withAttrs);
 
     /**
      * Get attributes of Group specified by ID.
@@ -47,23 +50,26 @@ public interface GroupDAO {
      * Get Groups that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Groups
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups found, empty list if nothing has been found.
      */
-    List<Group> getGroupsWithAttrs(List<InputAttribute> attrs);
+    List<Group> getGroupsWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
 
     /**
      * Get parent group of Group specified by ID.
      * @param childGroupId id of Group whose parent has to be found
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Parent Group.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      *                                    No parent group found for Group with specified ID.
      */
-    Group getParentGroup(Long childGroupId) throws DatabaseIntegrityException;
+    Group getParentGroup(Long childGroupId, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get all Groups of VO specified by ID.
      * @param voId id of VO
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    List<Group> getGroupsOfVo(Long voId);
+    List<Group> getGroupsOfVo(Long voId, boolean withAttrs);
 }

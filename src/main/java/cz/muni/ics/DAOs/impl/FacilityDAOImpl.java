@@ -29,9 +29,9 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public Facility getFacility(Long id) throws DatabaseIntegrityException {
+    public Facility getFacility(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -43,15 +43,16 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public List<Facility> getFacilities() {
-        String query = queryBuilder(null);
+    public List<Facility> getFacilities(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        Facility facility = getFacility(id);
+        //TODO: improve
+        Facility facility = getFacility(id, true);
         List<Attribute> result = new ArrayList<>();
 
         if (attrs == null) {
@@ -67,8 +68,9 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs) {
-        List<Facility> facilities = getFacilities();
+    public List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs, boolean withAttrs) {
+        //TODO: improve
+        List<Facility> facilities = getFacilities(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
 
         facilities.removeIf(facility -> {
@@ -80,21 +82,27 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public List<Facility> getFacilitiesByName(String name) {
+    public List<Facility> getFacilitiesByName(String name, boolean withAttrs) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check table names
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS facility ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS facility ");
+        }
         query.append("FROM facilities t ");
-        query.append("JOIN facility_attr_values av ON av.facility_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN facility_attr_values av ON av.facility_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

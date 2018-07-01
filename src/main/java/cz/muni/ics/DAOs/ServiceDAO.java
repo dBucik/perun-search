@@ -15,23 +15,26 @@ public interface ServiceDAO {
     /**
      * Get Service specified by ID.
      * @param id id of Service
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Service or null if not such found.
      * @throws DatabaseIntegrityException When more than one Service with same id found.
      */
-    Service getService(Long id) throws DatabaseIntegrityException;
+    Service getService(Long id, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get Services with NAME like specified parameter.
      * @param name name of Service
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    List<Service> getServicesByName(String name);
+    List<Service> getServicesByName(String name, boolean withAttrs);
 
     /**
      * Get all Services.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    List<Service> getServices();
+    List<Service> getServices(boolean withAttrs);
 
     /**
      * Get attributes of Service specified by ID.
@@ -46,14 +49,16 @@ public interface ServiceDAO {
      * Get Services that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Services
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    List<Service> getServicesWithAttrs(List<InputAttribute> attrs);
+    List<Service> getServicesWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
 
     /**
      * Get resources of Owner specified by ID.
      * @param ownerId id of Owner
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    List<Service> getServicesOfOwner(Long ownerId);
+    List<Service> getServicesOfOwner(Long ownerId, boolean withAttrs);
 }

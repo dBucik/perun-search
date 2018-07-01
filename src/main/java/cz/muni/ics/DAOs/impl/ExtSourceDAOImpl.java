@@ -29,9 +29,9 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public ExtSource getExtSource(Long id) throws DatabaseIntegrityException {
+    public ExtSource getExtSource(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -42,15 +42,16 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public List<ExtSource> getExtSources() {
-        String query = queryBuilder(null);
+    public List<ExtSource> getExtSources(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        ExtSource extSource = getExtSource(id);
+        //TODO: improve
+        ExtSource extSource = getExtSource(id, true);
         List<Attribute> result = new ArrayList<>();
         if (attrs == null) {
             result.add(new Attribute("id", extSource.getId().toString()));
@@ -65,26 +66,27 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public List<ExtSource> getExtSourcesByName(String name) {
+    public List<ExtSource> getExtSourcesByName(String name, boolean withAttrs) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
-    public List<ExtSource> getExtSourcesByType(String type) {
+    public List<ExtSource> getExtSourcesByType(String type, boolean withAttrs) {
         type = '%' + type + '%';
         String where = "WHERE upper(t.type) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {type}, MAPPER);
     }
 
     @Override
-    public List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs) {
-        List<ExtSource> extSources = getExtSources();
+    public List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
+        //TODO: improve
+        List<ExtSource> extSources = getExtSources(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
         extSources.removeIf(extSource -> {
             assert filter != null;
@@ -94,13 +96,19 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
         return extSources;
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check names for tables
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS extSource ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS extSource ");
+        }
         query.append("FROM ext_sources t ");
-        query.append("JOIN ext_source_attr_values av ON av.ext_source_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN ext_source_attr_values av ON av.ext_source_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

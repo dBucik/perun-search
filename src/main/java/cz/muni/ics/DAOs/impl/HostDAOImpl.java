@@ -29,9 +29,9 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public Host getHost(Long id) throws DatabaseIntegrityException {
+    public Host getHost(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -43,24 +43,25 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public List<Host> getHostsByHostname(String hostname) {
+    public List<Host> getHostsByHostname(String hostname, boolean withAttrs) {
         hostname = '%' + hostname + '%';
         String where = "WHERE upper(t.hostname) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {hostname}, MAPPER);
     }
 
     @Override
-    public List<Host> getHosts() {
-        String query = queryBuilder(null);
+    public List<Host> getHosts(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        Host host = getHost(id);
+        //TODO: improve
+        Host host = getHost(id, true);
         List<Attribute> result = new ArrayList<>();
 
         if (attrs == null) {
@@ -77,8 +78,9 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs) {
-        List<Host> hosts = getHosts();
+    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
+        //TODO: improve
+        List<Host> hosts = getHosts(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
 
         hosts.removeIf(host -> {
@@ -89,13 +91,19 @@ public class HostDAOImpl implements HostDAO {
         return hosts;
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check table names
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS host ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS host ");
+        }
         query.append("FROM hosts t ");
-        query.append("JOIN host_attr_values av ON av.host_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN host_attr_values av ON av.host_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

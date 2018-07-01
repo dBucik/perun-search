@@ -30,9 +30,9 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUser(Long id) throws DatabaseIntegrityException {
+    public User getUser(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id=?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -44,14 +44,15 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsers() {
-        String query = queryBuilder(null);
+    public List<User> getUsers(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        User user = getUser(id);
+        //TODO: improve
+        User user = getUser(id, true);
         List<Attribute> result = new ArrayList<>();
         if (attrs == null) {
             result.add(new Attribute("id", user.getId().toString()));
@@ -68,8 +69,9 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsersWithAttrs(List<InputAttribute> attrs) {
-        List<User> users = getUsers();
+    public List<User> getUsersWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
+        //TODO: improve
+        List<User> users = getUsers(withAttrs);
         List<Attribute> filter = convertAttrsFromInput(attrs);
 
         users.removeIf(user -> {
@@ -82,12 +84,12 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getUsersByName(String titleBefore, String firstName, String middleName,
-                                     String lastName, String titleAfter)
+                                     String lastName, String titleAfter, boolean withAttrs)
     {
         String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
                 "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
                 "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
         String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
                 ((firstName == null) ? "% " : '%' + firstName + "% ") +
                 ((middleName == null) ? "% " : '%' + middleName + "% ") +
@@ -98,28 +100,33 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsersByServiceAcc(boolean isServiceAcc) {
+    public List<User> getUsersByServiceAcc(boolean isServiceAcc, boolean withAttrs) {
         String param = isServiceAcc ? "t" : "f";
         String where = "WHERE t.service_acc = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
     @Override
-    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc) {
+    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc, boolean withAttrs) {
         String param = isSponsoredAcc ? "t" : "f";
         String where = "WHERE t.sponsored_acc = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS user ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS user ");
+        }
         query.append("FROM users t ");
-        query.append("JOIN user_attr_values av ON av.user_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN user_attr_values av ON av.user_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

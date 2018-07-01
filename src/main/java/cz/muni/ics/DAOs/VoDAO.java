@@ -15,41 +15,46 @@ public interface VoDAO {
     /**
      * Get VO specified by ID.
      * @param id id of VO
-     * @return Found VO or null if not such found.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
+     * @return Found VO or null if not such found
      * @throws DatabaseIntegrityException More than one VO with same ID found.
      */
-    Vo getVo(Long id) throws DatabaseIntegrityException;
+    Vo getVo(Long id, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get VO with names like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name substring in name of VO
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of VOs, empty list if nothing has been found.
      */
-    List<Vo> getVosByName(String name);
+    List<Vo> getVosByName(String name, boolean withAttrs);
 
     /**
      * Get VO specified by SHORT NAME.
      * (EXACT matching used, comparing ignores case)
      * @param shortName short name of VO
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found VO or null if not such found.
      * @throws DatabaseIntegrityException More than one VO with same shortName found.
      */
-    Vo getVoByShortName(String shortName) throws DatabaseIntegrityException;
+    Vo getVoByShortName(String shortName, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get VOs with short names like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param shortName substring in short_name of vo
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of vos, empty list if nothing has been found.
      */
-    List<Vo> getVosByShortName(String shortName);
+    List<Vo> getVosByShortName(String shortName, boolean withAttrs);
 
     /**
      * Get all VOs.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of VOs, empty list if nothing has been found.
      */
-    List<Vo> getVos();
+    List<Vo> getVos(boolean withAttrs);
 
     /**
      * Get attributes of VO specified by ID. Only attributes with value are returned.
@@ -64,7 +69,8 @@ public interface VoDAO {
      * Get VOs that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of VOs
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of VOs found, empty list if nothing has been found.
      */
-    List<Vo> getVosWithAttrs(List<InputAttribute> attrs);
+    List<Vo> getVosWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
 }

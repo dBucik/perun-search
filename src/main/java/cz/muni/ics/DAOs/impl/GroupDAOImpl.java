@@ -29,9 +29,9 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public Group getGroup(Long id) throws DatabaseIntegrityException {
+    public Group getGroup(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
@@ -43,24 +43,25 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<Group> getGroupsByName(String name) {
+    public List<Group> getGroupsByName(String name, boolean withAttrs) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
-    public List<Group> getGroups() {
-        String query = queryBuilder(null);
+    public List<Group> getGroups(boolean withAttrs) {
+        String query = queryBuilder(null, withAttrs);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
     public List<Attribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        Group group = getGroup(id);
+        //TODO: improve
+        Group group = getGroup(id, true);
         List<Attribute> result = new ArrayList<>();
 
         if (attrs == null) {
@@ -78,9 +79,9 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<Group> getGroupsWithAttrs(List<InputAttribute> attrs) {
+    public List<Group> getGroupsWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
         //TODO improve query
-        List<Group> groups = getGroups();
+        List<Group> groups = getGroups(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
 
         groups.removeIf(group -> {
@@ -92,11 +93,11 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public Group getParentGroup(Long childGroupId) throws DatabaseIntegrityException {
-        Group child = getGroup(childGroupId);
+    public Group getParentGroup(Long childGroupId, boolean withAttrs) throws DatabaseIntegrityException {
+        Group child = getGroup(childGroupId, withAttrs);
 
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{child.getParentGroupId()}, MAPPER);
@@ -108,20 +109,26 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<Group> getGroupsOfVo(Long voId) {
+    public List<Group> getGroupsOfVo(Long voId, boolean withAttrs) {
         String where = "WHERE t.vo_id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check table names
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS group ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS group ");
+        }
         query.append("FROM groups t ");
-        query.append("JOIN group_attr_values av ON av.group_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN group_attr_values av ON av.group_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }

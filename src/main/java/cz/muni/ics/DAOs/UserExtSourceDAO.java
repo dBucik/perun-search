@@ -15,15 +15,17 @@ public interface UserExtSourceDAO {
     /**
      * Get userExtSource specified by ID.
      * @param id id of userExtSource
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found userExtSource or null if not such found.
      */
-    UserExtSource getUserExtSource(Long id) throws DatabaseIntegrityException;
+    UserExtSource getUserExtSource(Long id, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get all userExtSources.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources, null if nothing has been found.
      */
-    List<UserExtSource> getUserExtSources();
+    List<UserExtSource> getUserExtSources(boolean withAttrs);
 
     /**
      * Get attributes of userExtSource specified by ID.
@@ -36,29 +38,33 @@ public interface UserExtSourceDAO {
     /**
      * Get userExtSources that have specified attributes. (Exact matching used)
      * @param attrs attributes of userExtSources
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs);
+    List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
 
     /**
      * Get userExtSources of user specified by ID.
      * @param userId id of user
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    List<UserExtSource> getUserExtSourcesOfUser(Long userId);
+    List<UserExtSource> getUserExtSourcesOfUser(Long userId, boolean withAttrs);
 
     /**
      * Get userExtSources of extSource specified by ID.
      * @param extSourceId id of extSource
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId);
+    List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId, boolean withAttrs);
 
     /**
      * Get userExtSources with specified loginExt
      * @param loginExt loginExt of userExtSource
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt);
+    List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt, boolean withAttrs);
 
 }

@@ -15,16 +15,18 @@ public interface ExtSourceDAO {
     /**
      * Get ExtSource specified by ID.
      * @param id id of extSource
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found extSource or null if not such found.
      * @throws DatabaseIntegrityException More than one ExtSource with same ID found.
      */
-    ExtSource getExtSource(Long id) throws DatabaseIntegrityException;
+    ExtSource getExtSource(Long id, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get all ExtSources.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    List<ExtSource> getExtSources();
+    List<ExtSource> getExtSources(boolean withAttrs);
 
     /**
      * Get attributes of ExtSource specified by ID.
@@ -39,23 +41,26 @@ public interface ExtSourceDAO {
      * Get ExtSources with NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of ExtSource
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    List<ExtSource> getExtSourcesByName(String name);
+    List<ExtSource> getExtSourcesByName(String name, boolean withAttrs);
 
     /**
      * Get ExtSources with TYPE like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param type type of ExtSource
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    List<ExtSource> getExtSourcesByType(String type);
+    List<ExtSource> getExtSourcesByType(String type, boolean withAttrs);
 
     /**
      * Get ExtSources that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of ExtSources
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs);
+    List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
 }

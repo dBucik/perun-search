@@ -20,23 +20,25 @@ public interface FacilityDAO {
     /**
      * Get Facility specified by ID.
      * @param id id of Facility
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Facility or null if not such found.
      * @throws DatabaseIntegrityException More than one Facility with same ID found.
      */
-    Facility getFacility(Long id) throws DatabaseIntegrityException;
+    Facility getFacility(Long id, boolean withAttrs) throws DatabaseIntegrityException;
 
     /**
      * Get all Facilities.
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Facilities, empty list if nothing has been found.
      */
-    List<Facility> getFacilities();
+    List<Facility> getFacilities(boolean withAttrs);
 
     /**
      * Get attributes of Facility specified by ID.
      * @param id id of Facility
      * @param attrs attributes to be fetched
      * @return List of attributes.
-     * * @throws DatabaseIntegrityException More than one Facility with same ID found.
+     * @throws DatabaseIntegrityException More than one Facility with same ID found.
      */
     List<Attribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
@@ -44,15 +46,17 @@ public interface FacilityDAO {
      * Get Facilities that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Facilities
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Facilities found, empty list if nothing has been found.
      */
-    List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs);
+    List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs, boolean withAttrs);
 
     /**
      * Get Facilities with NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of Facility
+     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Facilities, empty list if nothing has been found.
      */
-    List<Facility> getFacilitiesByName(String name);
+    List<Facility> getFacilitiesByName(String name, boolean withAttrs);
 }

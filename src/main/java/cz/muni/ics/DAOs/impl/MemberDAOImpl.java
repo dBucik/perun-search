@@ -29,9 +29,9 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public Member getMember(Long id) throws DatabaseIntegrityException {
+    public Member getMember(Long id, boolean withAttrs) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -43,7 +43,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<Member> getMembers() {
+    public List<Member> getMembers(boolean withAttrs) {
         String query = queryBuilder(null);
 
         return jdbcTemplate.query(query, MAPPER);
@@ -51,7 +51,8 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<Attribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        Member member = getMember(id);
+        //TODO: improve
+        Member member = getMember(id, true);
         List<Attribute> result = new ArrayList<>();
 
         if (attrs == null) {
@@ -69,9 +70,9 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs) {
+    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
         //TODO improve
-        List<Member> members = getMembers();
+        List<Member> members = getMembers(withAttrs);
         List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
 
         members.removeIf(member -> {
@@ -83,23 +84,23 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<Member> getMembersOfUser(Long userId) {
+    public List<Member> getMembersOfUser(Long userId, boolean withAttrs) {
         String where = "WHERE t.user_id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {userId}, MAPPER);
     }
 
     @Override
-    public List<Member> getMembersOfVo(Long voId) {
+    public List<Member> getMembersOfVo(Long voId, boolean withAttrs) {
         String where = "WHERE t.vo_id = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
     }
 
     @Override
-    public List<Member> getMembersByStatus(String status) {
+    public List<Member> getMembersByStatus(String status, boolean withAttrs) {
         char param;
         switch (status) {
             case "ACTIVE":
@@ -113,26 +114,32 @@ public class MemberDAOImpl implements MemberDAO {
         }
 
         String where = "WHERE t.status = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
     @Override
-    public List<Member> getMembersBySponsored(boolean isSponsored) {
+    public List<Member> getMembersBySponsored(boolean isSponsored, boolean withAttrs) {
         String where = "WHERE t.sponsored = ?";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {isSponsored}, MAPPER);
     }
 
-    private String queryBuilder(String where) {
+    private String queryBuilder(String where, boolean withAttrs) {
+        //TODO: check table names
         StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t) || ");
-        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS member ");
+        query.append("SELECT to_jsonb(t)");
+        if (withAttrs) {
+            query.append(" || ");
+            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS member ");
+        }
         query.append("FROM members t ");
-        query.append("JOIN member_attr_values av ON av.member_id = t.id ");
-        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (withAttrs) {
+            query.append("JOIN member_attr_values av ON av.member_id = t.id ");
+            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        }
         if (where != null) {
             query.append(where).append(' ');
         }
