@@ -1,5 +1,6 @@
 package cz.muni.ics.DAOs;
 
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.Member;
@@ -12,58 +13,60 @@ public interface MemberDAO {
     void setDataSource(DataSource dataSource);
 
     /**
-     * Get member specified by ID.
-     * @param id id of member
-     * @return Found member or null if not such found.
+     * Get Member specified by ID.
+     * @param id id of Member
+     * @return Found Member or null if not such found.
+     * @throws DatabaseIntegrityException More than one Member with same ID found.
      */
-    Member getMember(Long id);
+    Member getMember(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get all members.
-     * @return List of members, null if nothing has been found.
+     * Get all Members.
+     * @return List of Members, null if nothing has been found.
      */
     List<Member> getMembers();
 
     /**
-     * Get attributes of member specified by ID.
-     * @param id id of member
+     * Get attributes of Member specified by ID.
+     * @param id id of Member
      * @param attrs attributes to be fetched
      * @return List of attributes
+     * @throws DatabaseIntegrityException More than one Member with same ID found.
      */
-    List<Attribute> getMemberAttrs(Long id, List<InputAttribute> attrs);
+    List<Attribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
     /**
-     * Get members that have specified attributes. (Exact matching used)
-     * @param attrs attributes of members
-     * @return List of members found, empty list if nothing has been found.
+     * Get Members that have specified attributes. (Exact matching used)
+     * @param attrs attributes of Members
+     * @return List of Members found, empty list if nothing has been found.
      */
     List<Member> getMembersWithAttrs(List<InputAttribute> attrs);
 
     /**
-     * Get members of user specified by ID.
+     * Get Members of user specified by ID.
      * @param userId id of user
-     * @return List of members, empty list if nothing has been found.
+     * @return List of Members, empty list if nothing has been found.
      */
     List<Member> getMembersOfUser(Long userId);
 
     /**
-     * Get members of vo specified by ID.
+     * Get Members of vo specified by ID.
      * @param voId id of vo.
-     * @return List of members, empty list if nothing has been found.
+     * @return List of Members, empty list if nothing has been found.
      */
     List<Member> getMembersOfVo(Long voId);
 
     /**
-     * Get members with specified status. (Exact matching)
-     * @param status status of members
-     * @return List of members, empty list if nothing has been found.
+     * Get Members with specified STATUS.
+     * @param status ACTIVE or EXPIRED values are accepted
+     * @return List of Members, empty list if nothing has been found.
      */
     List<Member> getMembersByStatus(String status);
 
     /**
-     * Get members with specified value for sponsorship.
-     * @param isSponsored TRUE if member is sponsored, FALSE otherwise
-     * @return List of members, empty list if nothing has been found.
+     * Get Members with specified value for sponsorship.
+     * @param isSponsored TRUE if Member is sponsored, FALSE otherwise
+     * @return List of Members, empty list if nothing has been found.
      */
     List<Member> getMembersBySponsored(boolean isSponsored);
 }

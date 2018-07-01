@@ -1,5 +1,6 @@
 package cz.muni.ics.DAOs;
 
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Group;
 import cz.muni.ics.models.InputAttribute;
@@ -12,51 +13,57 @@ public interface GroupDAO {
     void setDataSource(DataSource dataSource);
 
     /**
-     * Get group specified by ID.
-     * @param id id of group
-     * @return Found group or null if not such found.
+     * Get Group specified by ID.
+     * @param id id of Group
+     * @return Found Group or null if not such found.
+     * @throws DatabaseIntegrityException More than one Group with same ID found.
      */
-    Group getGroup(Long id);
+    Group getGroup(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get group specified by NAME.
-     * @param name name of group
-     * @return Found group or null if not such found.
+     * Get Groups withe NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of Group
+     * @return List of Groups, empty list if nothing has been found.
      */
-    Group getGroupByName(String name);
+    List<Group> getGroupsByName(String name);
 
     /**
-     * Get all groups.
-     * @return List of groups, empty list if nothing has been found.
+     * Get all Groups.
+     * @return List of Groups, empty list if nothing has been found.
      */
     List<Group> getGroups();
 
     /**
-     * Get attributes of group specified by ID.
-     * @param id id of group
+     * Get attributes of Group specified by ID.
+     * @param id id of Group
      * @param attrs attributes to be fetched
      * @return List of attributes.
+     * @throws DatabaseIntegrityException More than one Group with same ID found.
      */
-    List<Attribute> getGroupAttrs(Long id, List<InputAttribute> attrs);
+    List<Attribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
     /**
-     * Get groups that have specified attributes. (Exact matching used)
-     * @param attrs attributes of groups
-     * @return List of groups found, empty list if nothing has been found.
+     * Get Groups that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Groups
+     * @return List of Groups found, empty list if nothing has been found.
      */
     List<Group> getGroupsWithAttrs(List<InputAttribute> attrs);
 
     /**
-     * Get parent group of group specified by ID
-     * @param childGroupId id of group whose parent has to be found
-     * @return Parent group.
+     * Get parent group of Group specified by ID.
+     * @param childGroupId id of Group whose parent has to be found
+     * @return Parent Group.
+     * @throws DatabaseIntegrityException More than one Group with same ID found.
+     *                                    No parent group found for Group with specified ID.
      */
-    Group getParentGroup(Long childGroupId);
+    Group getParentGroup(Long childGroupId) throws DatabaseIntegrityException;
 
     /**
-     * Get all groups of VO specified by ID.
+     * Get all Groups of VO specified by ID.
      * @param voId id of VO
-     * @return List of groups, empty list if nothing has been found.
+     * @return List of Groups, empty list if nothing has been found.
      */
     List<Group> getGroupsOfVo(Long voId);
 }

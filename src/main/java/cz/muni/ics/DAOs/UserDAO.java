@@ -1,5 +1,6 @@
 package cz.muni.ics.DAOs;
 
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.User;
@@ -12,56 +13,60 @@ public interface UserDAO {
     void setDataSource(DataSource dataSource);
 
     /**
-     * Get user specified by ID.
-     * @param id id of user
-     * @return Found user or null if not such found.
+     * Get User specified by ID.
+     * @param id id of User
+     * @return Found User or null if not such found.
+     * @throws DatabaseIntegrityException More than one User with same ID found.
      */
-    User getUser(Long id);
+    User getUser(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get all users.
-     * @return List of users, null if nothing has been found.
+     * Get all Users.
+     * @return List of Users, empty list if nothing has been found.
      */
     List<User> getUsers();
 
     /**
-     * Get attributes of user specified by ID.
-     * @param id id of user
+     * Get attributes of User specified by ID.
+     * @param id id of User
      * @param attrs attributes to be fetched
-     * @return List of attributes.
+     * @return List of attributes, empty list if nothing has been found.
+     * @throws DatabaseIntegrityException More than one User with same ID found.
      */
-    List<Attribute> getUserAttrs(Long id, List<InputAttribute> attrs);
+    List<Attribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
     /**
-     * Get users that have specified attributes. (Exact matching used)
-     * @param attrs attributes of users
-     * @return List of users found, empty list if nothing has been found.
+     * Get Users that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Users
+     * @return List of Users found, empty list if nothing has been found.
      */
     List<User> getUsersWithAttrs(List<InputAttribute> attrs);
 
     /**
-     * Get users with specified NAME. (Exact matching)
+     * Get Users with NAME like specified params.
+     * (LIKE operator used, comparing ignores case)
      * @param titleBefore title before the name
-     * @param firstName given name of user
-     * @param middleName middle name of user
-     * @param lastName family name of user
+     * @param firstName given name
+     * @param middleName middle name
+     * @param lastName family name
      * @param titleAfter title after the name
-     * @return List of users found, empty list if nothing has been found.
+     * @return List of Users found, empty list if nothing has been found.
      */
     List<User> getUsersByName(String titleBefore, String firstName, String middleName,
                               String lastName, String titleAfter);
 
     /**
-     * Get users by specifying if their acc is userAcc.
-     * @param isuserAcc TRUE for userAccounts, FALSE otherwise.
-     * @return List of users found, empty list if nothing has been found.
+     * Get Users by specifying if their acc is serviceAcc.
+     * @param isServiceAcc TRUE for serviceAccounts, FALSE otherwise.
+     * @return List of Users found, empty list if nothing has been found.
      */
-    List<User> getUsersByUserAcc(boolean isuserAcc);
+    List<User> getUsersByServiceAcc(boolean isServiceAcc);
 
     /**
-     * Get users by specifying if their acc is sponsored.
+     * Get Users by specifying if their acc is sponsored.
      * @param isSponsoredAcc TRUE for sponsoredAccounts, FALSE otherwise.
-     * @return List of users found, empty list if nothing has been found.
+     * @return List of Users found, empty list if nothing has been found.
      */
     List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc);
 }

@@ -1,5 +1,6 @@
 package cz.muni.ics.DAOs;
 
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Host;
 import cz.muni.ics.models.InputAttribute;
@@ -15,19 +16,21 @@ public interface HostDAO {
      * Get host specified by ID.
      * @param id id of host
      * @return Found host or null if not such found.
+     * @throws DatabaseIntegrityException More than one Host with same ID found.
      */
-    Host getHost(Long id);
+    Host getHost(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get host specified by HOSTNAME.
+     * Get Hosts with HOSTNAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
      * @param hostname hostname of host
-     * @return Found host or null if not such found.
+     * @return List of hosts, empty list if nothing has been found.
      */
-    Host getHostByHostname(String hostname);
+    List<Host> getHostsByHostname(String hostname);
 
     /**
      * Get all hosts.
-     * @return List of hosts, null if nothing has been found.
+     * @return List of hosts, empty list if nothing has been found.
      */
     List<Host> getHosts();
 
@@ -36,11 +39,13 @@ public interface HostDAO {
      * @param id id of host
      * @param attrs attributes to be fetched
      * @return List of attributes.
+     * @throws DatabaseIntegrityException More than one Host with same ID found.
      */
-    List<Attribute> getHostAttrs(Long id, List<InputAttribute> attrs);
+    List<Attribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
     /**
-     * Get hosts that have specified attributes. (Exact matching used)
+     * Get hosts that have specified attributes.
+     * (EXACT matching used)
      * @param attrs attributes of hosts
      * @return List of hosts found, empty list if nothing has been found.
      */

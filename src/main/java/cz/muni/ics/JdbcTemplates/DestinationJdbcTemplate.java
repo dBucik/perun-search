@@ -1,8 +1,11 @@
 package cz.muni.ics.JdbcTemplates;
 
 import cz.muni.ics.DAOs.DestinationDAO;
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.DestinationMapper;
 import cz.muni.ics.models.Destination;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -21,17 +24,21 @@ public class DestinationJdbcTemplate implements DestinationDAO {
     }
 
     @Override
-    public Destination getDestination(Long id) {
+    public Destination getDestination(Long id) throws DatabaseIntegrityException {
         String query = "SELECT * FROM destinations WHERE id=?";
-        Destination destination = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
-
-        return destination;
+        try {
+            return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        } catch (IncorrectResultSetColumnCountException e) {
+            throw new DatabaseIntegrityException("", e);
+        }
     }
 
     @Override
-    public Destination getDestinationByName(String name) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
+    public List<Destination> getDestinationsByName(String name) {
+        String query = "SELECT * FROM destinations WHERE upper(name) LIKE upper(?)";
+        return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override

@@ -41,7 +41,11 @@ public class MemberMapper implements RowMapper<Member> {
         if (!(json.get("status") instanceof String)) {
             member.setStatus(json.get("status").toString());
         } else {
-            member.setStatus(json.getString("status"));
+            if (json.get("status").equals('0')) {
+                member.setStatus("EXPIRED");
+            } else {
+                member.setStatus("ACTIVE");
+            }
         }
 
         if (!(json.get("vo_id") instanceof Long)) {

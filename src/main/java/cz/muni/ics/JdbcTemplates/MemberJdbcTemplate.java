@@ -1,15 +1,20 @@
 package cz.muni.ics.JdbcTemplates;
 
 import cz.muni.ics.DAOs.MemberDAO;
+import cz.muni.ics.Utils;
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.MemberMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.Member;
 import org.json.JSONObject;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +22,6 @@ import java.util.Map;
 public class MemberJdbcTemplate implements MemberDAO {
 
     private static final MemberMapper MAPPER = new MemberMapper();
-    private static final AttributeMapper ATTR_MAPPER = new AttributeMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -29,72 +33,114 @@ public class MemberJdbcTemplate implements MemberDAO {
     }
 
     @Override
-    public Member getMember(Long id) {
-        //TODO better query
-        String query = "SELECT * FROM members WHERE id=?";
-        Member member = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
+    public Member getMember(Long id) throws DatabaseIntegrityException {
+        String where = "WHERE t.id = ?";
+        String query = queryBuilder(where);
 
-        String attrQuery = "SELECT an.friendly_name, av.attr_value " +
-                "FROM attr_names an RIGHT OUTER JOIN member_attr_values av " +
-                "ON (an.id = av.attr_id) " +
-                "WHERE av.member_id=?";
-        List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        member.setAttributes(attrs);
-
-        return member;
+        try {
+            return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        } catch (IncorrectResultSetColumnCountException e) {
+            throw new DatabaseIntegrityException("More members with same ID found [id: " + id + ']');
+        }
     }
 
     @Override
     public List<Member> getMembers() {
-        //TODO better query
-        String query = "SELECT * FROM members";
-        List<Member> members = jdbcTemplate.query(query, new Object[] {}, MAPPER);
+        String query = queryBuilder(null);
 
-        for(Member member: members) {
-            String attrQuery = "SELECT an.friendly_name, av.attr_value " +
-                    "FROM attr_names an RIGHT OUTER JOIN member_attr_values av " +
-                    "ON (an.id = av.attr_id) " +
-                    "WHERE av.member_id=?";
-            List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {member.getId()}, ATTR_MAPPER);
-            member.setAttributes(attrs);
+        return jdbcTemplate.query(query, MAPPER);
+    }
+
+    @Override
+    public List<Attribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+        Member member = getMember(id);
+        List<Attribute> result = new ArrayList<>();
+
+        if (attrs == null) {
+            result.add(new Attribute("id", member.getId().toString()));
+            result.add(new Attribute("userId", member.getUserId().toString()));
+            result.add(new Attribute("voId", member.getVoId().toString()));
+            result.add(new Attribute("status", member.getStatus()));
+            result.add(new Attribute("sponsored", member.getSponsored().toString()));
+            result.addAll(member.getAttributes());
+        } else {
+            result.addAll(member.getAttributesByKeys(attrs));
         }
+
+        return result;
+    }
+
+    @Override
+    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs) {
+        //TODO improve
+        List<Member> members = getMembers();
+        List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
+
+        members.removeIf(member -> {
+           assert filter != null;
+           return ! member.getAttributes().containsAll(filter);
+        });
 
         return members;
     }
 
     @Override
-    public List<Attribute> getMemberAttrs(Long id, List<InputAttribute> attrs) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
-    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
     public List<Member> getMembersOfUser(Long userId) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
+        String where = "WHERE t.user_id = ?";
+        String query = queryBuilder(where);
+
+        return jdbcTemplate.query(query, new Object[] {userId}, MAPPER);
     }
 
     @Override
     public List<Member> getMembersOfVo(Long voId) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
+        String where = "WHERE t.vo_id = ?";
+        String query = queryBuilder(where);
+
+        return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
     }
 
     @Override
     public List<Member> getMembersByStatus(String status) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
+        Character param;
+        switch (status) {
+            case "ACTIVE":
+                param = '1';
+                break;
+            case "EXPIRED":
+                param = '0';
+                break;
+            default:
+                throw new IllegalArgumentException("ACTIVE or EXPIRED expected, got: " + status);
+        }
+
+        String where = "WHERE t.status = ?";
+        String query = queryBuilder(where);
+
+        return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
     @Override
     public List<Member> getMembersBySponsored(boolean isSponsored) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not implemented");
+        String where = "WHERE t.sponsored = ?";
+        String query = queryBuilder(where);
+
+        return jdbcTemplate.query(query, new Object[] {isSponsored}, MAPPER);
+    }
+
+    private String queryBuilder(String where) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT to_jsonb(t) || ");
+        query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS member ");
+        query.append("FROM members t ");
+        query.append("JOIN member_attr_values av ON av.member_id = t.id ");
+        query.append("JOIN attr_names an ON an.id = av.attr_id ");
+        if (where != null) {
+            query.append(where).append(' ');
+        }
+        query.append("GROUP BY t.id");
+        return query.toString();
     }
 }

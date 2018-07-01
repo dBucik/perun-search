@@ -1,5 +1,6 @@
 package cz.muni.ics.DAOs;
 
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Facility;
 import cz.muni.ics.models.InputAttribute;
@@ -17,37 +18,41 @@ public interface FacilityDAO {
     void setDataSource(DataSource ds);
 
     /**
-     * Get facility specified by ID.
-     * @param id id of facility
-     * @return Found facility or null if not such found.
+     * Get Facility specified by ID.
+     * @param id id of Facility
+     * @return Found Facility or null if not such found.
+     * @throws DatabaseIntegrityException More than one Facility with same ID found.
      */
-    Facility getFacility(Long id);
+    Facility getFacility(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get facility specified by NAME.
-     * @param name name of facility
-     * @return Found facility or null if not such found.
-     */
-    Facility getFacilityByName(String name);
-
-    /**
-     * Get all facilities.
-     * @return List of facilities, empty list if nothing has been found.
+     * Get all Facilities.
+     * @return List of Facilities, empty list if nothing has been found.
      */
     List<Facility> getFacilities();
 
     /**
-     * Get attributes of facility specified by ID.
-     * @param id id of facility
+     * Get attributes of Facility specified by ID.
+     * @param id id of Facility
      * @param attrs attributes to be fetched
      * @return List of attributes.
+     * * @throws DatabaseIntegrityException More than one Facility with same ID found.
      */
-    List<Attribute> getFacilityAttrs(Long id, List<InputAttribute> attrs);
+    List<Attribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
     /**
-     * Get facilities that have specified attributes. (Exact matching used)
-     * @param attrs attributes of facilities
-     * @return List of facilities found, empty list if nothing has been found.
+     * Get Facilities that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Facilities
+     * @return List of Facilities found, empty list if nothing has been found.
      */
     List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs);
+
+    /**
+     * Get Facilities with NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of Facility
+     * @return List of Facilities, empty list if nothing has been found.
+     */
+    List<Facility> getFacilitiesByName(String name);
 }
