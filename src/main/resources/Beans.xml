@@ -16,9 +16,6 @@
     </bean>
 
     <!-- Definition JdbcTemplate beans -->
-    <bean id="destinationDAO" class="cz.muni.ics.DAOs.impl.DestinationDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
 
     <bean id="extSourceDAO" class="cz.muni.ics.DAOs.impl.ExtSourceDAOImpl">
         <property name="dataSource" ref="dataSource" />
@@ -61,7 +58,6 @@
     </bean>
 
     <bean id="query" class="cz.muni.ics.models.Query">
-        <constructor-arg name="destinationDAO" ref="destinationDAO" />
         <constructor-arg name="extSourceDAO" ref="extSourceDAO" />
         <constructor-arg name="facilityDAO" ref="facilityDAO" />
         <constructor-arg name="groupDAO" ref="groupDAO" />

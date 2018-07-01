@@ -173,11 +173,6 @@ type RichVo {
 }
 
 type Query {
-    # DESTINATION
-    getDestination(id: Long!): Destination
-    getDestinations: [Destination!]!
-    getDestinationsByName(name: String!): [Destination!]!
-
     # EXT_SOURCE
     getExtSource(id: Long!): ExtSource
     getExtSources: [ExtSource!]!

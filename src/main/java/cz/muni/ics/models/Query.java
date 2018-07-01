@@ -17,7 +17,6 @@ import java.util.List;
 public class Query implements GraphQLRootResolver {
 
     //TODO: write JavaDoc
-    private final DestinationDAO destinationDAO;
     private final ExtSourceDAO extSourceDAO;
     private final FacilityDAO facilityDAO;
     private final GroupDAO groupDAO;
@@ -29,13 +28,12 @@ public class Query implements GraphQLRootResolver {
     private final UserExtSourceDAO userExtSourceDAO;
     private final VoDAO voDAO;
 
-    public Query(DestinationDAO destinationDAO, ExtSourceDAO extSourceDAO,
+    public Query(ExtSourceDAO extSourceDAO,
                  FacilityDAO facilityDAO, GroupDAO groupDAO,
                  HostDAO hostDAO, MemberDAO memberDAO,
                  ResourceDAO resourceDAO, ServiceDAO serviceDAO,
                  UserDAO userDAO, UserExtSourceDAO userExtSourceDAO,
                  VoDAO voDAO) {
-        this.destinationDAO = destinationDAO;
         this.extSourceDAO = extSourceDAO;
         this.facilityDAO = facilityDAO;
         this.groupDAO = groupDAO;
@@ -46,32 +44,6 @@ public class Query implements GraphQLRootResolver {
         this.userDAO = userDAO;
         this.userExtSourceDAO = userExtSourceDAO;
         this.voDAO = voDAO;
-    }
-
-    /* DESTINATION */
-
-    /**
-     * Get Destination specified by ID.
-     * @param id id of Destination
-     * @return Found Destination or null if no such found.
-     * @throws DatabaseIntegrityException Thrown when more than one Destinations with the same ID found.
-     */
-    public Destination getDestination(Long id) throws DatabaseIntegrityException { return destinationDAO.getDestination(id); }
-
-    /**
-     * Get all Destinations.
-     * @return List of Destinations, empty list if nothing has been found.
-     */
-    public List<Destination> getDestinations() { return destinationDAO.getDestinations(); }
-
-    /**
-     * Get Destinations with NAMEs like specified parameter.
-     * (LIKE operator used, comparing ignores case)
-     * @param name substring in Destination name
-     * @return List of Destinations, empty list if nothing has been found.
-     */
-    public List<Destination> getDestinationsByName(String name) {
-        return destinationDAO.getDestinationsByName(name);
     }
 
     /* EXT_SOURCE */

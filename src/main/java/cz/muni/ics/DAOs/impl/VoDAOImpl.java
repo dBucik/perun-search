@@ -192,4 +192,7 @@ public class VoDAOImpl implements VoDAO {
         return query.toString();
     }
 
+    //TODO: authz
+    //TODO: api pre GUI
+
 }
