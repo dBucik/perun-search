@@ -169,18 +169,19 @@ public class ResourceDAOImpl implements ResourceDAO {
         StringBuilder query = new StringBuilder();
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
-            query.append(" || ");
-            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS resource ");
+            query.append(" ||");
+            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
         }
-        query.append("FROM resources t ");
+        query.append(" AS resource");
+        query.append(" FROM resources t");
         if (withAttrs) {
-            query.append("JOIN resource_attr_values av ON av.resource_id = t.id ");
-            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+            query.append(" JOIN resource_attr_values av ON av.resource_id = t.id");
+            query.append(" JOIN attr_names an ON an.id = av.attr_id");
         }
         if (where != null) {
-            query.append(where).append(' ');
+            query.append(' ').append(where.trim());
         }
-        query.append("GROUP BY t.id");
+        query.append(" GROUP BY t.id");
         
         return query.toString();
     }

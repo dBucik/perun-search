@@ -188,18 +188,19 @@ public class GroupDAOImpl implements GroupDAO {
         StringBuilder query = new StringBuilder();
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
-            query.append(" || ");
-            query.append("jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value)) AS group ");
+            query.append(" ||");
+            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
         }
-        query.append("FROM groups t ");
+        query.append(" AS group");
+        query.append(" FROM groups t");
         if (withAttrs) {
-            query.append("JOIN group_attr_values av ON av.group_id = t.id ");
-            query.append("JOIN attr_names an ON an.id = av.attr_id ");
+            query.append(" JOIN group_attr_values av ON av.group_id = t.id");
+            query.append(" JOIN attr_names an ON an.id = av.attr_id");
         }
         if (where != null) {
-            query.append(where).append(' ');
+            query.append(' ').append(where.trim());
         }
-        query.append("GROUP BY t.id");
+        query.append(" GROUP BY t.id");
         return query.toString();
     }
 
