@@ -1,9 +1,9 @@
-package cz.muni.ics.JDBCTemplates;
+package cz.muni.ics.JdbcTemplates;
 
 import cz.muni.ics.DAOs.ServiceDAO;
-import cz.muni.ics.mappers.AttributesToJsonMapper;
+import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.ServiceMapper;
-import cz.muni.ics.models.AttributePair;
+import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Service;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class ServiceJdbcTemplate implements ServiceDAO {
 
     private static final ServiceMapper MAPPER = new ServiceMapper();
-    private static final AttributesToJsonMapper ATTR_MAPPER = new AttributesToJsonMapper();
+    private static final AttributeMapper ATTR_MAPPER = new AttributeMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -37,9 +37,9 @@ public class ServiceJdbcTemplate implements ServiceDAO {
                 "FROM attr_names an RIGHT OUTER JOIN service_required_attrs av " +
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.service_id=?";
-        List<AttributePair> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
+        List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
         Map<String, String> attrMap = new HashMap<>();
-        for (AttributePair attr: attrs) {
+        for (Attribute attr: attrs) {
             attrMap.put(attr.getAttrName(), attr.getAttrValue());
         }
         service.setAttributes(new JSONObject(attrMap));
@@ -58,9 +58,9 @@ public class ServiceJdbcTemplate implements ServiceDAO {
                     "FROM attr_names an RIGHT OUTER JOIN service_required_attrs av " +
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.service_id=?";
-            List<AttributePair> attrs = jdbcTemplate.query(attrQuery, new Object[] {service.getId()}, ATTR_MAPPER);
+            List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {service.getId()}, ATTR_MAPPER);
             Map<String, String> attrMap = new HashMap<>();
-            for (AttributePair attr: attrs) {
+            for (Attribute attr: attrs) {
                 attrMap.put(attr.getAttrName(), attr.getAttrValue());
             }
             service.setAttributes(new JSONObject(attrMap));

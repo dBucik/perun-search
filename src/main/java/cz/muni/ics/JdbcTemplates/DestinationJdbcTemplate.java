@@ -1,7 +1,6 @@
-package cz.muni.ics.JDBCTemplates;
+package cz.muni.ics.JdbcTemplates;
 
 import cz.muni.ics.DAOs.DestinationDAO;
-import cz.muni.ics.mappers.AttributesToJsonMapper;
 import cz.muni.ics.mappers.DestinationMapper;
 import cz.muni.ics.models.Destination;
 import org.springframework.jdbc.core.JdbcTemplate;
