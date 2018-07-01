@@ -1,0 +1,15 @@
+package cz.muni.ics.models;
+
+public enum RelationType {
+
+    VO_EXT_SOURCE,
+    USER_FACILITY,
+    RESOURCE_SERVICE,
+    MEMBER_RESOURCE,
+    MEMBER_GROUP,
+    GROUP_RESOURCE,
+    GROUP_MEMBER,
+    GROUP_GROUP,
+    GROUP_EXT_SOURCE,
+    FACILITY_OWNER
+}
