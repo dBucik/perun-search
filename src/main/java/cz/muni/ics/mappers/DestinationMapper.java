@@ -10,7 +10,12 @@ public class DestinationMapper implements RowMapper<Destination> {
 
     @Override
     public Destination mapRow(ResultSet resultSet, int i) throws SQLException {
-        //todo
-        return null;
+        Destination dest = new Destination();
+
+        dest.setId(resultSet.getLong("id"));
+        dest.setName(resultSet.getString("name"));
+        dest.setDescription(resultSet.getString("dsc"));
+
+        return dest;
     }
 }

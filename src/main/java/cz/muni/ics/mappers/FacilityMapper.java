@@ -10,7 +10,12 @@ public class FacilityMapper implements RowMapper<Facility> {
 
     @Override
     public Facility mapRow(ResultSet resultSet, int i) throws SQLException {
-        //todo
-        return null;
+        Facility facility = new Facility();
+
+        facility.setId(resultSet.getLong("id"));
+        facility.setName(resultSet.getString("name"));
+        facility.setDescription(resultSet.getString("dsc"));
+
+        return facility;
     }
 }

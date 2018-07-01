@@ -11,7 +11,12 @@ public class ExtSourceMapper implements RowMapper<ExtSource> {
 
     @Override
     public ExtSource mapRow(ResultSet resultSet, int i) throws SQLException {
-        //todo
-        return null;
+        ExtSource es = new ExtSource();
+
+        es.setId(resultSet.getLong("id"));
+        es.setName(resultSet.getString("name"));
+        es.setType(resultSet.getString("type"));
+
+        return es;
     }
 }

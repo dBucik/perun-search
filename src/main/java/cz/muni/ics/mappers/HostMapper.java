@@ -10,7 +10,13 @@ public class HostMapper implements RowMapper<Host> {
 
     @Override
     public Host mapRow(ResultSet resultSet, int i) throws SQLException {
-        //todo
-        return null;
+        Host host = new Host();
+
+        host.setId(resultSet.getLong("id"));
+        host.setHostname(resultSet.getString("hostname"));
+        host.setDescription(resultSet.getString("dsc"));
+        host.setFacilityId(resultSet.getLong("facility_id"));
+
+        return host;
     }
 }

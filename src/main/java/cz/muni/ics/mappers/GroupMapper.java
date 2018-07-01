@@ -10,7 +10,14 @@ public class GroupMapper implements RowMapper<Group> {
 
     @Override
     public Group mapRow(ResultSet resultSet, int i) throws SQLException {
-        //todo
-        return null;
+        Group group = new Group();
+
+        group.setId(resultSet.getLong("id"));
+        group.setName(resultSet.getString("name"));
+        group.setDescription(resultSet.getString("dsc"));
+        group.setVoId(resultSet.getLong("vo_id"));
+        group.setParentGroupId(resultSet.getLong("parent_group_id"));
+
+        return group;
     }
 }

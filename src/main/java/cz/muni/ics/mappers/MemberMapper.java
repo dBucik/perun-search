@@ -10,7 +10,17 @@ public class MemberMapper implements RowMapper<Member> {
 
     @Override
     public Member mapRow(ResultSet resultSet, int i) throws SQLException {
-        //todo
-        return null;
+        Member member = new Member();
+
+        member.setId(resultSet.getLong("id"));
+        member.setVoId(resultSet.getLong("vo_id"));
+        member.setUserId(resultSet.getLong("user_id"));
+        if (resultSet.getString("sponsored").equals("f")) {
+            member.setSponsored(false);
+        } else {
+            member.setSponsored(true);
+        }
+
+        return member;
     }
 }
