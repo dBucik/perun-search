@@ -3,10 +3,10 @@ package cz.muni.ics.DAOs.impl;
 import cz.muni.ics.DAOs.VoDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.Utils;
-import cz.muni.ics.mappers.VoMapper;
+import cz.muni.ics.mappers.entities.VoMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
-import cz.muni.ics.models.Vo;
+import cz.muni.ics.models.entities.Vo;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -74,7 +74,7 @@ public class VoDAOImpl implements VoDAO {
     public List<Vo> getVosByShortName(String shortName, boolean withAttrs) {
         shortName = '%' + shortName + '%';
         String where = "WHERE upper(t.short_name) LIKE upper(?)";
-        String query = queryBuilder(where);
+        String query = queryBuilder(where, withAttrs);
 
         return jdbcTemplate.query(query, new Object[] {shortName}, MAPPER);
     }

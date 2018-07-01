@@ -3,7 +3,7 @@ package cz.muni.ics.DAOs;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
-import cz.muni.ics.models.UserExtSource;
+import cz.muni.ics.models.entities.UserExtSource;
 
 import javax.sql.DataSource;
 import java.util.List;

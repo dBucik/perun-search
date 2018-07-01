@@ -18,6 +18,9 @@ type ExtSource {
     id: Long!
     name: String!
     type: String!
+}
+
+type RichExtSource extends ExtSource {
     attributes: [Attribute!]!
 }
 
@@ -25,15 +28,21 @@ type Facility {
     id: Long!
     name: String!
     description: String!
+}
+
+type RichFacility extends Facility {
     attributes: [Attribute!]!
 }
 
 type Group {
     id: Long!
-   name: String!
-   description: String!
+    name: String!
+    description: String!
     parentGroupId: Long!
     voId: Long!
+}
+
+type RichGroup extends Group {
     attributes: [Attribute!]!
 }
 
@@ -42,6 +51,9 @@ type Host {
     description: String!
     hostname: String!
     facilityId: Long!
+}
+
+type RichHost extends Host {
     attributes: [Attribute!]!
 }
 
@@ -51,6 +63,9 @@ type Member {
     voId: Long!
     status: String!
     sponsored: Boolean!
+}
+
+type RichMember extends Member {
     attributes: [Attribute!]!
 }
 
@@ -60,6 +75,9 @@ type Resource {
     name: String!
     description: String!
     voId: Long!
+}
+
+type RichResource extends Resource {
     attributes: [Attribute!]!
 }
 
@@ -67,6 +85,9 @@ type Service {
     id: Long!
     name: String!
     ownerId: Long!
+}
+
+type RichService extends Service {
     attributes: [Attribute!]!
 }
 
@@ -79,6 +100,9 @@ type User {
     titleAfter: String!
     serviceAcc: Boolean!
     sponsoredAcc: Boolean!
+}
+
+type RichUser extends User {
     attributes: [Attribute!]!
 }
 
@@ -88,6 +112,9 @@ type UserExtSource {
     loginExt: String!
     extSourcesId: Long!
     loa: Short!
+}
+
+type RichUserExtSource {
     attributes: [Attribute!]!
 }
 
@@ -95,6 +122,9 @@ type Vo {
     id: Long
     name: String!
     shortName: String!
+}
+
+type RichVo extends Vo {
     attributes: [Attribute!]!
 }
 

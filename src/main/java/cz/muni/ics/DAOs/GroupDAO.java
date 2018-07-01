@@ -2,7 +2,7 @@ package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
-import cz.muni.ics.models.Group;
+import cz.muni.ics.models.entities.Group;
 import cz.muni.ics.models.InputAttribute;
 
 import javax.sql.DataSource;

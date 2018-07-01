@@ -3,6 +3,7 @@ package cz.muni.ics.models;
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
 import cz.muni.ics.DAOs.*;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
+import cz.muni.ics.models.entities.*;
 
 import java.util.List;
 

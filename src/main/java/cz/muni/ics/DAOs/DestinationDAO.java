@@ -1,7 +1,7 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Destination;
+import cz.muni.ics.models.entities.Destination;
 
 import javax.sql.DataSource;
 import java.util.List;

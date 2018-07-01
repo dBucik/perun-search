@@ -3,10 +3,10 @@ package cz.muni.ics.DAOs.impl;
 import cz.muni.ics.DAOs.MemberDAO;
 import cz.muni.ics.Utils;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.mappers.MemberMapper;
+import cz.muni.ics.mappers.entities.MemberMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
-import cz.muni.ics.models.Member;
+import cz.muni.ics.models.entities.Member;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,7 +44,7 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<Member> getMembers(boolean withAttrs) {
-        String query = queryBuilder(null);
+        String query = queryBuilder(null, withAttrs);
 
         return jdbcTemplate.query(query, MAPPER);
     }

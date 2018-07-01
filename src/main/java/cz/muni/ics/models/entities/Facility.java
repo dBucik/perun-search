@@ -1,11 +1,11 @@
-package cz.muni.ics.models;
+package cz.muni.ics.models.entities;
 
 /**
- * Destination entity from Perun.
+ * Facility entity from Perun.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class Destination {
+public class Facility {
 
     private Long id;
     private String name;
