@@ -10,6 +10,8 @@ import java.util.List;
 
 public class HostJdbcTemplate implements HostDAO {
 
+    private static final HostMapper MAPPER = new HostMapper();
+
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -23,7 +25,7 @@ public class HostJdbcTemplate implements HostDAO {
     public Host getHost(Long id) {
         //TODO query
         String query = "";
-        Host host = jdbcTemplate.queryForObject(query, new Object[] {id}, new HostMapper());
+        Host host = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         return host;
     }
 
@@ -31,7 +33,7 @@ public class HostJdbcTemplate implements HostDAO {
     public List<Host> getHosts() {
         //TODO query
         String query = "";
-        List<Host> hosts = jdbcTemplate.query(query, new Object[] {}, new HostMapper());
+        List<Host> hosts = jdbcTemplate.query(query, new Object[] {}, MAPPER);
         return hosts;
     }
 }

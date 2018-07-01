@@ -8,7 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class VoJdbcTemplate implements VoDAO{
+public class VoJdbcTemplate implements VoDAO {
+
+    private static final VoMapper MAPPER = new VoMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -23,16 +25,16 @@ public class VoJdbcTemplate implements VoDAO{
     public Vo getVo(Long id) {
         //todo QUERY
         String query = "SELECT * FROM vos WHERE id=?";
-        Vo vo = jdbcTemplate.queryForObject(query, new Object[] {id}, new VoMapper());
+        Vo vo = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         return vo;
 
     }
 
     @Override
     public List<Vo> getVos() {
-        String query = "SELECT * FROM vos";
         //todo QUERY
-        List<Vo> vos = jdbcTemplate.query(query, new VoMapper());
+        String query = "SELECT * FROM vos";
+        List<Vo> vos = jdbcTemplate.query(query, MAPPER);
         return vos;
     }
 }

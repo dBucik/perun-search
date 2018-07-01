@@ -5,12 +5,11 @@ import cz.muni.ics.models.ExtSource;
 import javax.sql.DataSource;
 import java.util.List;
 
-public interface UserExtSourceDAO {
+public interface ExtSourceDAO {
 
     void setDataSource(DataSource dataSource);
 
-    ExtSource getUserExtSource(Long id);
+    ExtSource getExtSource(Long id);
 
-    List<ExtSource> getUserExtSources();
-
+    List<ExtSource> getExtSources();
 }

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class UserExtSourceMapper implements RowMapper<ExtSource> {
+public class ExtSourceMapper implements RowMapper<ExtSource> {
 
     @Override
     public ExtSource mapRow(ResultSet resultSet, int i) throws SQLException {

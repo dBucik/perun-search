@@ -10,6 +10,8 @@ import java.util.List;
 
 public class GroupJdbcTemplate implements GroupDAO {
 
+    private static final GroupMapper MAPPER = new GroupMapper();
+
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -23,7 +25,7 @@ public class GroupJdbcTemplate implements GroupDAO {
     public Group getGroup(Long id) {
         //TODO query
         String query = "";
-        Group group = jdbcTemplate.queryForObject(query, new Object[] {id}, new GroupMapper());
+        Group group = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         return group;
     }
 
@@ -31,7 +33,7 @@ public class GroupJdbcTemplate implements GroupDAO {
     public List<Group> getGroups() {
         //TODO query;
         String query = "";
-        List<Group> groups = jdbcTemplate.query(query, new Object[] {}, new GroupMapper());
+        List<Group> groups = jdbcTemplate.query(query, new Object[] {}, MAPPER);
         return groups;
     }
 }

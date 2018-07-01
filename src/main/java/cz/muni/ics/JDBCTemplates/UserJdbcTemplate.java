@@ -10,6 +10,8 @@ import java.util.List;
 
 public class UserJdbcTemplate implements UserDAO {
 
+    private static final UserMapper MAPPER = new UserMapper();
+
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -23,7 +25,7 @@ public class UserJdbcTemplate implements UserDAO {
     public User getUser(Long id) {
         //TODO query
         String query = "";
-        User user = jdbcTemplate.queryForObject(query, new Object[] {id}, new UserMapper());
+        User user = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         return user;
     }
 
@@ -31,7 +33,7 @@ public class UserJdbcTemplate implements UserDAO {
     public List<User> getUsers() {
         //TODO query
         String query = "";
-        List<User> users = jdbcTemplate.query(query, new Object[] {}, new UserMapper());
+        List<User> users = jdbcTemplate.query(query, new Object[] {}, MAPPER);
         return users;
     }
 }

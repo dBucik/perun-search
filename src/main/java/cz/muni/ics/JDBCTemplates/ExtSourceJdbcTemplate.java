@@ -1,16 +1,16 @@
 package cz.muni.ics.JDBCTemplates;
 
-import cz.muni.ics.DAOs.UserExtSourceDAO;
-import cz.muni.ics.mappers.UserExtSourceMapper;
+import cz.muni.ics.DAOs.ExtSourceDAO;
+import cz.muni.ics.mappers.ExtSourceMapper;
 import cz.muni.ics.models.ExtSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.List;
 
-public class UserExtSourceJdbcTemplate implements UserExtSourceDAO {
+public class ExtSourceJdbcTemplate implements ExtSourceDAO {
 
-    private static final UserExtSourceMapper MAPPER = new UserExtSourceMapper();
+    private static final ExtSourceMapper MAPPER = new ExtSourceMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -22,18 +22,18 @@ public class UserExtSourceJdbcTemplate implements UserExtSourceDAO {
     }
 
     @Override
-    public ExtSource getUserExtSource(Long id) {
+    public ExtSource getExtSource(Long id) {
         //TODO query
         String query = "";
-        ExtSource ues = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
-        return ues;
+        ExtSource extSource = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
+        return extSource;
     }
 
     @Override
-    public List<ExtSource> getUserExtSources() {
+    public List<ExtSource> getExtSources() {
         //TODO query
         String query = "";
-        List<ExtSource> ueses = jdbcTemplate.query(query, new Object[] {}, MAPPER);
-        return ueses;
+        List<ExtSource> extSources = jdbcTemplate.query(query, new Object[] {}, MAPPER);
+        return extSources;
     }
 }

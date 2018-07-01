@@ -10,6 +10,8 @@ import java.util.List;
 
 public class ResourceJdbcTemplate implements ResourceDAO {
 
+    private static final ResourceMapper MAPPER = new ResourceMapper();
+
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -23,7 +25,7 @@ public class ResourceJdbcTemplate implements ResourceDAO {
     public Resource getResource(Long id) {
         //TODO query
         String query = "";
-        Resource resource = jdbcTemplate.queryForObject(query, new Object[] {id}, new ResourceMapper());
+        Resource resource = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         return resource;
     }
 
@@ -31,7 +33,7 @@ public class ResourceJdbcTemplate implements ResourceDAO {
     public List<Resource> getResources() {
         //TODO query
         String query = "";
-        List<Resource> resources = jdbcTemplate.query(query, new Object[] {}, new ResourceMapper());
+        List<Resource> resources = jdbcTemplate.query(query, new Object[] {}, MAPPER);
         return getResources();
     }
 }

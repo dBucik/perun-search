@@ -10,6 +10,8 @@ import java.util.List;
 
 public class MemberJdbcTemplate implements MemberDAO {
 
+    private static final MemberMapper MAPPER = new MemberMapper();
+
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -23,7 +25,7 @@ public class MemberJdbcTemplate implements MemberDAO {
     public Member getMember(Long id) {
         //TODO query
         String query = "";
-        Member member = jdbcTemplate.queryForObject(query, new Object[] {id}, new MemberMapper());
+        Member member = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         return member;
     }
 
@@ -31,7 +33,7 @@ public class MemberJdbcTemplate implements MemberDAO {
     public List<Member> getMembers() {
         //TODO query
         String query = "";
-        List<Member> members = jdbcTemplate.query(query, new Object[] {}, new MemberMapper());
+        List<Member> members = jdbcTemplate.query(query, new Object[] {}, MAPPER);
         return members;
     }
 }

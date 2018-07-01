@@ -10,6 +10,8 @@ import java.util.List;
 
 public class FacilityJdbcTemplate implements FacilityDAO {
 
+    private static final FacilityMapper MAPPER = new FacilityMapper();
+
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -23,7 +25,7 @@ public class FacilityJdbcTemplate implements FacilityDAO {
     public Facility getFacility(Long id) {
         //todo QUERY
         String query = "";
-        Facility facility = jdbcTemplate.queryForObject(query, new Object[] {id}, new FacilityMapper());
+        Facility facility = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         return facility;
     }
 
@@ -31,7 +33,7 @@ public class FacilityJdbcTemplate implements FacilityDAO {
     public List<Facility> getFacilities() {
         //todo QUERY
         String query = "";
-        List<Facility> facilities = jdbcTemplate.query(query, new Object[] {}, new FacilityMapper());
+        List<Facility> facilities = jdbcTemplate.query(query, new Object[] {}, MAPPER);
         return facilities;
     }
 }
