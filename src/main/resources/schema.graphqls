@@ -1,0 +1,12 @@
+type Vo {
+    id: Int
+    name: String!
+}
+
+type Query {
+    allVos: [Vo]
+}
+
+schema {
+    query: Query
+}
