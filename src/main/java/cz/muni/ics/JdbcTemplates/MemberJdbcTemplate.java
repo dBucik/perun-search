@@ -4,6 +4,7 @@ import cz.muni.ics.DAOs.MemberDAO;
 import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.MemberMapper;
 import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.Member;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,5 +60,41 @@ public class MemberJdbcTemplate implements MemberDAO {
         }
 
         return members;
+    }
+
+    @Override
+    public List<Attribute> getMemberAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Member> getMembersOfUser(Long userId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Member> getMembersOfVo(Long voId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Member> getMembersByStatus(String status) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Member> getMembersBySponsored(boolean isSponsored) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

@@ -5,6 +5,7 @@ import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.ExtSourceMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.ExtSource;
+import cz.muni.ics.models.InputAttribute;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -44,6 +45,12 @@ public class ExtSourceJdbcTemplate implements ExtSourceDAO {
     }
 
     @Override
+    public ExtSource getExtSourceByName(String name) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
     public List<ExtSource> getExtSources() {
         //TODO better query
         String query = "SELECT * FROM ext_sources";
@@ -58,5 +65,17 @@ public class ExtSourceJdbcTemplate implements ExtSourceDAO {
             extSource.setAttributes(attrs);
         }
         return extSources;
+    }
+
+    @Override
+    public ExtSource getExtSourceAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<ExtSource> getExtSourcesByAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

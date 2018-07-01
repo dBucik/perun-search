@@ -12,4 +12,6 @@ public interface DestinationDAO {
     Destination getDestination(Long id);
 
     List<Destination> getDestinations();
+
+    Destination getDestinationByName(String name);
 }

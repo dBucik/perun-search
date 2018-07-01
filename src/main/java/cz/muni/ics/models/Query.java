@@ -60,7 +60,7 @@ public class Query implements GraphQLRootResolver {
 
     public Member getMember(Long id) { return memberJdbcTemplate.getMember(id); }
 
-    public List<Member> getMembers() { return memberJdbcTemplate.getMembers();}
+    public List<Member> getAllMembers() { return memberJdbcTemplate.getMembers();}
 
     public Resource getResource(Long id) { return resourceJdbcTemplate.getResource(id); }
 
@@ -78,9 +78,36 @@ public class Query implements GraphQLRootResolver {
 
     public List<UserExtSource> getAllUserExtSources() { return userExtSourceJdbcTemplate.getUserExtSources(); }
 
+
+    /* VO */
+
+    /**
+     * Get vo specified by id.
+     * @param id id of VO
+     * @return Found VO or null if VO with such id doesn't exist
+     */
     public Vo getVo(Long id) { return voJdbcTemplate.getVo(id); }
 
+    /**
+     * Get all VOs.
+     * @return List of VOs
+     */
     public List<Vo> getAllVos() {
         return voJdbcTemplate.getVos();
     }
+
+    /**
+     * Get VOs by specifying their attributes. Uses exact matching of attributes.
+     * @param attrs attributes in format name:value that VO has to have
+     * @return List of VOs, null if no VOs were found.
+     */
+    public List<Vo> getVosByAttrs(List<InputAttribute> attrs) { return voJdbcTemplate.getVosByAttrs(attrs); }
+
+    /**
+     * Get attributes of VO specified by id.
+     * @param id id specifying the VO
+     * @param attrNames names of attributes to be displayed
+     * @return List of attributes, null if no attributes were found.
+     */
+    public List<Attribute> getVoAttrs(Long id, List<String> attrNames) { return voJdbcTemplate.getVoWithAttrs(id, attrNames); }
 }

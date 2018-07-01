@@ -5,6 +5,7 @@ import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.HostMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Host;
+import cz.muni.ics.models.InputAttribute;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -25,6 +26,12 @@ public class HostJdbcTemplate implements HostDAO {
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public Host getHostByHostname(String hostname) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
@@ -58,5 +65,17 @@ public class HostJdbcTemplate implements HostDAO {
             host.setAttributes(attrs);
         }
         return hosts;
+    }
+
+    @Override
+    public List<Attribute> getHostAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

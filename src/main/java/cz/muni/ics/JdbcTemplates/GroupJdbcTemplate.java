@@ -5,6 +5,7 @@ import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.GroupMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Group;
+import cz.muni.ics.models.InputAttribute;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -44,6 +45,12 @@ public class GroupJdbcTemplate implements GroupDAO {
     }
 
     @Override
+    public Group getGroupByName(String name) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
     public List<Group> getGroups() {
         //TODO query;
         String query = "SELECT * FROM groups";
@@ -59,5 +66,29 @@ public class GroupJdbcTemplate implements GroupDAO {
         }
 
         return groups;
+    }
+
+    @Override
+    public List<Attribute> getGroupAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Group> getGroupsWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Group getParentGroup(Long childGroupId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Group> getGroupsOfVo(Long voId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

@@ -45,6 +45,18 @@ public class VoJdbcTemplate implements VoDAO {
     }
 
     @Override
+    public Vo getVoByName(String name) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Vo getVoByShortName(String shortName) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
     public List<Vo> getVos() {
         //TODO better query
         String query = "SELECT * FROM vos";
@@ -63,29 +75,16 @@ public class VoJdbcTemplate implements VoDAO {
         return vos;
     }
 
-    public List<Vo> getVosByAttrs(List<InputAttribute> inputAttributes) {
-        List<Vo> vos = getVos();
-        if (vos.isEmpty()) {
-            return null;
-        }
-
-        List<Attribute> attrs = convertAttrsFromInput(inputAttributes);
-        vos.removeIf(vo -> {
-            assert attrs != null;
-            return !vo.getAttributes().containsAll(attrs);
-        });
-
-        return vos;
+    @Override
+    public List<Attribute> getVoAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 
-    public List<Attribute> getVoWithAttrs(Long id, List<String> attrNames) {
-        Vo vo = getVo(id);
-        if (vo == null) {
-            return null;
-        }
-
-        vo.getAttributes().removeIf(attribute -> !attrNames.contains(attribute.getKey()));
-        return vo.getAttributes();
+    @Override
+    public List<Vo> getVosWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     private List<Attribute> convertAttrsFromInput(List<InputAttribute> input) {

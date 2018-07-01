@@ -29,6 +29,12 @@ public class DestinationJdbcTemplate implements DestinationDAO {
     }
 
     @Override
+    public Destination getDestinationByName(String name) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
     public List<Destination> getDestinations() {
         String query = "SELECT * FROM destinations";
         List<Destination>  destinations = jdbcTemplate.query(query, new Object[] {}, MAPPER);

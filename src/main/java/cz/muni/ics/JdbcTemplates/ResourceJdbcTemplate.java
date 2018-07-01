@@ -4,6 +4,7 @@ import cz.muni.ics.DAOs.ResourceDAO;
 import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.ResourceMapper;
 import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.Resource;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,6 +45,12 @@ public class ResourceJdbcTemplate implements ResourceDAO {
     }
 
     @Override
+    public Resource getResourceByName(String name) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
     public List<Resource> getResources() {
         //TODO query
         String query = "SELECT * FROM resources";
@@ -59,5 +66,29 @@ public class ResourceJdbcTemplate implements ResourceDAO {
         }
 
         return resources;
+    }
+
+    @Override
+    public List<Attribute> getResourceAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Resource> getResourcesWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Resource> getResourcesOfFacility(Long facilityId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Resource> getResourcesOfVo(Long voId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

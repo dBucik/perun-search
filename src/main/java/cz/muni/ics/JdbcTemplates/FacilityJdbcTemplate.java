@@ -5,6 +5,7 @@ import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.FacilityMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Facility;
+import cz.muni.ics.models.InputAttribute;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -44,6 +45,12 @@ public class FacilityJdbcTemplate implements FacilityDAO {
     }
 
     @Override
+    public Facility getFacilityByName(String name) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
     public List<Facility> getFacilities() {
         //TODO better query
         String query = "SELECT * FROM facilities";
@@ -59,5 +66,17 @@ public class FacilityJdbcTemplate implements FacilityDAO {
         }
 
         return facilities;
+    }
+
+    @Override
+    public List<Attribute> getFacilityAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

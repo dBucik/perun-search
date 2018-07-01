@@ -4,6 +4,7 @@ import cz.muni.ics.DAOs.ServiceDAO;
 import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.ServiceMapper;
 import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.Service;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,6 +45,12 @@ public class ServiceJdbcTemplate implements ServiceDAO {
     }
 
     @Override
+    public Service getServiceByName(String name) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
     public List<Service> getServices() {
         //TODO better query
         String query = "SELECT * FROM services";
@@ -59,5 +66,23 @@ public class ServiceJdbcTemplate implements ServiceDAO {
         }
 
         return services;
+    }
+
+    @Override
+    public List<Attribute> getServiceAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Service> getServicesWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Service> getServicesOfOwner(Long ownerId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

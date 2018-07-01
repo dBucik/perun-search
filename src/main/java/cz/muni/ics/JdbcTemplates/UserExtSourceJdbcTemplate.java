@@ -4,6 +4,7 @@ import cz.muni.ics.DAOs.UserExtSourceDAO;
 import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.UserExtSourceMapper;
 import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.UserExtSource;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -57,5 +58,35 @@ public class UserExtSourceJdbcTemplate implements UserExtSourceDAO {
             ues.setAttributes(attrs);
         }
         return ueses;
+    }
+
+    @Override
+    public List<Attribute> getUserExtSourceAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<UserExtSource> getUserExtSourcesOfUser(Long userId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

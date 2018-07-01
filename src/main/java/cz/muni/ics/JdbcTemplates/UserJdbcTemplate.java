@@ -4,6 +4,7 @@ import cz.muni.ics.DAOs.UserDAO;
 import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.UserMapper;
 import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.User;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,5 +60,35 @@ public class UserJdbcTemplate implements UserDAO {
         }
 
         return users;
+    }
+
+    @Override
+    public List<Attribute> getUserAttrs(Long id, List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<User> getUsersWithAttrs(List<InputAttribute> attrs) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<User> getUsersByName(String titleBefore, String firstName, String middleName, String lastName, String titleAfter) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<User> getUsersByUserAcc(boolean isuserAcc) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        //TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }
