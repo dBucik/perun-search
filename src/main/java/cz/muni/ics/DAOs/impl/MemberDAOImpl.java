@@ -56,8 +56,8 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichMembersWithAttrs(attrs));
+    public List<Member> getMembersHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichMembersHavingAttrs(attrs));
     }
 
     @Override
@@ -117,7 +117,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<RichMember> getRichMembersWithAttrs(List<InputAttribute> attrs) {
+    public List<RichMember> getRichMembersHavingAttrs(List<InputAttribute> attrs) {
         //TODO improve
         List<RichMember> members = getRichMembers();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

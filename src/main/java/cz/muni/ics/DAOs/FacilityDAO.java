@@ -35,20 +35,20 @@ public interface FacilityDAO {
     List<Facility> getFacilities();
 
     /**
-     * Get Facilities that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of Facilities
-     * @return List of Facilities found, empty list if nothing has been found.
-     */
-    List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs);
-
-    /**
      * Get Facilities with NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of Facility
      * @return List of Facilities, empty list if nothing has been found.
      */
     List<Facility> getFacilitiesByName(String name);
+
+    /**
+     * Get Facilities that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Facilities
+     * @return List of Facilities found, empty list if nothing has been found.
+     */
+    List<Facility> getFacilitiesHavingAttrs(List<InputAttribute> attrs);
 
     /* RICH_FACILITY */
 
@@ -67,20 +67,20 @@ public interface FacilityDAO {
     List<RichFacility> getRichFacilities();
 
     /**
-     * Get RichFacilities that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of RichFacilities
-     * @return List of RichFacilities found, empty list if nothing has been found.
-     */
-    List<RichFacility> getRichFacilitiesByAttrs(List<InputAttribute> attrs);
-
-    /**
      * Get RichFacilities with NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of RichFacility
      * @return List of RichFacilities, empty list if nothing has been found.
      */
     List<RichFacility> getRichFacilitiesByName(String name);
+
+    /**
+     * Get RichFacilities that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichFacilities
+     * @return List of RichFacilities found, empty list if nothing has been found.
+     */
+    List<RichFacility> getRichFacilitiesHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

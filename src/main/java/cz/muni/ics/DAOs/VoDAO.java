@@ -12,9 +12,9 @@ import java.util.List;
 public interface VoDAO {
 
     void setDataSource(DataSource ds);
-    
+
     /* VO */
-    
+
     /**
      * Get VO specified by ID.
      * @param id id of VO
@@ -22,6 +22,12 @@ public interface VoDAO {
      * @throws DatabaseIntegrityException More than one VO with same ID found.
      */
     Vo getVo(Long id) throws DatabaseIntegrityException;
+
+    /**
+     * Get all VOs.
+     * @return List of VOs, empty list if nothing has been found.
+     */
+    List<Vo> getVos();
 
     /**
      * Get VO with names like specified parameter.
@@ -49,18 +55,12 @@ public interface VoDAO {
     List<Vo> getVosByShortName(String shortName);
 
     /**
-     * Get all VOs.
-     * @return List of VOs, empty list if nothing has been found.
-     */
-    List<Vo> getVos();
-
-    /**
      * Get VOs that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of VOs
      * @return List of VOs found, empty list if nothing has been found.
      */
-    List<Vo> getVosWithAttrs(List<InputAttribute> attrs);
+    List<Vo> getVosHavingAttrs(List<InputAttribute> attrs);
     
     /* RICH_VO */
 
@@ -71,6 +71,12 @@ public interface VoDAO {
      * @throws DatabaseIntegrityException More than one RichVO with same ID found.
      */
     RichVo getRichVo(Long id) throws DatabaseIntegrityException;
+
+    /**
+     * Get all RichVOs.
+     * @return List of RichVOs, empty list if nothing has been found.
+     */
+    List<RichVo> getRichVos();
 
     /**
      * Get RichVO with names like specified parameter.
@@ -98,18 +104,12 @@ public interface VoDAO {
     List<RichVo> getRichVosByShortName(String shortName);
 
     /**
-     * Get all RichVOs.
-     * @return List of RichVOs, empty list if nothing has been found.
-     */
-    List<RichVo> getRichVos();
-
-    /**
      * Get RichVOs that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of RichVOs
      * @return List of RichVOs found, empty list if nothing has been found.
      */
-    List<RichVo> getRichVosWithAttrs(List<InputAttribute> attrs);    
+    List<RichVo> getRichVosHavingAttrs(List<InputAttribute> attrs);
     
     /* ATTRIBUTES */
     

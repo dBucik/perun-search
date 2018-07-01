@@ -72,8 +72,8 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichExtSourcesWithAttrs(attrs));
+    public List<ExtSource> getExtSourcesHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichExtSourcesHavingAttrs(attrs));
     }
 
     /* RICH_EXT_SOURCE */
@@ -117,7 +117,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public List<RichExtSource> getRichExtSourcesWithAttrs(List<InputAttribute> attrs) {
+    public List<RichExtSource> getRichExtSourcesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
         List<RichExtSource> extSources = getRichExtSources();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

@@ -64,8 +64,8 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<Group> getGroupsWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichGroupsWithAttrs(attrs));
+    public List<Group> getGroupsHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichGroupsHavingAttrs(attrs));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<RichGroup> getRichGroupsWithAttrs(List<InputAttribute> attrs) {
+    public List<RichGroup> getRichGroupsHavingAttrs(List<InputAttribute> attrs) {
         List<RichGroup> groups = getRichGroups();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
 

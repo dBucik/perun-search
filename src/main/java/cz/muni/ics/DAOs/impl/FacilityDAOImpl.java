@@ -55,8 +55,8 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichFacilitiesByAttrs(attrs));
+    public List<Facility> getFacilitiesHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichFacilitiesHavingAttrs(attrs));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public List<RichFacility> getRichFacilitiesByAttrs(List<InputAttribute> attrs) {
+    public List<RichFacility> getRichFacilitiesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
         List<RichFacility> facilities = getRichFacilities();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

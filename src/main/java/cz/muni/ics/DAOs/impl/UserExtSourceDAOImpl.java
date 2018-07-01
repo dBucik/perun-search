@@ -52,8 +52,8 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     }
 
     @Override
-    public List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichUserExtSourcesWithAttrs(attrs));
+    public List<UserExtSource> getUserExtSourcesHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichUserExtSourcesHavingAttrs(attrs));
     }
 
     @Override
@@ -104,7 +104,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     }
 
     @Override
-    public List<RichUserExtSource> getRichUserExtSourcesWithAttrs(List<InputAttribute> attrs) {
+    public List<RichUserExtSource> getRichUserExtSourcesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
         List<RichUserExtSource> userExtSources = getRichUserExtSources();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

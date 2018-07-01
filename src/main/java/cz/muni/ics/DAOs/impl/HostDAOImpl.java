@@ -64,8 +64,8 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichHostsWithAttrs(attrs));
+    public List<Host> getHostsHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichHostsHavingAttrs(attrs));
     }
 
     /* RICH_HOST */
@@ -101,7 +101,7 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public List<RichHost> getRichHostsWithAttrs(List<InputAttribute> attrs) {
+    public List<RichHost> getRichHostsHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
         List<RichHost> hosts = getRichHosts();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

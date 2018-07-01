@@ -54,8 +54,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsersWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichUsersWithAttrs(attrs));
+    public List<User> getUsersHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichUsersHavingAttrs(attrs));
     }
 
     @Override
@@ -114,7 +114,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<RichUser> getRichUsersWithAttrs(List<InputAttribute> attrs) {
+    public List<RichUser> getRichUsersHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
         List<RichUser> users = getRichUsers();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

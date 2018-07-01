@@ -83,8 +83,8 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<Vo> getVosWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichVosWithAttrs(attrs));
+    public List<Vo> getVosHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichVosHavingAttrs(attrs));
     }
 
     /* RICH_VO */
@@ -140,7 +140,7 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<RichVo> getRichVosWithAttrs(List<InputAttribute> attrs) {
+    public List<RichVo> getRichVosHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
         List<RichVo> vos = getRichVos();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

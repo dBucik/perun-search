@@ -175,168 +175,188 @@ type RichVo {
 type Query {
     # DESTINATION
     getDestination(id: Long!): Destination
-    getAllDestinations: [Destination!]!
+    getDestinations: [Destination!]!
     getDestinationsByName(name: String!): [Destination!]!
 
     # EXT_SOURCE
     getExtSource(id: Long!): ExtSource
     getExtSources: [ExtSource!]!
-    getExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
     getExtSourcesByName(name: String!): [ExtSource!]!
     getExtSourcesByType(type: String!): [ExtSource!]!
-    getExtSourcesWithAttrs(attrs: [InputAttribute!]!): [ExtSource!]!
+    getExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [ExtSource!]!
 
     # RICH_EXT_SOURCE
     getRichExtSource(id: Long!): RichExtSource
     getRichExtSources: [RichExtSource!]!
     getRichExtSourcesByName(name: String!): [RichExtSource!]!
     getRichExtSourcesByType(type: String!): [RichExtSource!]!
-    getRichExtSourcesWithAttrs(attrs: [InputAttribute!]!): [RichExtSource!]!
+    getRichExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichExtSource!]!
+
+    # EXT_SOURCE_ATTRS
+    getExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 
     # FACILITY
     getFacility(id: Long!): Facility
     getFacilities: [Facility!]!
-    getFacilityAttrs(id: Long!, attrs: [String!]): [Attribute!]!
-    getFacilitiesByAttrs(attrs: [InputAttribute!]!): [Facility!]!
     getFacilitiesByName(name: String!): [Facility!]!
+    getFacilitiesHavingAttrs(attrs: [InputAttribute!]!): [Facility!]!
 
     # RICH_FACILITY
     getRichFacility(id: Long!): RichFacility
     getRichFacilities: [RichFacility!]!
-    getRichFacilitiesByAttrs(attrs: [InputAttribute!]!): [RichFacility!]!
     getRichFacilitiesByName(name: String!): [RichFacility!]!
+    getRichFacilitiesHavingAttrs(attrs: [InputAttribute!]!): [RichFacility!]!
+
+    # FACILITY_ATTRS
+    getFacilityAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 
     # GROUP
     getGroup(id: Long!): Group
-    getGroupsByName(name: String!): [Group!]!
     getGroups: [Group!]!
-    getGroupAttrs(id: Long!, attrs: [String!]): [Attribute!]!
-    getGroupsWithAttrs(attrs: [InputAttribute!]!): [Group!]!
+    getGroupsByName(name: String!): [Group!]!
     getParentGroup(childGroupId: Long!): Group!
     getGroupsOfVo(voId: Long!): [Group!]!
+    getGroupsHavingAttrs(attrs: [InputAttribute!]!): [Group!]!
 
     # RICH_GROUP
     getRichGroup(id: Long!): RichGroup
-    getRichGroupsByName(name: String!): [RichGroup!]!
     getRichGroups: [RichGroup!]!
-    getRichGroupsWithAttrs(attrs: [InputAttribute!]!): [RichGroup!]!
+    getRichGroupsByName(name: String!): [RichGroup!]!
     getParentRichGroup(childRichGroupId: Long!): RichGroup!
     getRichGroupsOfVo(voId: Long!): [RichGroup!]!
+    getRichGroupsHavingAttrs(attrs: [InputAttribute!]!): [RichGroup!]!
+
+    # GROUP_ATTRS
+    getGroupAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 
     # HOST
     getHost(id: Long!): Host
-    getHostsByHostname(hostname: String!): [Host!]!
     getHosts: [Host!]!
-    getHostAttrs(id: Long!, attrs: [String!]): [Attribute!]!
-    getHostsWithAttrs(attrs: [InputAttribute!]!): [Host!]!
+    getHostsByHostname(hostname: String!): [Host!]!
+    getHostsHavingAttrs(attrs: [InputAttribute!]!): [Host!]!
 
     # RICH_HOST
     getRichHost(id: Long!): RichHost
-    getRichHostsByHostname(hostname: String!): [RichHost!]!
     getRichHosts: [RichHost!]!
-    getRichHostsWithAttrs(attrs: [InputAttribute!]!): [RichHost!]!
+    getRichHostsByHostname(hostname: String!): [RichHost!]!
+    getRichHostsHavingAttrs(attrs: [InputAttribute!]!): [RichHost!]!
+
+    # HOST_ATTRS
+    getHostAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 
     # MEMBER
     getMember(id: Long!): Member
     getMembers: [Member!]!
-    getMemberAttrs(id: Long!, attrs: [String!]!): [Attribute!]!
-    getMembersWithAttrs(attrs: [InputAttribute!]!): [Member!]!
     getMembersOfUser(userId: Long!): [Member!]!
     getMembersOfVo(voId: Long!): [Member!]!
     getMembersByStatus(status: String!): [Member!]!
     getMembersBySponsored(isSponsored: Boolean!): [Member!]!
+    getMembersHavingAttrs(attrs: [InputAttribute!]!): [Member!]!
 
     # RICH_MEMBER
     getRichMember(id: Long!): RichMember
     getRichMembers: [RichMember!]!
-    getRichMembersWithAttrs(attrs: [InputAttribute!]!): [RichMember!]!
     getRichMembersOfUser(userId: Long!): [RichMember!]!
     getRichMembersOfVo(voId: Long!): [RichMember!]!
     getRichMembersByStatus(status: String!): [RichMember!]!
     getRichMembersBySponsored(isSponsored: Boolean!): [RichMember!]!
+    getRichMembersHavingAttrs(attrs: [InputAttribute!]!): [RichMember!]!
+
+    # MEMBER_ATTRS
+    getMemberAttrs(id: Long!, attrs: [String!]!): [Attribute!]!
 
     # RESOURCE
     getResource(id: Long!): Resource
-    getResourcesByName(name: String!): [Resource!]!
     getResources: [Resource!]!
-    getResourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
-    getResourcesWithAttrs(attrs: [InputAttribute!]!): [Resource!]!
+    getResourcesByName(name: String!): [Resource!]!
     getResourcesOfFacility(facilityId: Long!): [Resource!]!
     getResourcesOfVo(voId: Long!): [Resource!]!
+    getResourcesHavingAttrs(attrs: [InputAttribute!]!): [Resource!]!
 
     # RICH_RESOURCE
     getRichResource(id: Long!): RichResource
-    getRichResourcesByName(name: String!): [RichResource!]!
     getRichResources: [RichResource!]!
-    getRichResourcesWithAttrs(attrs: [InputAttribute!]!): [RichResource!]!
+    getRichResourcesByName(name: String!): [RichResource!]!
     getRichResourcesOfFacility(facilityId: Long!): [RichResource!]!
     getRichResourcesOfVo(voId: Long!): [RichResource!]!
+    getRichResourcesHavingAttrs(attrs: [InputAttribute!]!): [RichResource!]!
+
+    # RESOURCE_ATTRS
+    getResourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 
     # SERVICE
     getService(id: Long!): Service
-    getServicesByName(name: String!): [Service!]!
     getServices: [Service!]!
-    getServiceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
-    getServicesWithAttrs(attrs: [InputAttribute!]!): [Service!]!
+    getServicesByName(name: String!): [Service!]!
     getServicesOfOwner(ownerId: Long!): [Service!]!
+    getServicesHavingAttrs(attrs: [InputAttribute!]!): [Service!]!
 
     # RICH_SERVICE
     getRichService(id: Long!): RichService
-    getRichServicesByName(name: String!): [RichService!]!
     getRichServices: [RichService!]!
-    getRichServicesWithAttrs(attrs: [InputAttribute!]!): [RichService!]!
+    getRichServicesByName(name: String!): [RichService!]!
     getRichServicesOfOwner(ownerId: Long!): [RichService!]!
+    getRichServicesHavingAttrs(attrs: [InputAttribute!]!): [RichService!]!
+
+    # SERVICE_ATTRS
+    getServiceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 
     # USER
     getUser(id: Long!): User
     getUsers: [User!]!
-    getUserAttrs(id: Long, attrs: [String!]): [Attribute!]!
-    getUsersWithAttrs(attrs: [InputAttribute!]!): [User!]!
     getUsersByName(titleBefore: String, firstName: String, middleName: String, lastName: String, titleAfter: String): [User!]!
     getUsersByServiceAcc(isServiceAcc: Boolean): [User!]!
     getUsersBySponsoredAcc(isSponsoredAcc: Boolean): [User!]!
+    getUsersHavingAttrs(attrs: [InputAttribute!]!): [User!]!
 
     # RICH_USER
     getRichUser(id: Long!): RichUser
     getRichUsers: [RichUser!]!
-    getRichUsersWithAttrs(attrs: [InputAttribute!]!): [RichUser!]!
     getRichUsersByName(titleBefore: String, firstName: String, middleName: String, lastName: String, titleAfter: String): [RichUser!]!
     getRichUsersByServiceAcc(isServiceAcc: Boolean): [RichUser!]!
     getRichUsersBySponsoredAcc(isSponsoredAcc: Boolean): [RichUser!]!
+    getRichUsersHavingAttrs(attrs: [InputAttribute!]!): [RichUser!]!
+
+    # USER_ATTRS
+    getUserAttrs(id: Long, attrs: [String!]): [Attribute!]!
 
     # USER_EXT_SOURCE
     getUserExtSource(id: Long!): UserExtSource
     getUserExtSources: [UserExtSource!]!
-    getUserExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
-    getUserExtSourcesWithAttrs(attrs: [InputAttribute!]!): [UserExtSource!]!
     getUserExtSourcesOfUser(userId: Long!): [UserExtSource!]!
     getUserExtSourcesOfExtSource(extSourceId: Long!): [UserExtSource!]!
     getUserExtSourcesByLoginExt(loginExt: String!): [UserExtSource!]!
+    getUserExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [UserExtSource!]!
 
     # RICH_USER_EXT_SOURCE
     getRichUserExtSource(id: Long!): RichUserExtSource
     getRichUserExtSources: [RichUserExtSource!]!
-    getRichUserExtSourcesWithAttrs(attrs: [InputAttribute!]!): [RichUserExtSource!]!
     getRichUserExtSourcesOfUser(userId: Long!): [RichUserExtSource!]!
     getRichUserExtSourcesOfExtSource(extSourceId: Long!): [RichUserExtSource!]!
     getRichUserExtSourcesByLoginExt(loginExt: String!): [RichUserExtSource!]!
+    getRichUserExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichUserExtSource!]!
+
+    # USER_EXT_SOURCE_ATTRS
+    getUserExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 
     # VO
     getVo(id: Long!): Vo
+    getVos: [Vo!]
     getVosByName(name: String!): [Vo!]!
     getVoByShortName(shortName: String!): Vo
     getVosByShortName(shortName: String!): [Vo!]!
-    getVos: [Vo!]
-    getVoAttrs(id: Long!, attrs: [String!]): [Attribute!]!
-    getVosWithAttrs(attrs: [InputAttribute!]!): [Vo!]!
+    getVosHavingAttrs(attrs: [InputAttribute!]!): [Vo!]!
 
     # RICH_VO
     getRichVo(id: Long!): RichVo
+    getRichVos: [RichVo!]
     getRichVosByName(name: String!): [RichVo!]!
     getRichVoByShortName(shortName: String!): RichVo
     getRichVosByShortName(shortName: String!): [RichVo!]!
-    getRichVos: [RichVo!]
-    getRichVosWithAttrs(attrs: [InputAttribute!]!): [RichVo!]!
+    getRichVosHavingAttrs(attrs: [InputAttribute!]!): [RichVo!]!
+
+    # VO_ATTRS
+    getVoAttrs(id: Long!, attrs: [String!]): [Attribute!]!
 }
 
 schema {

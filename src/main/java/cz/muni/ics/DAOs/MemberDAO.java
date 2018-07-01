@@ -30,13 +30,6 @@ public interface MemberDAO {
     List<Member> getMembers();
 
     /**
-     * Get Members that have specified attributes. (Exact matching used)
-     * @param attrs attributes of Members
-     * @return List of Members found, empty list if nothing has been found.
-     */
-    List<Member> getMembersWithAttrs(List<InputAttribute> attrs);
-
-    /**
      * Get Members of user specified by ID.
      * @param userId id of user
      * @return List of Members, empty list if nothing has been found.
@@ -63,6 +56,13 @@ public interface MemberDAO {
      * @return List of Members, empty list if nothing has been found.
      */
     List<Member> getMembersBySponsored(boolean isSponsored);
+
+    /**
+     * Get Members that have specified attributes. (Exact matching used)
+     * @param attrs attributes of Members
+     * @return List of Members found, empty list if nothing has been found.
+     */
+    List<Member> getMembersHavingAttrs(List<InputAttribute> attrs);
     
     /* RICH_MEMBER*/
 
@@ -79,13 +79,6 @@ public interface MemberDAO {
      * @return List of RichMembers, null if nothing has been found.
      */
     List<RichMember> getRichMembers();
-
-    /**
-     * Get RichMembers that have specified attributes. (Exact matching used)
-     * @param attrs attributes of RichMembers
-     * @return List of RichMembers found, empty list if nothing has been found.
-     */
-    List<RichMember> getRichMembersWithAttrs(List<InputAttribute> attrs);
 
     /**
      * Get RichMembers of user specified by ID.
@@ -114,6 +107,13 @@ public interface MemberDAO {
      * @return List of RichMembers, empty list if nothing has been found.
      */
     List<RichMember> getRichMembersBySponsored(boolean isSponsored);
+
+    /**
+     * Get RichMembers that have specified attributes. (Exact matching used)
+     * @param attrs attributes of RichMembers
+     * @return List of RichMembers found, empty list if nothing has been found.
+     */
+    List<RichMember> getRichMembersHavingAttrs(List<InputAttribute> attrs);
     
     /* ATTRIBUTES */
     

@@ -61,8 +61,8 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<Service> getServicesWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichServicesWithAttrs(attrs));
+    public List<Service> getServicesHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichServicesHavingAttrs(attrs));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<RichService> getRichServicesWithAttrs(List<InputAttribute> attrs) {
+    public List<RichService> getRichServicesHavingAttrs(List<InputAttribute> attrs) {
         //TODO improve
         List<RichService> services = getRichServices();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);

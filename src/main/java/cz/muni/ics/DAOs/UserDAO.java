@@ -30,14 +30,6 @@ public interface UserDAO {
     List<User> getUsers();
 
     /**
-     * Get Users that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of Users
-     * @return List of Users found, empty list if nothing has been found.
-     */
-    List<User> getUsersWithAttrs(List<InputAttribute> attrs);
-
-    /**
      * Get Users with NAME like specified params.
      * (LIKE operator used, comparing ignores case)
      * @param titleBefore title before the name
@@ -63,7 +55,15 @@ public interface UserDAO {
      * @return List of Users found, empty list if nothing has been found.
      */
     List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc);
-    
+
+    /**
+     * Get Users that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Users
+     * @return List of Users found, empty list if nothing has been found.
+     */
+    List<User> getUsersHavingAttrs(List<InputAttribute> attrs);
+
     /* RICH_USER */
 
     /**
@@ -79,14 +79,6 @@ public interface UserDAO {
      * @return List of RichUsers, empty list if nothing has been found.
      */
     List<RichUser> getRichUsers();
-
-    /**
-     * Get RichUsers that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of RichUsers
-     * @return List of RichUsers found, empty list if nothing has been found.
-     */
-    List<RichUser> getRichUsersWithAttrs(List<InputAttribute> attrs);
 
     /**
      * Get RichUsers with NAME like specified params.
@@ -114,7 +106,15 @@ public interface UserDAO {
      * @return List of RichUsers found, empty list if nothing has been found.
      */
     List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc);
-    
+
+    /**
+     * Get RichUsers that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichUsers
+     * @return List of RichUsers found, empty list if nothing has been found.
+     */
+    List<RichUser> getRichUsersHavingAttrs(List<InputAttribute> attrs);
+
     
     /* ATTRIBUTES */
 

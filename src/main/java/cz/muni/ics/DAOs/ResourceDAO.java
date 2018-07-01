@@ -24,26 +24,18 @@ public interface ResourceDAO {
     Resource getResource(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get Resource with NAME like specified parameter.
-     * (Operator LIKE used, comparing ignores case)
-     * @param name name of Resource
-     * @return List of Resources, empty list if nothing has been found.
-     */
-    List<Resource> getResourcesByName(String name);
-
-    /**
      * Get all Resources.
      * @return List of Resources, empty list if nothing has been found.
      */
     List<Resource> getResources();
 
     /**
-     * Get Resources that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of Resources
+     * Get Resource with NAME like specified parameter.
+     * (Operator LIKE used, comparing ignores case)
+     * @param name name of Resource
      * @return List of Resources, empty list if nothing has been found.
      */
-    List<Resource> getResourcesWithAttrs(List<InputAttribute> attrs);
+    List<Resource> getResourcesByName(String name);
 
     /**
      * Get Resources of Facility specified by ID.
@@ -58,9 +50,17 @@ public interface ResourceDAO {
      * @return List of Resources, empty list if nothing has been found.
      */
     List<Resource> getResourcesOfVo(Long voId);
-    
+
+    /**
+     * Get Resources that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Resources
+     * @return List of Resources, empty list if nothing has been found.
+     */
+    List<Resource> getResourcesHavingAttrs(List<InputAttribute> attrs);
+
     /* RICH_RESOURCE */
-    
+
     /**
      * Get RichResource specified by ID.
      * @param id id of RichResource
@@ -70,26 +70,18 @@ public interface ResourceDAO {
     RichResource getRichResource(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get RichResource with NAME like specified parameter.
-     * (Operator LIKE used, comparing ignores case)
-     * @param name name of RichResource
-     * @return List of RichResources, empty list if nothing has been found.
-     */
-    List<RichResource> getRichResourcesByName(String name);
-
-    /**
      * Get all RichResources.
      * @return List of RichResources, empty list if nothing has been found.
      */
     List<RichResource> getRichResources();
 
     /**
-     * Get RichResources that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of RichResources
+     * Get RichResource with NAME like specified parameter.
+     * (Operator LIKE used, comparing ignores case)
+     * @param name name of RichResource
      * @return List of RichResources, empty list if nothing has been found.
      */
-    List<RichResource> getRichResourcesWithAttrs(List<InputAttribute> attrs);
+    List<RichResource> getRichResourcesByName(String name);
 
     /**
      * Get RichResources of Facility specified by ID.
@@ -104,6 +96,14 @@ public interface ResourceDAO {
      * @return List of RichResources, empty list if nothing has been found.
      */
     List<RichResource> getRichResourcesOfVo(Long voId);
+
+    /**
+     * Get RichResources that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichResources
+     * @return List of RichResources, empty list if nothing has been found.
+     */
+    List<RichResource> getRichResourcesHavingAttrs(List<InputAttribute> attrs);
     
     /* ATTRIBUTES */
     

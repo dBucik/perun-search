@@ -13,6 +13,8 @@ public interface GroupDAO {
 
     void setDataSource(DataSource dataSource);
 
+    /* GROUP */
+
     /**
      * Get Group specified by ID.
      * @param id id of Group
@@ -22,35 +24,18 @@ public interface GroupDAO {
     Group getGroup(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get Groups withe NAME like specified parameter.
-     * (LIKE operator used, comparing ignores case)
-     * @param name name of Group
-     * @return List of Groups, empty list if nothing has been found.
-     */
-    List<Group> getGroupsByName(String name);
-
-    /**
      * Get all Groups.
      * @return List of Groups, empty list if nothing has been found.
      */
     List<Group> getGroups();
 
     /**
-     * Get attributes of Group specified by ID.
-     * @param id id of Group
-     * @param attrs attributes to be fetched
-     * @return List of attributes.
-     * @throws DatabaseIntegrityException More than one Group with same ID found.
+     * Get Groups withe NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of Group
+     * @return List of Groups, empty list if nothing has been found.
      */
-    List<Attribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
-
-    /**
-     * Get Groups that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of Groups
-     * @return List of Groups found, empty list if nothing has been found.
-     */
-    List<Group> getGroupsWithAttrs(List<InputAttribute> attrs);
+    List<Group> getGroupsByName(String name);
 
     /**
      * Get parent group of Group specified by ID.
@@ -69,6 +54,16 @@ public interface GroupDAO {
     List<Group> getGroupsOfVo(Long voId);
 
     /**
+     * Get Groups that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Groups
+     * @return List of Groups found, empty list if nothing has been found.
+     */
+    List<Group> getGroupsHavingAttrs(List<InputAttribute> attrs);
+
+    /* RICH_GROUP */
+
+    /**
      * Get RichGroup specified by ID.
      * @param id id of RichGroup
      * @return Found RichGroup or null if not such found.
@@ -77,26 +72,18 @@ public interface GroupDAO {
     RichGroup getRichGroup(Long id) throws DatabaseIntegrityException;
 
     /**
-     * Get RichGroups withe NAME like specified parameter.
-     * (LIKE operator used, comparing ignores case)
-     * @param name name of RichGroup
-     * @return List of RichGroups, empty list if nothing has been found.
-     */
-    List<RichGroup> getRichGroupsByName(String name);
-
-    /**
      * Get all RichGroups.
      * @return List of RichGroups, empty list if nothing has been found.
      */
     List<RichGroup> getRichGroups();
 
     /**
-     * Get RichGroups that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of RichGroups
-     * @return List of RichGroups found, empty list if nothing has been found.
+     * Get RichGroups withe NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of RichGroup
+     * @return List of RichGroups, empty list if nothing has been found.
      */
-    List<RichGroup> getRichGroupsWithAttrs(List<InputAttribute> attrs);
+    List<RichGroup> getRichGroupsByName(String name);
 
     /**
      * Get parent richGroup of RichGroup specified by ID.
@@ -113,5 +100,24 @@ public interface GroupDAO {
      * @return List of RichGroups, empty list if nothing has been found.
      */
     List<RichGroup> getRichGroupsOfVo(Long voId);
+
+    /**
+     * Get RichGroups that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichGroups
+     * @return List of RichGroups found, empty list if nothing has been found.
+     */
+    List<RichGroup> getRichGroupsHavingAttrs(List<InputAttribute> attrs);
+
+    /* ATTRIBUTES */
+
+    /**
+     * Get attributes of Group specified by ID.
+     * @param id id of Group
+     * @param attrs attributes to be fetched
+     * @return List of attributes.
+     * @throws DatabaseIntegrityException More than one Group with same ID found.
+     */
+    List<Attribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
 }

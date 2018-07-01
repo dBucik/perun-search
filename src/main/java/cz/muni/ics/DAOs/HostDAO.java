@@ -24,6 +24,12 @@ public interface HostDAO {
     Host getHost(Long id) throws DatabaseIntegrityException;
 
     /**
+     * Get all Hosts.
+     * @return List of Hosts, empty list if nothing has been found.
+     */
+    List<Host> getHosts();
+
+    /**
      * Get Hosts with HOSTNAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param hostname Hostname of Host
@@ -32,18 +38,12 @@ public interface HostDAO {
     List<Host> getHostsByHostname(String hostname);
 
     /**
-     * Get all Hosts.
-     * @return List of Hosts, empty list if nothing has been found.
-     */
-    List<Host> getHosts();
-
-    /**
      * Get Hosts that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Hosts
      * @return List of Hosts, empty list if nothing has been found.
      */
-    List<Host> getHostsWithAttrs(List<InputAttribute> attrs);
+    List<Host> getHostsHavingAttrs(List<InputAttribute> attrs);
 
     /* RICH_HOST */
 
@@ -56,6 +56,12 @@ public interface HostDAO {
     RichHost getRichHost(Long id) throws DatabaseIntegrityException;
 
     /**
+     * Get all RichHosts.
+     * @return List of RichHosts, empty list if nothing has been found.
+     */
+    List<RichHost> getRichHosts();
+
+    /**
      * Get RichHosts with HOSTNAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param hostname RichHostname of RichHost
@@ -64,18 +70,12 @@ public interface HostDAO {
     List<RichHost> getRichHostsByHostname(String hostname);
 
     /**
-     * Get all RichHosts.
-     * @return List of RichHosts, empty list if nothing has been found.
-     */
-    List<RichHost> getRichHosts();
-
-    /**
      * Get RichHosts that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of RichHosts
      * @return List of RichHosts, empty list if nothing has been found.
      */
-    List<RichHost> getRichHostsWithAttrs(List<InputAttribute> attrs);
+    List<RichHost> getRichHostsHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

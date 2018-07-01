@@ -51,7 +51,7 @@ public interface ExtSourceDAO {
      * @param attrs attributes of ExtSources
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs);
+    List<ExtSource> getExtSourcesHavingAttrs(List<InputAttribute> attrs);
 
     /* RICH_EXT_SOURCE */
 
@@ -91,7 +91,7 @@ public interface ExtSourceDAO {
      * @param attrs attributes of RichExtSources
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    List<RichExtSource> getRichExtSourcesWithAttrs(List<InputAttribute> attrs);
+    List<RichExtSource> getRichExtSourcesHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

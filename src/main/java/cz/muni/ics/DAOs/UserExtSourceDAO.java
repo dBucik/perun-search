@@ -29,13 +29,6 @@ public interface UserExtSourceDAO {
     List<UserExtSource> getUserExtSources();
 
     /**
-     * Get userExtSources that have specified attributes. (Exact matching used)
-     * @param attrs attributes of userExtSources
-     * @return List of userExtSources found, empty list if nothing has been found.
-     */
-    List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs);
-
-    /**
      * Get userExtSources of user specified by ID.
      * @param userId id of user
      * @return List of userExtSources found, empty list if nothing has been found.
@@ -56,6 +49,13 @@ public interface UserExtSourceDAO {
      */
     List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt);
 
+    /**
+     * Get userExtSources that have specified attributes. (Exact matching used)
+     * @param attrs attributes of userExtSources
+     * @return List of userExtSources found, empty list if nothing has been found.
+     */
+    List<UserExtSource> getUserExtSourcesHavingAttrs(List<InputAttribute> attrs);
+
     /* RICH_USER_EXT_SOURCE */
 
     /**
@@ -70,13 +70,6 @@ public interface UserExtSourceDAO {
      * @return List of richUserExtSources, null if nothing has been found.
      */
     List<RichUserExtSource> getRichUserExtSources();
-
-    /**
-     * Get richUserExtSources that have specified attributes. (Exact matching used)
-     * @param attrs attributes of richUserExtSources
-     * @return List of richUserExtSources found, empty list if nothing has been found.
-     */
-    List<RichUserExtSource> getRichUserExtSourcesWithAttrs(List<InputAttribute> attrs);
 
     /**
      * Get richUserExtSources of user specified by ID.
@@ -98,6 +91,13 @@ public interface UserExtSourceDAO {
      * @return List of richUserExtSources found, empty list if nothing has been found.
      */
     List<RichUserExtSource> getRichUserExtSourcesByLoginExt(String loginExt);
+
+    /**
+     * Get richUserExtSources that have specified attributes. (Exact matching used)
+     * @param attrs attributes of richUserExtSources
+     * @return List of richUserExtSources found, empty list if nothing has been found.
+     */
+    List<RichUserExtSource> getRichUserExtSourcesHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

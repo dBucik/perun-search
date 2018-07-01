@@ -24,6 +24,12 @@ public interface ServiceDAO {
     Service getService(Long id) throws DatabaseIntegrityException;
 
     /**
+     * Get all Services.
+     * @return List of Services, empty list if nothing has been found.
+     */
+    List<Service> getServices();
+
+    /**
      * Get Services with NAME like specified parameter.
      * @param name name of Service
      * @return List of Services, empty list if nothing has been found.
@@ -31,26 +37,20 @@ public interface ServiceDAO {
     List<Service> getServicesByName(String name);
 
     /**
-     * Get all Services.
+     * Get resources of Owner specified by ID.
+     * @param ownerId id of Owner
      * @return List of Services, empty list if nothing has been found.
      */
-    List<Service> getServices();
-    
+    List<Service> getServicesOfOwner(Long ownerId);
+
     /**
      * Get Services that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Services
      * @return List of Services, empty list if nothing has been found.
      */
-    List<Service> getServicesWithAttrs(List<InputAttribute> attrs);
+    List<Service> getServicesHavingAttrs(List<InputAttribute> attrs);
 
-    /**
-     * Get resources of Owner specified by ID.
-     * @param ownerId id of Owner
-     * @return List of Services, empty list if nothing has been found.
-     */
-    List<Service> getServicesOfOwner(Long ownerId);
-    
     /* RICH_SERVICE */
 
     /**
@@ -62,6 +62,12 @@ public interface ServiceDAO {
     RichService getRichService(Long id) throws DatabaseIntegrityException;
 
     /**
+     * Get all RichServices.
+     * @return List of RichServices, empty list if nothing has been found.
+     */
+    List<RichService> getRichServices();
+
+    /**
      * Get RichServices with NAME like specified parameter.
      * @param name name of RichService
      * @return List of RichServices, empty list if nothing has been found.
@@ -69,10 +75,11 @@ public interface ServiceDAO {
     List<RichService> getRichServicesByName(String name);
 
     /**
-     * Get all RichServices.
+     * Get resources of Owner specified by ID.
+     * @param ownerId id of Owner
      * @return List of RichServices, empty list if nothing has been found.
      */
-    List<RichService> getRichServices();
+    List<RichService> getRichServicesOfOwner(Long ownerId);
 
     /**
      * Get RichServices that have specified attributes.
@@ -80,15 +87,8 @@ public interface ServiceDAO {
      * @param attrs attributes of RichServices
      * @return List of RichServices, empty list if nothing has been found.
      */
-    List<RichService> getRichServicesWithAttrs(List<InputAttribute> attrs);
+    List<RichService> getRichServicesHavingAttrs(List<InputAttribute> attrs);
 
-    /**
-     * Get resources of Owner specified by ID.
-     * @param ownerId id of Owner
-     * @return List of RichServices, empty list if nothing has been found.
-     */
-    List<RichService> getRichServicesOfOwner(Long ownerId);
-    
     /* ATTRIBUTES */
 
     /**

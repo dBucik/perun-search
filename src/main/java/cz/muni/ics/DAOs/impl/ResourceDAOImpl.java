@@ -61,8 +61,8 @@ public class ResourceDAOImpl implements ResourceDAO {
     }
 
     @Override
-    public List<Resource> getResourcesWithAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichResourcesWithAttrs(attrs));
+    public List<Resource> getResourcesHavingAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichResourcesHavingAttrs(attrs));
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ResourceDAOImpl implements ResourceDAO {
     }
 
     @Override
-    public List<RichResource> getRichResourcesWithAttrs(List<InputAttribute> attrs) {
+    public List<RichResource> getRichResourcesHavingAttrs(List<InputAttribute> attrs) {
         //TODO improve
         List<RichResource> resources = getRichResources();
         List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
