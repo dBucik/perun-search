@@ -1,27 +1,18 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntity;
+
 /**
  * Member entity from Perun.
- * Core attributes are stored in entity and have their get methods.
- * Additional attributes are stored in list accessed with getAttributes method.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class Member {
+public class Member extends PerunEntity {
 
-    private Long id;
     private Long userId;
     private Long voId;
     private String status;
     private Boolean sponsored;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getUserId() {
         return userId;

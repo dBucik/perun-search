@@ -1,26 +1,17 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntity;
+
 /**
  * Host entity from Perun.
- * Core attributes are stored in entity and have their get methods.
- * Additional attributes are stored in list accessed with getAttributes method.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class Host {
+public class Host extends PerunEntity {
 
-    private Long id;
     private String description;
     private String hostname;
     private Long facilityId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getDescription() {
         return description;

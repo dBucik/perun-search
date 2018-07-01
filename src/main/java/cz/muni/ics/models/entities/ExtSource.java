@@ -1,23 +1,16 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntity;
+
 /**
  * ExtSource entity from Perun.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class ExtSource {
+public class ExtSource extends PerunEntity {
 
-    private Long id;
     private String name;
     private String type;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

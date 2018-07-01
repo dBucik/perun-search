@@ -1,25 +1,18 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntity;
+
 /**
  * Group entity from Perun.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class Group {
+public class Group extends PerunEntity {
 
-    private Long id;
     private String name;
     private String description;
     private Long parentGroupId;
     private Long voId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

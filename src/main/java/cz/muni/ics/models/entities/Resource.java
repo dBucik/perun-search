@@ -1,27 +1,18 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntity;
+
 /**
  * Resource entity from Perun.
- * Core attributes are stored in entity and have their get methods.
- * Additional attributes are stored in list accessed with getAttributes method.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class Resource {
+public class Resource extends PerunEntity {
 
-    private Long id;
     private Long facilityId;
     private String name;
     private String description;
     private Long voId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getFacilityId() {
         return facilityId;

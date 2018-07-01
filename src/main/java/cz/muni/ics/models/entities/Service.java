@@ -1,23 +1,17 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntity;
+
 /**
  * Service entity from Perun.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class Service {
+public class Service extends PerunEntity {
 
     private Long id;
     private String name;
     private Long ownerId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

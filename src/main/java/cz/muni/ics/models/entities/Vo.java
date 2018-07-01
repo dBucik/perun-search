@@ -1,23 +1,16 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntity;
+
 /**
  * Vo entity from Perun.
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class Vo {
+public class Vo extends PerunEntity {
 
-    private Long id;
     private String name;
     private String shortName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
