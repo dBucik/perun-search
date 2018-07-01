@@ -1,31 +1,16 @@
 package cz.muni.ics.models;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+
 public class Member {
 
     //core
     private Long id;
+    private Long userId;
+    private Long voId;
     private String status;
+    private Boolean sponsored;
 
-    //def
-    private String address;
-    private String loa;
-    private String gdprApproval;
-    private String mail;
-    private String membershipExpiration;
-    private String mobileNumbers;
-    private String organization;
-    private String phone;
-    private String sponzoredMember;
-    private String telephoneNumbers;
-    private String workplace;
-
-    //opt
-    private String eduPersonAffiliation;
-    private String registrationNote;
-    private String researchGroup;
-
-    //virt
-    private String loaVirt;
-
+    private JSONPObject attributes;
 
 }

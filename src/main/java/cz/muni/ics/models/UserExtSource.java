@@ -1,22 +1,13 @@
 package cz.muni.ics.models;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+
 public class UserExtSource {
 
-    //def
-    private String mail;
-    private String cn;
-    private String o;
-    private String dn;
-    private String cadn;
-    private String certificate;
-    private String schacHomeOrganization;
-    private String forwardedScopeAffiliation;
-    private String sn;
-    private String givenName;
-    private String ou;
-    private String eppn;
-    private String affiliation;
-    private String displayName;
-    private Long uid;
-    private String epuId;
+    private Long id;
+    private String loginExt;
+    private Long extSourceId;
+    private Short loa;
+
+    private JSONPObject attributes;
 }
