@@ -1,6 +1,6 @@
-package cz.muni.ics.mappers;
+package cz.muni.ics.mappers.entities;
 
-import cz.muni.ics.models.Destination;
+import cz.muni.ics.models.entities.Destination;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.RowMapper;
 
