@@ -1,5 +1,6 @@
 package cz.muni.ics.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserExtSource {
@@ -58,5 +59,36 @@ public class UserExtSource {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Attribute> getAttributesByKeys(List<String> keys) {
+        List<Attribute> res = new ArrayList<>();
+
+        if (keys.contains("id")) {
+            res.add(new Attribute("id", id.toString()));
+        }
+
+        if (keys.contains("userId")) {
+            res.add(new Attribute("userId", userId.toString()));
+        }
+
+        if (keys.contains("loginExt")) {
+            res.add(new Attribute("loginExt", loginExt));
+        }
+
+        if (keys.contains("extSourcesId")) {
+            res.add(new Attribute("extSourcesId", extSourcesId.toString()));
+        }
+
+        if (keys.contains("loa")) {
+            res.add(new Attribute("loa", loa.toString()));
+        }
+
+        for (Attribute attr: attributes) {
+            if (keys.contains(attr.getKey())) {
+                res.add(attr);
+            }
+        }
+        return res;
     }
 }

@@ -40,4 +40,9 @@ public class Attribute {
         res *= 31 * this.value.hashCode();
         return res;
     }
+
+    @Override
+    public String toString() {
+        return "{ " + key + ": " + value + "}";
+    }
 }

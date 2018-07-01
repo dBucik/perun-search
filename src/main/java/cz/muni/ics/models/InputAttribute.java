@@ -5,6 +5,13 @@ public class InputAttribute {
     private String key;
     private String value;
 
+    public InputAttribute() {}
+
+    public InputAttribute(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
     public String getKey() {
         return key;
     }

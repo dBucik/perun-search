@@ -1,5 +1,7 @@
 package cz.muni.ics.models;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class User {
@@ -86,5 +88,48 @@ public class User {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Attribute> getAttributesByKeys(List<String> keys) {
+        List<Attribute> res = new ArrayList<>();
+
+        if (keys.contains("id")) {
+            res.add(new Attribute("id", id.toString()));
+        }
+
+        if (keys.contains("firstName")) {
+            res.add(new Attribute("firstName", firstName));
+        }
+
+        if (keys.contains("middleName")) {
+            res.add(new Attribute("middleName", middleName));
+        }
+
+        if (keys.contains("lastName")) {
+            res.add(new Attribute("lastName", lastName));
+        }
+
+        if (keys.contains("titleBefore")) {
+            res.add(new Attribute("titleBefore", titleBefore));
+        }
+
+        if (keys.contains("titleAfter")) {
+            res.add(new Attribute("titleAfter", titleAfter));
+        }
+
+        if (keys.contains("serviceAcc")) {
+            res.add(new Attribute("serviceAcc", serviceAcc.toString()));
+        }
+
+        if (keys.contains("sponsoredAcc")) {
+            res.add(new Attribute("sponsoredAcc", sponsoredAcc.toString()));
+        }
+
+        for (Attribute attr: attributes) {
+            if (keys.contains(attr.getKey())) {
+                res.add(attr);
+            }
+        }
+        return res;
     }
 }

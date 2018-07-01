@@ -1,6 +1,8 @@
 package cz.muni.ics.models;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Vo {
 
@@ -41,6 +43,28 @@ public class Vo {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Attribute> getAttributesByKeys(List<String> keys) {
+        List<Attribute> res = new ArrayList<>();
+        if (keys.contains("id")) {
+            res.add(new Attribute("id", id.toString()));
+        }
+
+        if (keys.contains("name")) {
+            res.add(new Attribute("name", name));
+        }
+
+        if (keys.contains("shortName")) {
+            res.add(new Attribute("shortName", shortName));
+        }
+
+        for (Attribute attr: attributes) {
+            if (keys.contains(attr.getKey())) {
+                res.add(attr);
+            }
+        }
+        return res;
     }
 
     @Override

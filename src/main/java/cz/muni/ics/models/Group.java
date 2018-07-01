@@ -1,5 +1,6 @@
 package cz.muni.ics.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
@@ -59,5 +60,36 @@ public class Group {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Attribute> getAttributesByKeys(List<String> keys) {
+        List<Attribute> res = new ArrayList<>();
+
+        if (keys.contains("id")) {
+            res.add(new Attribute("id", id.toString()));
+        }
+
+        if (keys.contains("name")) {
+            res.add(new Attribute("name", name));
+        }
+
+        if (keys.contains("description")) {
+            res.add(new Attribute("description", description));
+        }
+
+        if (keys.contains("voId")) {
+            res.add(new Attribute("voId", voId.toString()));
+        }
+
+        if (keys.contains("parentGroupId")) {
+            res.add(new Attribute("parentGroupId", parentGroupId.toString()));
+        }
+
+        for (Attribute attr: attributes) {
+            if (keys.contains(attr.getKey())) {
+                res.add(attr);
+            }
+        }
+        return res;
     }
 }

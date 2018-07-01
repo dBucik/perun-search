@@ -2,6 +2,7 @@ package cz.muni.ics.models;
 
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
 import cz.muni.ics.JdbcTemplates.*;
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class Query implements GraphQLRootResolver {
         this.voJdbcTemplate = voJdbcTemplate;
     }
 
-    public Destination getDestination(Long id) { return destinationJdbcTemplate.getDestination(id); }
+    public Destination getDestination(Long id) throws DatabaseIntegrityException { return destinationJdbcTemplate.getDestination(id); }
 
     public List<Destination> getAllDestinations() { return destinationJdbcTemplate.getDestinations(); }
 
@@ -70,9 +71,77 @@ public class Query implements GraphQLRootResolver {
 
     public List<Service> getAllServices() { return serviceJdbcTemplate.getServices(); }
 
-    public User getUser(Long id) { return userJdbcTemplate.getUser(id); }
+    /* USER */
 
-    public List<User> getAllUsers() { return userJdbcTemplate.getUsers(); }
+    /**
+     * Get user specified by ID.
+     * @param id id of user
+     * @return Found user or null if not such found.
+     */
+    public User getUser(Long id) throws DatabaseIntegrityException {
+        return userJdbcTemplate.getUser(id);
+    }
+
+    /**
+     * Get all users.
+     * @return List of users, empty list if nothing has been found.
+     */
+    public List<User> getUsers() {
+        return userJdbcTemplate.getUsers();
+    }
+
+    /**
+     * Get attributes of user specified by ID.
+     * @param id id of user
+     * @param attrs attributes to be fetched
+     * @return List of attributes, empty list if nothing has been found.
+     */
+    public List<Attribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+        return userJdbcTemplate.getUserAttrs(id, attrs);
+    }
+
+    /**
+     * Get users that have specified attributes. (Exact matching used)
+     * @param attrs attributes of users
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<User> getUsersWithAttrs(List<InputAttribute> attrs) {
+        return userJdbcTemplate.getUsersWithAttrs(attrs);
+    }
+
+    /**
+     * Get users with specified NAME. (LIKE operator used)
+     * @param titleBefore title before the name
+     * @param firstName given name of user
+     * @param middleName middle name of user
+     * @param lastName family name of user
+     * @param titleAfter title after the name
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<User> getUsersByName(String titleBefore, String firstName, String middleName,
+                              String lastName, String titleAfter) {
+        return userJdbcTemplate.getUsersByName(titleBefore, firstName, middleName, lastName, titleAfter);
+    }
+
+    /**
+     * Get users by specifying if their acc is serviceAcc.
+     * @param isServiceAcc TRUE for serviceAccounts, FALSE otherwise.
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<User> getUsersByServiceAcc(boolean isServiceAcc) {
+        return userJdbcTemplate.getUsersByServiceAcc(isServiceAcc);
+    }
+
+    /**
+     * Get users by specifying if their acc is sponsored.
+     * @param isSponsoredAcc TRUE for sponsoredAccounts, FALSE otherwise.
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        return userJdbcTemplate.getUsersBySponsoredAcc(isSponsoredAcc);
+    }
+
+    /* USER_EXT_SOURCE */
 
     public UserExtSource getUserExtSource(Long id) { return userExtSourceJdbcTemplate.getUserExtSource(id); }
 
@@ -82,32 +151,65 @@ public class Query implements GraphQLRootResolver {
     /* VO */
 
     /**
-     * Get vo specified by id.
-     * @param id id of VO
-     * @return Found VO or null if VO with such id doesn't exist
+     * Get vo specified by ID.
+     * @param id id of vo
+     * @return Found vo or null if not such found.
      */
-    public Vo getVo(Long id) { return voJdbcTemplate.getVo(id); }
+    public Vo getVo(Long id) throws DatabaseIntegrityException {
+        return voJdbcTemplate.getVo(id);
+    }
 
     /**
-     * Get all VOs.
-     * @return List of VOs
+     * Get vos with names like specified parameter. (LIKE operator used, comparing ignores case)
+     * @param name substring in name of vo
+     * @return List of vos, empty list if nothing has been found.
      */
-    public List<Vo> getAllVos() {
+    public List<Vo> getVosByName(String name) {
+        return voJdbcTemplate.getVosByName(name);
+    }
+
+    /**
+     * Get vo specified by SHORT NAME. (EXACT MATCH, comparing ignores case)
+     * @param shortName short name of vo
+     * @return Found vo or null if not such found.
+     */
+    public Vo getVoByShortName(String shortName) throws DatabaseIntegrityException {
+        return voJdbcTemplate.getVoByShortName(shortName);
+    }
+
+    /**
+     * Get vos with short names like specified parameter. (LIKE operator used, comparing ignores case)
+     * @param shortName substring in short_name of vo
+     * @return List of vos, empty list if nothing has been found.
+     */
+    public List<Vo> getVosByShortName(String shortName) {
+        return voJdbcTemplate.getVosByShortName(shortName);
+    }
+
+    /**
+     * Get all vos.
+     * @return List of vos, empty list if nothing has been found.
+     */
+    public List<Vo> getVos() {
         return voJdbcTemplate.getVos();
     }
 
     /**
-     * Get VOs by specifying their attributes. Uses exact matching of attributes.
-     * @param attrs attributes in format name:value that VO has to have
-     * @return List of VOs, null if no VOs were found.
+     * Get attributes of vo specified by ID. Only attributes with value are returned.
+     * @param id id of vo
+     * @param attrs attributes to be fetched
+     * @return List of attributes, empty list if nothing has been found.
      */
-    public List<Vo> getVosByAttrs(List<InputAttribute> attrs) { return voJdbcTemplate.getVosByAttrs(attrs); }
+    public List<Attribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+        return voJdbcTemplate.getVoAttrs(id, attrs);
+    }
 
     /**
-     * Get attributes of VO specified by id.
-     * @param id id specifying the VO
-     * @param attrNames names of attributes to be displayed
-     * @return List of attributes, null if no attributes were found.
+     * Get vos that have specified attributes. (Exact matching used)
+     * @param attrs attributes of vos
+     * @return List of vos found, empty list if nothing has been found.
      */
-    public List<Attribute> getVoAttrs(Long id, List<String> attrNames) { return voJdbcTemplate.getVoWithAttrs(id, attrNames); }
+    public List<Vo> getVosWithAttrs(List<InputAttribute> attrs) {
+        return voJdbcTemplate.getVosWithAttrs(attrs);
+    }
 }
