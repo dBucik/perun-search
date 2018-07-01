@@ -1,6 +1,6 @@
 input InputAttribute {
     key: String!
-    value: String!
+    value: String
 }
 
 type Attribute {
@@ -123,16 +123,28 @@ type Query {
     getService(id: Int!): Service
     getAllServices: [Service]!
 
+    # USER
     getUser(id: Int!): User
-    getAllUsers: [User]!
+    getUsers: [User!]!
+    getUserAttrs(id: Long, attrs: [String!]): [Attribute!]!
+    getUsersWithAttrs(attrs: [InputAttribute!]!): [User!]!
+    getUsersByName(titleBefore: String, firstName: String, middleName: String,
+                   lastName: String, titleAfter: String): [User!]!
+    getUsersByServiceAcc(isServiceAcc: Boolean): [User!]!
+    getUsersBySponsoredAcc(isSponsoredAcc: Boolean): [User!]!
 
+    # UserExtSource
     getUserExtSource(id: Int!): UserExtSource
     getAllUserExtSources: [UserExtSource]!
 
+    # VO
     getVo(id: Int!): Vo
-    getAllVos: [Vo]!
-    getVosByAttrs(attrs: [InputAttribute!]!): [Vo]
-    getVoAttrs(id: Int!, attrNames: [String!]!): [Attribute!]
+    getVosByName(name: String!): [Vo!]!
+    getVoByShortName(shortName: String!): Vo
+    getVosByShortName(shortName: String!): [Vo!]!
+    getVos: [Vo!]
+    getVoAttrs(id: Int!, attrs: [String!]): [Attribute!]!
+    getVosWithAttrs(attrs: [InputAttribute!]!): [Vo!]!
 }
 
 schema {
