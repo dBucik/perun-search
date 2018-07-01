@@ -1,13 +1,13 @@
 package cz.muni.ics.models;
 
+
 import org.json.JSONObject;
 
-public class Vo {
+public class Service {
 
-    //core
     private Long id;
     private String name;
-    private String shortName;
+    private Long ownerId;
 
     private JSONObject attributes;
 
@@ -27,12 +27,12 @@ public class Vo {
         this.name = name;
     }
 
-    public String getShortName() {
-        return shortName;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public JSONObject getAttributes() {
@@ -41,13 +41,5 @@ public class Vo {
 
     public void setAttributes(JSONObject attributes) {
         this.attributes = attributes;
-    }
-
-    @Override
-    public String toString() {
-        return "Id: " + id
-                + ", name: " + name
-                + ", shortName: " + shortName
-                + ", attributes: " + attributes;
     }
 }
