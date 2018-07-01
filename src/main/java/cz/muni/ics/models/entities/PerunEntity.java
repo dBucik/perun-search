@@ -1,4 +1,4 @@
-package cz.muni.ics.models;
+package cz.muni.ics.models.entities;
 
 /**
  * Basic perun entity. Specific entities extend this class

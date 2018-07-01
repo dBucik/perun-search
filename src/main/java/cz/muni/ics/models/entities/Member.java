@@ -1,7 +1,5 @@
 package cz.muni.ics.models.entities;
 
-import cz.muni.ics.models.PerunEntity;
-
 /**
  * Member entity from Perun.
  *

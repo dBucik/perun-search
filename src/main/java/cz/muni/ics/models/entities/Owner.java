@@ -1,7 +1,5 @@
 package cz.muni.ics.models.entities;
 
-import cz.muni.ics.models.PerunEntity;
-
 public class Owner extends PerunEntity {
 
     private String name;

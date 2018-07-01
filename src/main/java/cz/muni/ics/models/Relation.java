@@ -4,6 +4,7 @@ import cz.muni.ics.models.entities.ExtSource;
 import cz.muni.ics.models.entities.Facility;
 import cz.muni.ics.models.entities.Group;
 import cz.muni.ics.models.entities.Member;
+import cz.muni.ics.models.entities.PerunEntity;
 import cz.muni.ics.models.entities.Resource;
 import cz.muni.ics.models.entities.Service;
 import cz.muni.ics.models.entities.User;
