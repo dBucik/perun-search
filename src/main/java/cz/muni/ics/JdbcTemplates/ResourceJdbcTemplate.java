@@ -38,11 +38,7 @@ public class ResourceJdbcTemplate implements ResourceDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.resource_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        resource.setAttributes(new JSONObject(attrMap));
+        resource.setAttributes(attrs);
 
         return resource;
     }
@@ -59,11 +55,7 @@ public class ResourceJdbcTemplate implements ResourceDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.resource_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {resource.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            resource.setAttributes(new JSONObject(attrMap));
+            resource.setAttributes(attrs);
         }
 
         return resources;

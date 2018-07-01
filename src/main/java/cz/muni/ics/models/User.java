@@ -1,6 +1,6 @@
 package cz.muni.ics.models;
 
-import org.json.JSONObject;
+import java.util.List;
 
 public class User {
 
@@ -14,7 +14,7 @@ public class User {
     private Boolean serviceAcc;
     private Boolean sponsoredAcc;
 
-    private JSONObject attributes;
+    private List<Attribute> attributes;
 
     public Long getId() {
         return id;
@@ -80,11 +80,11 @@ public class User {
         this.sponsoredAcc = sponsoredAcc;
     }
 
-    public JSONObject getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(JSONObject attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 }

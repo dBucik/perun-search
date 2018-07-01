@@ -38,11 +38,7 @@ public class GroupJdbcTemplate implements GroupDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.group_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        group.setAttributes(new JSONObject(attrMap));
+        group.setAttributes(attrs);
 
         return group;
     }
@@ -59,11 +55,7 @@ public class GroupJdbcTemplate implements GroupDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.group_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {group.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            group.setAttributes(new JSONObject(attrMap));
+            group.setAttributes(attrs);
         }
 
         return groups;

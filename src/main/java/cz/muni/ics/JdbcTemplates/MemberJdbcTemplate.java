@@ -38,11 +38,7 @@ public class MemberJdbcTemplate implements MemberDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.member_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        member.setAttributes(new JSONObject(attrMap));
+        member.setAttributes(attrs);
 
         return member;
     }
@@ -59,11 +55,7 @@ public class MemberJdbcTemplate implements MemberDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.member_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {member.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            member.setAttributes(new JSONObject(attrMap));
+            member.setAttributes(attrs);
         }
 
         return members;

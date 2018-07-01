@@ -1,6 +1,6 @@
 package cz.muni.ics.models;
 
-import org.json.JSONObject;
+import java.util.List;
 
 public class Facility {
 
@@ -9,7 +9,7 @@ public class Facility {
     private String name;
     private String description;
 
-    private JSONObject attributes;
+    private List<Attribute> attributes;
 
     public Long getId() {
         return id;
@@ -35,11 +35,11 @@ public class Facility {
         this.description = description;
     }
 
-    public JSONObject getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(JSONObject attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 }

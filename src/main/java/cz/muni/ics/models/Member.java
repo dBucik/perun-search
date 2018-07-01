@@ -1,6 +1,6 @@
 package cz.muni.ics.models;
 
-import org.json.JSONObject;
+import java.util.List;
 
 public class Member {
 
@@ -11,7 +11,7 @@ public class Member {
     private String status;
     private Boolean sponsored;
 
-    private JSONObject attributes;
+    private List<Attribute> attributes;
 
     public Long getId() {
         return id;
@@ -53,11 +53,11 @@ public class Member {
         this.sponsored = sponsored;
     }
 
-    public JSONObject getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(JSONObject attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 }

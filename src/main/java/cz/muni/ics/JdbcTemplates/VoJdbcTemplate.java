@@ -4,14 +4,14 @@ import cz.muni.ics.DAOs.VoDAO;
 import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.VoMapper;
 import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.Vo;
-import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class VoJdbcTemplate implements VoDAO {
 
@@ -38,12 +38,7 @@ public class VoJdbcTemplate implements VoDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.vo_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-
-        vo.setAttributes(new JSONObject(attrMap));
+        vo.setAttributes(attrs);
 
         return vo;
 
@@ -62,13 +57,48 @@ public class VoJdbcTemplate implements VoDAO {
                     "WHERE av.vo_id=?";
 
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {vo.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            vo.setAttributes(new JSONObject(attrMap));
+            vo.setAttributes(attrs);
         }
 
         return vos;
+    }
+
+    public List<Vo> getVosByAttrs(List<InputAttribute> inputAttributes) {
+        List<Vo> vos = getVos();
+        if (vos.isEmpty()) {
+            return null;
+        }
+
+        List<Attribute> attrs = convertAttrsFromInput(inputAttributes);
+        vos.removeIf(vo -> {
+            assert attrs != null;
+            return !vo.getAttributes().containsAll(attrs);
+        });
+
+        return vos;
+    }
+
+    public List<Attribute> getVoWithAttrs(Long id, List<String> attrNames) {
+        Vo vo = getVo(id);
+        if (vo == null) {
+            return null;
+        }
+
+        vo.getAttributes().removeIf(attribute -> !attrNames.contains(attribute.getKey()));
+        return vo.getAttributes();
+    }
+
+    private List<Attribute> convertAttrsFromInput(List<InputAttribute> input) {
+        List<Attribute> result = new ArrayList<>();
+        for (InputAttribute inputAttribute: input) {
+            Attribute filter = new Attribute(inputAttribute.getKey(), inputAttribute.getValue());
+            result.add(filter);
+        }
+
+        if (result.isEmpty()) {
+            return null;
+        }
+
+        return result;
     }
 }

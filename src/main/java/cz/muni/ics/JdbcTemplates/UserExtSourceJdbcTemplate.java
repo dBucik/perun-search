@@ -38,11 +38,7 @@ public class UserExtSourceJdbcTemplate implements UserExtSourceDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.user_ext_source_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        ues.setAttributes(new JSONObject(attrMap));
+        ues.setAttributes(attrs);
 
         return ues;
     }
@@ -58,11 +54,7 @@ public class UserExtSourceJdbcTemplate implements UserExtSourceDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.user_ext_source_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {ues.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            ues.setAttributes(new JSONObject(attrMap));
+            ues.setAttributes(attrs);
         }
         return ueses;
     }

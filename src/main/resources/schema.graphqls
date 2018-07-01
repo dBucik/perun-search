@@ -1,48 +1,138 @@
-type AttributePair {
-    attrName: String!
-    attrValue: String!
+input InputAttribute {
+    key: String!
+    value: String!
+}
+
+type Attribute {
+    key: String!
+    value: String
+}
+
+type Destination {
+    id: Int!
+    name: String!
+    description: String!
+}
+
+type ExtSource {
+    id: Int!
+    name: String!
+    type: String!
+    attributes: [Attribute!]!
+}
+
+type Facility {
+    id: Int!
+    name: String!
+    description: String!
+    attributes: [Attribute!]!
+}
+
+type Group {
+    id: Int!
+    name: String!
+    description: String!
+    parentGroupId: Int!
+    voId: Int!
+    attributes: [Attribute!]!
+}
+
+type Host {
+    id: Int!
+    description: String!
+    hostname: String!
+    facilityId: Int!
+    attributes: [Attribute!]!
+}
+
+type Member {
+    id: Int!
+    userId: Int!
+    voId: Int!
+    status: String!
+    sponsored: Boolean!
+    attributes: [Attribute!]!
+}
+
+type Resource {
+    id: Int!
+    facilityId: Int!
+    name: String!
+    description: String!
+    voId: Int!
+    attributes: [Attribute!]!
+}
+
+type Service {
+    id: Int!
+    name: String!
+    ownerId: Int!
+    attributes: [Attribute!]!
+}
+
+type User {
+    id: Int!
+    firstName: String!
+    lastName: String!
+    middleName: String!
+    titleBefore: String!
+    titleAfter: String!
+    serviceAcc: Boolean!
+    sponsoredAcc: Boolean!
+    attributes: [Attribute!]!
+}
+
+type UserExtSource {
+    id: Int!
+    userId: Int!
+    loginExt: String!
+    extSourcesId: Int!
+    loa: Int!
+    attributes: [Attribute!]!
 }
 
 type Vo {
     id: Int
     name: String!
     shortName: String!
-    attributesList: [AttributePair!]!
+    attributes: [Attribute!]!
 }
 
 type Query {
-    getDestination(id: Int!): Destination!
-    getAllDestinations: [Destination!]!
+    getDestination(id: Int!): Destination
+    getAllDestinations: [Destination]!
 
-    getExtSource(id: Int!): ExtSource!
-    getAllExtSources: [ExtSource!]!
+    getExtSource(id: Int!): ExtSource
+    getAllExtSources: [ExtSource]!
 
-    getFacility(id: Int!): Facility!
-    getAllFacilities: [Facility!]!
+    getFacility(id: Int!): Facility
+    getAllFacilities: [Facility]!
 
-    getGroup(id: Int!): Group!
-    getAllGroups: [Group!]!
+    getGroup(id: Int!): Group
+    getAllGroups: [Group]!
 
-    getHost(id: Int!): Host!
-    getAllHosts: [Host!]!
+    getHost(id: Int!): Host
+    getAllHosts: [Host]!
 
-    getMember(id: Int!): Member!
-    getAllMembers: [Member!]!
+    getMember(id: Int!): Member
+    getAllMembers: [Member]!
 
-    getResource(id: Int!): Resource!
-    getAllResources: [Resource!]!
+    getResource(id: Int!): Resource
+    getAllResources: [Resource]!
 
-    getService(id: Int!): Service!
-    getAllServices: [Service!]!
+    getService(id: Int!): Service
+    getAllServices: [Service]!
 
-    getUser(id: Int!): User!
-    getAllUsers(): [User!]!
+    getUser(id: Int!): User
+    getAllUsers: [User]!
 
-    getUserExtSource(id: Int!): UserExtSource!
-    getAllUserExtSources(): [UserExtSource!]!
+    getUserExtSource(id: Int!): UserExtSource
+    getAllUserExtSources: [UserExtSource]!
 
-    getVo(id: Int!): Vo!
-    getAllVos: [Vo!]!
+    getVo(id: Int!): Vo
+    getAllVos: [Vo]!
+    getVosByAttrs(attrs: [InputAttribute!]!): [Vo]
+    getVoAttrs(id: Int!, attrNames: [String!]!): [Attribute!]
 }
 
 schema {

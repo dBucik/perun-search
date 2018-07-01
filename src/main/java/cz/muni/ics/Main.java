@@ -1,14 +1,13 @@
 package cz.muni.ics;
 
-import cz.muni.ics.JDBCTemplates.VoJdbcTemplate;
+import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.Query;
 import cz.muni.ics.models.Vo;
-import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Main {
 
@@ -21,13 +20,13 @@ public class Main {
 
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-        VoJdbcTemplate voJdbcTemplate = (VoJdbcTemplate) context.getBean("voJdbcTemplate");
+        Query query = (Query) context.getBean("query");
+
 
         System.out.println("VO WITH Id: 1");
-        Vo vo = voJdbcTemplate.getVo(1L);
-        System.out.println(vo);
+        System.out.println(query.getVo(1L));
 
-        List<Vo> vos = voJdbcTemplate.getVos();
+        List<Vo> vos = query.getAllVos();
         System.out.println("");
         System.out.println("ALL VOS");
         for (Vo voItem: vos) {

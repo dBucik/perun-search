@@ -38,11 +38,7 @@ public class ExtSourceJdbcTemplate implements ExtSourceDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.ext_sources_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        extSource.setAttributes(new JSONObject(attrMap));
+        extSource.setAttributes(attrs);
 
         return extSource;
     }
@@ -53,17 +49,13 @@ public class ExtSourceJdbcTemplate implements ExtSourceDAO {
         String query = "SELECT * FROM ext_sources";
         List<ExtSource> extSources = jdbcTemplate.query(query, new Object[] {}, MAPPER);
 
-        for (ExtSource es: extSources) {
+        for (ExtSource extSource: extSources) {
             String attrQuery = "SELECT an.friendly_name, av.attr_value " +
                     "FROM attr_names an RIGHT OUTER JOIN ext_sources_attributes av " +
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.ext_sources_id=?";
-            List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {es.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            es.setAttributes(new JSONObject(attrMap));
+            List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {extSource.getId()}, ATTR_MAPPER);
+            extSource.setAttributes(attrs);
         }
         return extSources;
     }

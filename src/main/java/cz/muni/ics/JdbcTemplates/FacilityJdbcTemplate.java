@@ -38,11 +38,7 @@ public class FacilityJdbcTemplate implements FacilityDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.facility_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        facility.setAttributes(new JSONObject(attrMap));
+        facility.setAttributes(attrs);
 
         return facility;
     }
@@ -59,11 +55,7 @@ public class FacilityJdbcTemplate implements FacilityDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.facility_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {facility.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            facility.setAttributes(new JSONObject(attrMap));
+            facility.setAttributes(attrs);
         }
 
         return facilities;

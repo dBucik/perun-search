@@ -38,10 +38,8 @@ public class UserJdbcTemplate implements UserDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.user_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
+        user.setAttributes(attrs);
+
         return user;
     }
 
@@ -57,12 +55,9 @@ public class UserJdbcTemplate implements UserDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.user_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {user.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            user.setAttributes(new JSONObject(attrMap));
+            user.setAttributes(attrs);
         }
+
         return users;
     }
 }

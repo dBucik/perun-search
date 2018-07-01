@@ -1,6 +1,7 @@
 package cz.muni.ics.models;
 
-import org.json.JSONObject;
+
+import java.util.List;
 
 public class ExtSource {
 
@@ -8,7 +9,7 @@ public class ExtSource {
     private String name;
     private String type;
 
-    private JSONObject attributes;
+    private List<Attribute> attributes;
 
     public Long getId() {
         return id;
@@ -34,11 +35,11 @@ public class ExtSource {
         this.type = type;
     }
 
-    public JSONObject getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(JSONObject attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 }

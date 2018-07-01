@@ -38,11 +38,7 @@ public class HostJdbcTemplate implements HostDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.host_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        host.setAttributes(new JSONObject(attrMap));
+        host.setAttributes(attrs);
 
         return host;
     }
@@ -59,11 +55,7 @@ public class HostJdbcTemplate implements HostDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.host_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] { host.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            host.setAttributes(new JSONObject(attrMap));
+            host.setAttributes(attrs);
         }
         return hosts;
     }

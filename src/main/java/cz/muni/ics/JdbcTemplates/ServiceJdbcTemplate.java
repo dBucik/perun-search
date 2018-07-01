@@ -38,11 +38,7 @@ public class ServiceJdbcTemplate implements ServiceDAO {
                 "ON (an.id = av.attr_id) " +
                 "WHERE av.service_id=?";
         List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
-        Map<String, String> attrMap = new HashMap<>();
-        for (Attribute attr: attrs) {
-            attrMap.put(attr.getAttrName(), attr.getAttrValue());
-        }
-        service.setAttributes(new JSONObject(attrMap));
+        service.setAttributes(attrs);
 
         return service;
     }
@@ -59,11 +55,7 @@ public class ServiceJdbcTemplate implements ServiceDAO {
                     "ON (an.id = av.attr_id) " +
                     "WHERE av.service_id=?";
             List<Attribute> attrs = jdbcTemplate.query(attrQuery, new Object[] {service.getId()}, ATTR_MAPPER);
-            Map<String, String> attrMap = new HashMap<>();
-            for (Attribute attr: attrs) {
-                attrMap.put(attr.getAttrName(), attr.getAttrValue());
-            }
-            service.setAttributes(new JSONObject(attrMap));
+            service.setAttributes(attrs);
         }
 
         return services;
