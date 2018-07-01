@@ -1,10 +1,48 @@
+type AttributePair {
+    attrName: String!
+    attrValue: String!
+}
+
 type Vo {
     id: Int
     name: String!
+    shortName: String!
+    attributesList: [AttributePair!]!
 }
 
 type Query {
-    allVos: [Vo]
+    getDestination(id: Int!): Destination!
+    getAllDestinations: [Destination!]!
+
+    getExtSource(id: Int!): ExtSource!
+    getAllExtSources: [ExtSource!]!
+
+    getFacility(id: Int!): Facility!
+    getAllFacilities: [Facility!]!
+
+    getGroup(id: Int!): Group!
+    getAllGroups: [Group!]!
+
+    getHost(id: Int!): Host!
+    getAllHosts: [Host!]!
+
+    getMember(id: Int!): Member!
+    getAllMembers: [Member!]!
+
+    getResource(id: Int!): Resource!
+    getAllResources: [Resource!]!
+
+    getService(id: Int!): Service!
+    getAllServices: [Service!]!
+
+    getUser(id: Int!): User!
+    getAllUsers(): [User!]!
+
+    getUserExtSource(id: Int!): UserExtSource!
+    getAllUserExtSources(): [UserExtSource!]!
+
+    getVo(id: Int!): Vo!
+    getAllVos: [Vo!]!
 }
 
 schema {
