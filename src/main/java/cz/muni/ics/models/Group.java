@@ -3,14 +3,21 @@ package cz.muni.ics.models;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Group entity from Perun.
+ * Core attributes are stored in entity and have their get methods.
+ * Additional attributes are stored in list accessed with getAttributes method.
+ *
+ * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
+ */
 public class Group {
 
     //core
     private Long id;
     private String name;
     private String description;
-    private Long voId;
     private Long parentGroupId;
+    private Long voId;
 
     private List<Attribute> attributes;
 

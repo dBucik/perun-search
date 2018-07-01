@@ -1,25 +1,21 @@
-package cz.muni.ics.JdbcTemplates;
+package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.FacilityDAO;
 import cz.muni.ics.Utils;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.FacilityMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Facility;
 import cz.muni.ics.models.InputAttribute;
-import org.json.JSONObject;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class FacilityJdbcTemplate implements FacilityDAO {
+public class FacilityDAOImpl implements FacilityDAO {
 
     private static final FacilityMapper MAPPER = new FacilityMapper();
 

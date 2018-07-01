@@ -1,7 +1,6 @@
 package cz.muni.ics;
 
 import com.coxautodev.graphql.tools.SchemaParser;
-import cz.muni.ics.JdbcTemplates.VoJdbcTemplate;
 import cz.muni.ics.models.Query;
 import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;

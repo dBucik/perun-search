@@ -1,5 +1,6 @@
 package cz.muni.ics.DAOs;
 
+import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.UserExtSource;
@@ -16,7 +17,7 @@ public interface UserExtSourceDAO {
      * @param id id of userExtSource
      * @return Found userExtSource or null if not such found.
      */
-    UserExtSource getUserExtSource(Long id);
+    UserExtSource getUserExtSource(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all userExtSources.
@@ -30,7 +31,7 @@ public interface UserExtSourceDAO {
      * @param attrs attributes to be fetched
      * @return List of attributes.
      */
-    List<Attribute> getUserExtSourceAttrs(Long id, List<InputAttribute> attrs);
+    List<Attribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
     /**
      * Get userExtSources that have specified attributes. (Exact matching used)

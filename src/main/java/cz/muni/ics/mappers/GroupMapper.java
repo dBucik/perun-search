@@ -2,7 +2,6 @@ package cz.muni.ics.mappers;
 
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Group;
-import cz.muni.ics.models.Vo;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.RowMapper;

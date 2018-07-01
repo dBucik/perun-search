@@ -16,63 +16,62 @@
     </bean>
 
     <!-- Definition JdbcTemplate beans -->
-    <bean id="destinationJdbcTemplate" class="cz.muni.ics.JdbcTemplates.DestinationJdbcTemplate">
+    <bean id="destinationDAO" class="cz.muni.ics.DAOs.impl.DestinationDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="extSourceJdbcTemplate" class="cz.muni.ics.JdbcTemplates.ExtSourceJdbcTemplate">
+    <bean id="extSourceDAO" class="cz.muni.ics.DAOs.impl.ExtSourceDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-     <bean id="facilityJdbcTemplate" class="cz.muni.ics.JdbcTemplates.FacilityJdbcTemplate">
+     <bean id="facilityDAO" class="cz.muni.ics.DAOs.impl.FacilityDAOImpl">
          <property name="dataSource" ref="dataSource" />
      </bean>
 
-    <bean id="groupJdbcTemplate" class="cz.muni.ics.JdbcTemplates.GroupJdbcTemplate">
+    <bean id="groupDAO" class="cz.muni.ics.DAOs.impl.GroupDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="hostJdbcTemplate" class="cz.muni.ics.JdbcTemplates.HostJdbcTemplate">
+    <bean id="hostDAO" class="cz.muni.ics.DAOs.impl.HostDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="memberJdbcTemplate" class="cz.muni.ics.JdbcTemplates.MemberJdbcTemplate">
+    <bean id="memberDAO" class="cz.muni.ics.DAOs.impl.MemberDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="resourceJdbcTemplate" class="cz.muni.ics.JdbcTemplates.ResourceJdbcTemplate">
+    <bean id="resourceDAO" class="cz.muni.ics.DAOs.impl.ResourceDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="serviceJdbcTemplate" class="cz.muni.ics.JdbcTemplates.ServiceJdbcTemplate">
+    <bean id="serviceDAO" class="cz.muni.ics.DAOs.impl.ServiceDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="userJdbcTemplate" class="cz.muni.ics.JdbcTemplates.UserJdbcTemplate">
+    <bean id="userDAO" class="cz.muni.ics.DAOs.impl.UserDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="userExtSourceJdbcTemplate" class="cz.muni.ics.JdbcTemplates.UserExtSourceJdbcTemplate">
+    <bean id="userExtSourceDAO" class="cz.muni.ics.DAOs.impl.UserExtSourceDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id = "voJdbcTemplate"
-          class = "cz.muni.ics.JdbcTemplates.VoJdbcTemplate">
+    <bean id = "voDAO" class="cz.muni.ics.DAOs.impl.VoDAOImpl">
         <property name = "dataSource" ref="dataSource" />
     </bean>
 
     <bean id="query" class="cz.muni.ics.models.Query">
-        <constructor-arg name="destinationJdbcTemplate" ref="destinationJdbcTemplate" />
-        <constructor-arg name="extSourceJdbcTemplate" ref="extSourceJdbcTemplate" />
-        <constructor-arg name="facilityJdbcTemplate" ref="facilityJdbcTemplate" />
-        <constructor-arg name="groupJdbcTemplate" ref="groupJdbcTemplate" />
-        <constructor-arg name="hostJdbcTemplate" ref="hostJdbcTemplate" />
-        <constructor-arg name="memberJdbcTemplate" ref="memberJdbcTemplate" />
-        <constructor-arg name="resourceJdbcTemplate" ref="resourceJdbcTemplate" />
-        <constructor-arg name="serviceJdbcTemplate" ref="serviceJdbcTemplate" />
-        <constructor-arg name="userExtSourceJdbcTemplate" ref="userExtSourceJdbcTemplate" />
-        <constructor-arg name="userJdbcTemplate" ref="userJdbcTemplate" />
-        <constructor-arg name="voJdbcTemplate" ref="voJdbcTemplate" />
+        <constructor-arg name="destinationDAO" ref="destinationDAO" />
+        <constructor-arg name="extSourceDAO" ref="extSourceDAO" />
+        <constructor-arg name="facilityDAO" ref="facilityDAO" />
+        <constructor-arg name="groupDAO" ref="groupDAO" />
+        <constructor-arg name="hostDAO" ref="hostDAO" />
+        <constructor-arg name="memberDAO" ref="memberDAO" />
+        <constructor-arg name="resourceDAO" ref="resourceDAO" />
+        <constructor-arg name="serviceDAO" ref="serviceDAO" />
+        <constructor-arg name="userExtSourceDAO" ref="userExtSourceDAO" />
+        <constructor-arg name="userDAO" ref="userDAO" />
+        <constructor-arg name="voDAO" ref="voDAO" />
     </bean>
 
 </beans>

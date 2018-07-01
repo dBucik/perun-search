@@ -3,6 +3,13 @@ package cz.muni.ics.models;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service entity from Perun.
+ * Core attributes are stored in entity and have their get methods.
+ * Additional attributes are stored in list accessed with getAttributes method.
+ *
+ * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
+ */
 public class Service {
 
     private Long id;

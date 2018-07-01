@@ -1,25 +1,21 @@
-package cz.muni.ics.JdbcTemplates;
+package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.ExtSourceDAO;
 import cz.muni.ics.Utils;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.ExtSourceMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.ExtSource;
 import cz.muni.ics.models.InputAttribute;
-import org.json.JSONObject;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class ExtSourceJdbcTemplate implements ExtSourceDAO {
+public class ExtSourceDAOImpl implements ExtSourceDAO {
 
     private static final ExtSourceMapper MAPPER = new ExtSourceMapper();
 

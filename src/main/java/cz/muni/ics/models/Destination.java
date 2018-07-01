@@ -1,5 +1,10 @@
 package cz.muni.ics.models;
 
+/**
+ * Destination entity from Perun.
+ *
+ * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
+ */
 public class Destination {
 
     private Long id;

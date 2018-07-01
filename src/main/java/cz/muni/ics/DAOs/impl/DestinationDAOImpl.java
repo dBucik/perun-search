@@ -1,4 +1,4 @@
-package cz.muni.ics.JdbcTemplates;
+package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.DestinationDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class DestinationJdbcTemplate implements DestinationDAO {
+public class DestinationDAOImpl implements DestinationDAO {
 
     private static final DestinationMapper MAPPER = new DestinationMapper();
 
@@ -44,8 +44,7 @@ public class DestinationJdbcTemplate implements DestinationDAO {
     @Override
     public List<Destination> getDestinations() {
         String query = "SELECT * FROM destinations";
-        List<Destination>  destinations = jdbcTemplate.query(query, new Object[] {}, MAPPER);
 
-        return destinations;
+        return jdbcTemplate.query(query, new Object[] {}, MAPPER);
     }
 }

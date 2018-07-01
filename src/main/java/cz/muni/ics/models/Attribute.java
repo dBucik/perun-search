@@ -1,5 +1,10 @@
 package cz.muni.ics.models;
 
+/**
+ * Class represents attribute stored in Perun. Each attribute has key and value.
+ *
+ * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
+ */
 public class Attribute {
 
     private String key;
@@ -28,7 +33,7 @@ public class Attribute {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof Attribute)) return false;
+        if (!(o instanceof Attribute)) return false;
         Attribute ao = (Attribute) o;
 
         return this.key.equals(ao.key) && this.value.equals(ao.value);

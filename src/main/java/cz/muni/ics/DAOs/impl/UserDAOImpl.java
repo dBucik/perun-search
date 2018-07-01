@@ -1,8 +1,7 @@
-package cz.muni.ics.JdbcTemplates;
+package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.UserDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.UserMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
@@ -17,7 +16,7 @@ import java.util.List;
 
 import static cz.muni.ics.Utils.convertAttrsFromInput;
 
-public class UserJdbcTemplate implements UserDAO {
+public class UserDAOImpl implements UserDAO {
 
     private static final UserMapper MAPPER = new UserMapper();
 
@@ -85,19 +84,17 @@ public class UserJdbcTemplate implements UserDAO {
     public List<User> getUsersByName(String titleBefore, String firstName, String middleName,
                                      String lastName, String titleAfter)
     {
-        StringBuilder param = new StringBuilder();
-        param.append((titleBefore == null) ? "% " : '%' + titleBefore + "% ");
-        param.append((firstName == null) ? "% " : '%' + firstName + "% ");
-        param.append((middleName == null) ? "% " : '%' + middleName + "% ");
-        param.append((lastName == null) ? "% " : '%' + lastName + "% ");
-        param.append((titleAfter == null) ? "%" : '%' + titleAfter + "% ");
-
         String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
                 "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
                 "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
         String query = queryBuilder(where);
+        String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
+                ((firstName == null) ? "% " : '%' + firstName + "% ") +
+                ((middleName == null) ? "% " : '%' + middleName + "% ") +
+                ((lastName == null) ? "% " : '%' + lastName + "% ") +
+                ((titleAfter == null) ? "%" : '%' + titleAfter + "% ");
         return jdbcTemplate.query(query,
-                new Object[] {param.toString()}, MAPPER);
+                new Object[] {param}, MAPPER);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package cz.muni.ics.JdbcTemplates;
+package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.VoDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoJdbcTemplate implements VoDAO {
+public class VoDAOImpl implements VoDAO {
 
     private static final VoMapper MAPPER = new VoMapper();
 

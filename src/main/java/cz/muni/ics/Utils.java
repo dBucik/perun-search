@@ -1,17 +1,11 @@
 package cz.muni.ics;
 
-import cz.muni.ics.JdbcTemplates.UserJdbcTemplate;
-import cz.muni.ics.JdbcTemplates.VoJdbcTemplate;
+import cz.muni.ics.DAOs.impl.UserDAOImpl;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +22,7 @@ public class Utils {
         // TESTING QUERIES
         ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
         Query query = (Query) context.getBean("query");
-        UserJdbcTemplate jdbcTemplate = (UserJdbcTemplate) context.getBean("userJdbcTemplate");
+        UserDAOImpl jdbcTemplate = (UserDAOImpl) context.getBean("userJdbcTemplate");
 
         List<User> users = jdbcTemplate.getUsersByName(null, null, null, "holub", null);
         System.out.println(users);

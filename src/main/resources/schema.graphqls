@@ -9,69 +9,69 @@ type Attribute {
 }
 
 type Destination {
-    id: Int!
+    id: Long!
     name: String!
     description: String!
 }
 
 type ExtSource {
-    id: Int!
+    id: Long!
     name: String!
     type: String!
     attributes: [Attribute!]!
 }
 
 type Facility {
-    id: Int!
+    id: Long!
     name: String!
     description: String!
     attributes: [Attribute!]!
 }
 
 type Group {
-    id: Int!
-    name: String!
-    description: String!
-    parentGroupId: Int!
-    voId: Int!
+    id: Long!
+   name: String!
+   description: String!
+    parentGroupId: Long!
+    voId: Long!
     attributes: [Attribute!]!
 }
 
 type Host {
-    id: Int!
+    id: Long!
     description: String!
     hostname: String!
-    facilityId: Int!
+    facilityId: Long!
     attributes: [Attribute!]!
 }
 
 type Member {
-    id: Int!
-    userId: Int!
-    voId: Int!
+    id: Long!
+    userId: Long!
+    voId: Long!
     status: String!
     sponsored: Boolean!
     attributes: [Attribute!]!
 }
 
 type Resource {
-    id: Int!
-    facilityId: Int!
+    id: Long!
+    facilityId: Long!
     name: String!
     description: String!
-    voId: Int!
+    voId: Long!
     attributes: [Attribute!]!
 }
 
 type Service {
-    id: Int!
+    id: Long!
     name: String!
-    ownerId: Int!
+    ownerId: Long!
     attributes: [Attribute!]!
 }
 
 type User {
-    id: Int!
+    id: Long!
     firstName: String!
     lastName: String!
     middleName: String!
@@ -83,67 +83,110 @@ type User {
 }
 
 type UserExtSource {
-    id: Int!
-    userId: Int!
+    id: Long!
+    userId: Long!
     loginExt: String!
-    extSourcesId: Int!
-    loa: Int!
+    extSourcesId: Long!
+    loa: Short!
     attributes: [Attribute!]!
 }
 
 type Vo {
-    id: Int
+    id: Long
     name: String!
     shortName: String!
     attributes: [Attribute!]!
 }
 
 type Query {
-    getDestination(id: Int!): Destination
-    getAllDestinations: [Destination]!
+    # DESTINATION
+    getDestination(id: Long!): Destination
+    getAllDestinations: [Destination!]!
+    getDestinationsByName(name: String!): [Destination!]!
 
-    getExtSource(id: Int!): ExtSource
-    getAllExtSources: [ExtSource]!
+    # EXT_SOURCE
+    getExtSource(id: Long!): ExtSource
+    getExtSources: [ExtSource!]!
+    getExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getExtSourcesByName(name: String!): [ExtSource!]!
+    getExtSourcesByType(type: String!): [ExtSource!]!
+    getExtSourcesWithAttrs(attrs: [InputAttribute!]!): [ExtSource!]!
 
-    getFacility(id: Int!): Facility
-    getAllFacilities: [Facility]!
+    # FACILITY
+    getFacility(id: Long!): Facility
+    getFacilities: [Facility!]!
+    getFacilityAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getFacilitiesByAttrs(attrs: [InputAttribute!]!): [Facility!]!
+    getFacilitiesByName(name: String!): [Facility!]!
 
-    getGroup(id: Int!): Group
-    getAllGroups: [Group]!
+    # GROUP
+    getGroup(id: Long!): Group
+    getGroupsByName(name: String!): [Group!]!
+    getGroups: [Group!]!
+    getGroupAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getGroupsWithAttrs(attrs: [InputAttribute!]!): [Group!]!
+    getParentGroup(childGroupId: Long!): Group!
+    getGroupsOfVo(voId: Long!): [Group!]!
 
-    getHost(id: Int!): Host
-    getAllHosts: [Host]!
+    # HOST
+    getHost(id: Long!): Host
+    getHostsByHostname(hostname: String!): [Host!]!
+    getHosts: [Host!]!
+    getHostAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getHostsWithAttrs(attrs: [InputAttribute!]!): [Host!]!
 
-    getMember(id: Int!): Member
-    getAllMembers: [Member]!
+    # MEMBER
+    getMember(id: Long!): Member
+    getMembers: [Member!]!
+    getMemberAttrs(id: Long!, attrs: [String!]!): [Attribute!]!
+    getMembersWithAttrs(attrs: [InputAttribute!]!): [Member!]!
+    getMembersOfUser(userId: Long!): [Member!]!
+    getMembersOfVo(voId: Long!): [Member!]!
+    getMembersByStatus(status: String!): [Member!]!
+    getMembersBySponsored(isSponsored: Boolean!): [Member!]!
 
-    getResource(id: Int!): Resource
-    getAllResources: [Resource]!
+    # RESOURCE
+    getResource(id: Long!): Resource
+    getResourcesByName(name: String!): [Resource!]!
+    getResources: [Resource!]!
+    getResourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getResourcesWithAttrs(attrs: [InputAttribute!]!): [Resource!]!
+    getResourcesOfFacility(facilityId: Long!): [Resource!]!
+    getResourcesOfVo(voId: Long!): [Resource!]!
 
-    getService(id: Int!): Service
-    getAllServices: [Service]!
+    # SERVICE
+    getService(id: Long!): Service
+    getServicesByName(name: String!): [Service!]!
+    getServices: [Service!]!
+    getServiceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getServicesWithAttrs(attrs: [InputAttribute!]!): [Service!]!
+    getServicesOfOwner(ownerId: Long!): [Service!]!
 
     # USER
-    getUser(id: Int!): User
+    getUser(id: Long!): User
     getUsers: [User!]!
     getUserAttrs(id: Long, attrs: [String!]): [Attribute!]!
     getUsersWithAttrs(attrs: [InputAttribute!]!): [User!]!
-    getUsersByName(titleBefore: String, firstName: String, middleName: String,
-                   lastName: String, titleAfter: String): [User!]!
+    getUsersByName(titleBefore: String, firstName: String, middleName: String, lastName: String, titleAfter: String): [User!]!
     getUsersByServiceAcc(isServiceAcc: Boolean): [User!]!
     getUsersBySponsoredAcc(isSponsoredAcc: Boolean): [User!]!
 
-    # UserExtSource
-    getUserExtSource(id: Int!): UserExtSource
-    getAllUserExtSources: [UserExtSource]!
+    # USER_EXT_SOURCE
+    getUserExtSource(id: Long!): UserExtSource
+    getUserExtSources: [UserExtSource!]!
+    getUserExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getUserExtSourcesWithAttrs(attrs: [InputAttribute!]!): [UserExtSource!]!
+    getUserExtSourcesOfUser(userId: Long!): [UserExtSource!]!
+    getUserExtSourcesOfExtSource(extSourceId: Long!): [UserExtSource!]!
+    getUserExtSourcesByLoginExt(loginExt: String!): [UserExtSource!]!
 
     # VO
-    getVo(id: Int!): Vo
+    getVo(id: Long!): Vo
     getVosByName(name: String!): [Vo!]!
     getVoByShortName(shortName: String!): Vo
     getVosByShortName(shortName: String!): [Vo!]!
     getVos: [Vo!]
-    getVoAttrs(id: Int!, attrs: [String!]): [Attribute!]!
+    getVoAttrs(id: Long!, attrs: [String!]): [Attribute!]!
     getVosWithAttrs(attrs: [InputAttribute!]!): [Vo!]!
 }
 

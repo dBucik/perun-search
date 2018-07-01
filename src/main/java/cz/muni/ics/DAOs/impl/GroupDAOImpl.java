@@ -1,25 +1,21 @@
-package cz.muni.ics.JdbcTemplates;
+package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.GroupDAO;
 import cz.muni.ics.Utils;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.GroupMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Group;
 import cz.muni.ics.models.InputAttribute;
-import org.json.JSONObject;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class GroupJdbcTemplate implements GroupDAO {
+public class GroupDAOImpl implements GroupDAO {
 
     private static final GroupMapper MAPPER = new GroupMapper();
 

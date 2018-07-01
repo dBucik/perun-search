@@ -1,5 +1,10 @@
 package cz.muni.ics.models;
 
+/**
+ * Attribute read from input for GraphQL.
+ *
+ * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
+ */
 public class InputAttribute {
 
     private String key;

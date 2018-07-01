@@ -13,7 +13,7 @@ public interface DestinationDAO {
     /**
      * Get Destination specified by ID.
      * @param id id of Destination
-     * @return Found Destination or null if not such found.
+     * @return Found Destination or null if no such found.
      * @throws DatabaseIntegrityException Thrown when more than one Destinations with the same ID found.
      */
     Destination getDestination(Long id) throws DatabaseIntegrityException;

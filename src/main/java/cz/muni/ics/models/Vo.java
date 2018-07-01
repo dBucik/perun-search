@@ -2,8 +2,14 @@ package cz.muni.ics.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Vo entity from Perun.
+ * Core attributes are stored in entity and have their get methods.
+ * Additional attributes are stored in list accessed with getAttributes method.
+ *
+ * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
+ */
 public class Vo {
 
     //core

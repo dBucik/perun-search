@@ -1,9 +1,15 @@
 package cz.muni.ics.models;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Host entity from Perun.
+ * Core attributes are stored in entity and have their get methods.
+ * Additional attributes are stored in list accessed with getAttributes method.
+ *
+ * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
+ */
 public class Host {
 
     //core

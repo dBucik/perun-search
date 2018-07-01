@@ -1,25 +1,21 @@
-package cz.muni.ics.JdbcTemplates;
+package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.HostDAO;
 import cz.muni.ics.Utils;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.mappers.AttributeMapper;
 import cz.muni.ics.mappers.HostMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.Host;
 import cz.muni.ics.models.InputAttribute;
-import org.json.JSONObject;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class HostJdbcTemplate implements HostDAO {
+public class HostDAOImpl implements HostDAO {
 
     private static final HostMapper MAPPER = new HostMapper();
 
