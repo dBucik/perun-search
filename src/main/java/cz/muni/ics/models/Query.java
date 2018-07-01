@@ -4,6 +4,7 @@ import com.coxautodev.graphql.tools.GraphQLRootResolver;
 import cz.muni.ics.DAOs.*;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.entities.*;
+import cz.muni.ics.models.richEntities.*;
 
 import java.util.List;
 
@@ -78,22 +79,19 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get ExtSource specified by ID.
      * @param id id of extSource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found extSource or null if not such found.
      * @throws DatabaseIntegrityException More than one ExtSource with same ID found.
      */
-    public ExtSource getExtSource(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return extSourceDAO.getExtSource(id, withAttrs);
+    public ExtSource getExtSource(Long id) throws DatabaseIntegrityException {
+        return extSourceDAO.getExtSource(id);
     }
-
 
     /**
      * Get all ExtSources.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    public List<ExtSource> getExtSources(boolean withAttrs) {
-        return extSourceDAO.getExtSources(withAttrs);
+    public List<ExtSource> getExtSources() {
+        return extSourceDAO.getExtSources();
     }
 
     /**
@@ -111,33 +109,80 @@ public class Query implements GraphQLRootResolver {
      * Get ExtSources with NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of ExtSource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    public List<ExtSource> getExtSourcesByName(String name, boolean withAttrs) {
-        return extSourceDAO.getExtSourcesByName(name, withAttrs);
+    public List<ExtSource> getExtSourcesByName(String name) {
+        return extSourceDAO.getExtSourcesByName(name);
     }
 
     /**
      * Get ExtSources with TYPE like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param type type of ExtSource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    public List<ExtSource> getExtSourcesByType(String type, boolean withAttrs) {
-        return extSourceDAO.getExtSourcesByType(type, withAttrs);
+    public List<ExtSource> getExtSourcesByType(String type) {
+        return extSourceDAO.getExtSourcesByType(type);
     }
 
     /**
      * Get ExtSources that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of ExtSources
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of ExtSources, empty list if nothing has been found.
      */
-    public List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return extSourceDAO.getExtSourcesWithAttrs(attrs, withAttrs);
+    public List<ExtSource> getExtSourcesWithAttrs(List<InputAttribute> attrs) {
+        return extSourceDAO.getExtSourcesWithAttrs(attrs);
+    }
+
+    /* RICH_EXT_SOURCE */
+
+    /**
+     * Get RichExtSource specified by ID.
+     * @param id id of extSource
+     * @return Found extSource or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichExtSource with same ID found.
+     */
+    public RichExtSource getRichExtSource(Long id) throws DatabaseIntegrityException {
+        return extSourceDAO.getRichExtSource(id);
+    }
+
+    /**
+     * Get all RichExtSources.
+     * @return List of RichExtSources, empty list if nothing has been found.
+     */
+    public List<RichExtSource> getRichExtSources() {
+        return extSourceDAO.getRichExtSources();
+    }
+
+    /**
+     * Get RichExtSources with NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of RichExtSource
+     * @return List of RichExtSources, empty list if nothing has been found.
+     */
+    public List<RichExtSource> getRichExtSourcesByName(String name) {
+        return extSourceDAO.getRichExtSourcesByName(name);
+    }
+
+    /**
+     * Get RichExtSources with TYPE like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param type type of RichExtSource
+     * @return List of RichExtSources, empty list if nothing has been found.
+     */
+    public List<RichExtSource> getRichExtSourcesByType(String type) {
+        return extSourceDAO.getRichExtSourcesByType(type);
+    }
+
+    /**
+     * Get RichExtSources that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichExtSources
+     * @return List of RichExtSources, empty list if nothing has been found.
+     */
+    public List<RichExtSource> getRichExtSourcesWithAttrs(List<InputAttribute> attrs) {
+        return extSourceDAO.getRichExtSourcesWithAttrs(attrs);
     }
 
     /* FACILITY */
@@ -145,21 +190,19 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get Facility specified by ID.
      * @param id id of Facility
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Facility or null if not such found.
      * @throws DatabaseIntegrityException More than one Facility with same ID found.
      */
-    public Facility getFacility(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return facilityDAO.getFacility(id, withAttrs);
+    public Facility getFacility(Long id) throws DatabaseIntegrityException {
+        return facilityDAO.getFacility(id);
     }
 
     /**
      * Get all Facilities.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Facilities, empty list if nothing has been found.
      */
-    public List<Facility> getFacilities(boolean withAttrs) {
-        return facilityDAO.getFacilities(withAttrs);
+    public List<Facility> getFacilities() {
+        return facilityDAO.getFacilities();
     }
 
     /**
@@ -177,22 +220,60 @@ public class Query implements GraphQLRootResolver {
      * Get Facilities that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Facilities
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Facilities found, empty list if nothing has been found.
      */
-    public List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return facilityDAO.getFacilitiesByAttrs(attrs, withAttrs);
+    public List<Facility> getFacilitiesByAttrs(List<InputAttribute> attrs) {
+        return facilityDAO.getFacilitiesByAttrs(attrs);
     }
 
     /**
      * Get Facilities with NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of Facility
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Facilities, empty list if nothing has been found.
      */
-    public List<Facility> getFacilitiesByName(String name, boolean withAttrs) {
-        return facilityDAO.getFacilitiesByName(name, withAttrs);
+    public List<Facility> getFacilitiesByName(String name) {
+        return facilityDAO.getFacilitiesByName(name);
+    }
+    
+    /* RICH_FACILITY */
+
+    /**
+     * Get RichFacility specified by ID.
+     * @param id id of RichFacility
+     * @return Found RichFacility or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichFacility with same ID found.
+     */
+    public RichFacility getRichFacility(Long id) throws DatabaseIntegrityException {
+        return facilityDAO.getRichFacility(id);
+    }
+
+    /**
+     * Get all RichFacilities.
+     * @return List of RichFacilities, empty list if nothing has been found.
+     */
+    public List<RichFacility> getRichFacilities() {
+        return facilityDAO.getRichFacilities();
+    }
+
+    /**
+     * Get RichFacilities that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichFacilities
+     * @return List of RichFacilities found, empty list if nothing has been found.
+     */
+    public List<RichFacility> getRichFacilitiesByAttrs(List<InputAttribute> attrs) {
+        return facilityDAO.getRichFacilitiesByAttrs(attrs);
+    }
+
+    /**
+     * Get RichFacilities with NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of RichFacility
+     * @return List of RichFacilities, empty list if nothing has been found.
+     */
+    public List<RichFacility> getRichFacilitiesByName(String name) {
+        return facilityDAO.getRichFacilitiesByName(name);
     }
 
     /* GROUP */
@@ -200,32 +281,29 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get Group specified by ID.
      * @param id id of Group
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Group or null if not such found.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      */
-    public Group getGroup(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return groupDAO.getGroup(id, withAttrs);
+    public Group getGroup(Long id) throws DatabaseIntegrityException {
+        return groupDAO.getGroup(id);
     }
 
     /**
      * Get Groups withe NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of Group
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    public List<Group> getGroupsByName(String name, boolean withAttrs) {
-        return groupDAO.getGroupsByName(name, withAttrs);
+    public List<Group> getGroupsByName(String name) {
+        return groupDAO.getGroupsByName(name);
     }
 
     /**
      * Get all Groups.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    public List<Group> getGroups(boolean withAttrs) {
-        return groupDAO.getGroups(withAttrs);
+    public List<Group> getGroups() {
+        return groupDAO.getGroups();
     }
 
     /**
@@ -243,33 +321,90 @@ public class Query implements GraphQLRootResolver {
      * Get Groups that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Groups
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups found, empty list if nothing has been found.
      */
-    public List<Group> getGroupsWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return groupDAO.getGroupsWithAttrs(attrs, withAttrs);
+    public List<Group> getGroupsWithAttrs(List<InputAttribute> attrs) {
+        return groupDAO.getGroupsWithAttrs(attrs);
     }
 
     /**
      * Get parent group of Group specified by ID.
      * @param childGroupId id of Group whose parent has to be found
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Parent Group.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      *                                    No parent group found for Group with specified ID.
      */
-    public Group getParentGroup(Long childGroupId, boolean withAttrs) throws DatabaseIntegrityException {
-        return groupDAO.getParentGroup(childGroupId, withAttrs);
+    public Group getParentGroup(Long childGroupId) throws DatabaseIntegrityException {
+        return groupDAO.getParentGroup(childGroupId);
     }
 
     /**
      * Get all Groups of VO specified by ID.
      * @param voId id of VO
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    public List<Group> getGroupsOfVo(Long voId, boolean withAttrs) {
-        return groupDAO.getGroupsOfVo(voId, withAttrs);
+    public List<Group> getGroupsOfVo(Long voId) {
+        return groupDAO.getGroupsOfVo(voId);
+    }
+    
+    /* RICH_GROUP */
+
+    /**
+     * Get RichGroup specified by ID.
+     * @param id id of RichGroup
+     * @return Found RichGroup or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichGroup with same ID found.
+     */
+    public RichGroup getRichGroup(Long id) throws DatabaseIntegrityException {
+        return groupDAO.getRichGroup(id);
+    }
+
+    /**
+     * Get RichGroups withe NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of RichGroup
+     * @return List of RichGroups, empty list if nothing has been found.
+     */
+    public List<RichGroup> getRichGroupsByName(String name) {
+        return groupDAO.getRichGroupsByName(name);
+    }
+
+    /**
+     * Get all RichGroups.
+     * @return List of RichGroups, empty list if nothing has been found.
+     */
+    public List<RichGroup> getRichGroups() {
+        return groupDAO.getRichGroups();
+    }
+
+    /**
+     * Get RichGroups that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichGroups
+     * @return List of RichGroups found, empty list if nothing has been found.
+     */
+    public List<RichGroup> getRichGroupsWithAttrs(List<InputAttribute> attrs) {
+        return groupDAO.getRichGroupsWithAttrs(attrs);
+    }
+
+    /**
+     * Get parent group of RichGroup specified by ID.
+     * @param childRichGroupId id of RichGroup whose parent has to be found
+     * @return Parent RichGroup.
+     * @throws DatabaseIntegrityException More than one RichGroup with same ID found.
+     *                                    No parent group found for RichGroup with specified ID.
+     */
+    public RichGroup getParentRichGroup(Long childRichGroupId) throws DatabaseIntegrityException {
+        return groupDAO.getParentRichGroup(childRichGroupId);
+    }
+
+    /**
+     * Get all RichGroups of VO specified by ID.
+     * @param voId id of VO
+     * @return List of RichGroups, empty list if nothing has been found.
+     */
+    public List<RichGroup> getRichGroupsOfVo(Long voId) {
+        return groupDAO.getRichGroupsOfVo(voId);
     }
 
     /* HOST */
@@ -277,32 +412,29 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get Host specified by ID.
      * @param id id of Host
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Host or null if not such found.
      * @throws DatabaseIntegrityException More than one Host with same ID found.
      */
-    public Host getHost(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return hostDAO.getHost(id, withAttrs);
+    public Host getHost(Long id) throws DatabaseIntegrityException {
+        return hostDAO.getHost(id);
     }
 
     /**
      * Get Hosts with HOSTNAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param hostname Hostname of Host
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    public List<Host> getHostsByHostname(String hostname, boolean withAttrs) {
-        return hostDAO.getHostsByHostname(hostname, withAttrs);
+    public List<Host> getHostsByHostname(String hostname) {
+        return hostDAO.getHostsByHostname(hostname);
     }
 
     /**
      * Get all Hosts.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    public List<Host> getHosts(boolean withAttrs) {
-        return hostDAO.getHosts(withAttrs);
+    public List<Host> getHosts() {
+        return hostDAO.getHosts();
     }
 
     /**
@@ -320,11 +452,50 @@ public class Query implements GraphQLRootResolver {
      * Get Hosts that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Hosts
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return hostDAO.getHostsWithAttrs(attrs, withAttrs);
+    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs) {
+        return hostDAO.getHostsWithAttrs(attrs);
+    }
+    
+    /* RICH_HOST */
+
+    /**
+     * Get RichHost specified by ID.
+     * @param id id of RichHost
+     * @return Found RichHost or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichHost with same ID found.
+     */
+    public RichHost getRichHost(Long id) throws DatabaseIntegrityException {
+        return hostDAO.getRichHost(id);
+    }
+
+    /**
+     * Get RichHosts with HOSTNAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param hostname RichHostname of RichHost
+     * @return List of RichHosts, empty list if nothing has been found.
+     */
+    public List<RichHost> getRichHostsByHostname(String hostname) {
+        return hostDAO.getRichHostsByHostname(hostname);
+    }
+
+    /**
+     * Get all RichHosts.
+     * @return List of RichHosts, empty list if nothing has been found.
+     */
+    public List<RichHost> getRichHosts() {
+        return hostDAO.getRichHosts();
+    }
+
+    /**
+     * Get RichHosts that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichHosts
+     * @return List of RichHosts, empty list if nothing has been found.
+     */
+    public List<RichHost> getRichHostsWithAttrs(List<InputAttribute> attrs) {
+        return hostDAO.getRichHostsWithAttrs(attrs);
     }
 
     /* MEMBER */
@@ -332,21 +503,19 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get Member specified by ID.
      * @param id id of Member
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Member or null if not such found.
      * @throws DatabaseIntegrityException More than one Member with same ID found.
      */
-    public Member getMember(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return memberDAO.getMember(id, withAttrs);
+    public Member getMember(Long id) throws DatabaseIntegrityException {
+        return memberDAO.getMember(id);
     }
 
     /**
      * Get all Members.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Members, null if nothing has been found.
      */
-    public List<Member> getMembers(boolean withAttrs) {
-        return memberDAO.getMembers(withAttrs);
+    public List<Member> getMembers() {
+        return memberDAO.getMembers();
     }
 
     /**
@@ -363,51 +532,111 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get Members that have specified attributes. (Exact matching used)
      * @param attrs attributes of Members
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Members found, empty list if nothing has been found.
      */
-    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return memberDAO.getMembersWithAttrs(attrs, withAttrs);
+    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs) {
+        return memberDAO.getMembersWithAttrs(attrs);
     }
 
     /**
      * Get Members of user specified by ID.
      * @param userId id of user
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Members, empty list if nothing has been found.
      */
-    public List<Member> getMembersOfUser(Long userId, boolean withAttrs) {
-        return memberDAO.getMembersOfUser(userId, withAttrs);
+    public List<Member> getMembersOfUser(Long userId) {
+        return memberDAO.getMembersOfUser(userId);
     }
 
     /**
      * Get Members of vo specified by ID.
      * @param voId id of vo.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Members, empty list if nothing has been found.
      */
-    public List<Member> getMembersOfVo(Long voId, boolean withAttrs) {
-        return memberDAO.getMembersOfVo(voId, withAttrs);
+    public List<Member> getMembersOfVo(Long voId) {
+        return memberDAO.getMembersOfVo(voId);
     }
 
     /**
      * Get Members with specified STATUS.
      * @param status ACTIVE or EXPIRED values are accepted
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Members, empty list if nothing has been found.
      */
-    public List<Member> getMembersByStatus(String status, boolean withAttrs) {
-        return memberDAO.getMembersByStatus(status, withAttrs);
+    public List<Member> getMembersByStatus(String status) {
+        return memberDAO.getMembersByStatus(status);
     }
 
     /**
      * Get Members with specified value for sponsorship.
      * @param isSponsored TRUE if Member is sponsored, FALSE otherwise
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Members, empty list if nothing has been found.
      */
-    public List<Member> getMembersBySponsored(boolean isSponsored, boolean withAttrs) {
-        return memberDAO.getMembersBySponsored(isSponsored, withAttrs);
+    public List<Member> getMembersBySponsored(boolean isSponsored) {
+        return memberDAO.getMembersBySponsored(isSponsored);
+    }
+    
+    /* RICH_MEMBER */
+
+    /**
+     * Get RichMember specified by ID.
+     * @param id id of RichMember
+     * @return Found RichMember or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichMember with same ID found.
+     */
+    public RichMember getRichMember(Long id) throws DatabaseIntegrityException {
+        return memberDAO.getRichMember(id);
+    }
+
+    /**
+     * Get all RichMembers.
+     * @return List of RichMembers, null if nothing has been found.
+     */
+    public List<RichMember> getRichMembers() {
+        return memberDAO.getRichMembers();
+    }
+
+    /**
+     * Get RichMembers that have specified attributes. (Exact matching used)
+     * @param attrs attributes of RichMembers
+     * @return List of RichMembers found, empty list if nothing has been found.
+     */
+    public List<RichMember> getRichMembersWithAttrs(List<InputAttribute> attrs) {
+        return memberDAO.getRichMembersWithAttrs(attrs);
+    }
+
+    /**
+     * Get RichMembers of user specified by ID.
+     * @param userId id of user
+     * @return List of RichMembers, empty list if nothing has been found.
+     */
+    public List<RichMember> getRichMembersOfUser(Long userId) {
+        return memberDAO.getRichMembersOfUser(userId);
+    }
+
+    /**
+     * Get RichMembers of vo specified by ID.
+     * @param voId id of vo.
+     * @return List of RichMembers, empty list if nothing has been found.
+     */
+    public List<RichMember> getRichMembersOfVo(Long voId) {
+        return memberDAO.getRichMembersOfVo(voId);
+    }
+
+    /**
+     * Get RichMembers with specified STATUS.
+     * @param status ACTIVE or EXPIRED values are accepted
+     * @return List of RichMembers, empty list if nothing has been found.
+     */
+    public List<RichMember> getRichMembersByStatus(String status) {
+        return memberDAO.getRichMembersByStatus(status);
+    }
+
+    /**
+     * Get RichMembers with specified value for sponsorship.
+     * @param isSponsored TRUE if RichMember is sponsored, FALSE otherwise
+     * @return List of RichMembers, empty list if nothing has been found.
+     */
+    public List<RichMember> getRichMembersBySponsored(boolean isSponsored) {
+        return memberDAO.getRichMembersBySponsored(isSponsored);
     }
 
     /* RESOURCE */
@@ -415,32 +644,29 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get Resource specified by ID.
      * @param id id of Resource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Resource or null if not such found.
      * @throws DatabaseIntegrityException More than one Resource with same ID found.
      */
-    public Resource getResource(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return resourceDAO.getResource(id, withAttrs);
+    public Resource getResource(Long id) throws DatabaseIntegrityException {
+        return resourceDAO.getResource(id);
     }
 
     /**
      * Get Resource with NAME like specified parameter.
      * (Operator LIKE used, comparing ignores case)
      * @param name name of Resource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Resources, empty list if nothing has been found.
      */
-    public List<Resource> getResourcesByName(String name, boolean withAttrs) {
-        return resourceDAO.getResourcesByName(name, withAttrs);
+    public List<Resource> getResourcesByName(String name) {
+        return resourceDAO.getResourcesByName(name);
     }
 
     /**
      * Get all Resources.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Resources, empty list if nothing has been found.
      */
-    public List<Resource> getResources(boolean withAttrs) {
-        return resourceDAO.getResources(withAttrs);
+    public List<Resource> getResources() {
+        return resourceDAO.getResources();
     }
 
     /**
@@ -458,31 +684,86 @@ public class Query implements GraphQLRootResolver {
      * Get Resources that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Resources
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Resources, empty list if nothing has been found.
      */
-    public List<Resource> getResourcesWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return resourceDAO.getResourcesWithAttrs(attrs, withAttrs);
+    public List<Resource> getResourcesWithAttrs(List<InputAttribute> attrs) {
+        return resourceDAO.getResourcesWithAttrs(attrs);
     }
 
     /**
      * Get Resources of Facility specified by ID.
      * @param facilityId id of Facility
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Resources, empty list if nothing has been found.
      */
-    public List<Resource> getResourcesOfFacility(Long facilityId, boolean withAttrs) {
-        return resourceDAO.getResourcesOfFacility(facilityId, withAttrs);
+    public List<Resource> getResourcesOfFacility(Long facilityId) {
+        return resourceDAO.getResourcesOfFacility(facilityId);
     }
 
     /**
      * Get Resources of Vo specified by ID.
      * @param voId id of Vo
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Resources, empty list if nothing has been found.
      */
-    public List<Resource> getResourcesOfVo(Long voId, boolean withAttrs) {
-        return resourceDAO.getResourcesOfVo(voId, withAttrs);
+    public List<Resource> getResourcesOfVo(Long voId) {
+        return resourceDAO.getResourcesOfVo(voId);
+    }
+    
+    /* RICH_RESOURCE */
+    
+    /**
+     * Get RichResource specified by ID.
+     * @param id id of RichResource
+     * @return Found RichResource or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichResource with same ID found.
+     */
+    public RichResource getRichResource(Long id) throws DatabaseIntegrityException {
+        return resourceDAO.getRichResource(id);
+    }
+
+    /**
+     * Get RichResource with NAME like specified parameter.
+     * (Operator LIKE used, comparing ignores case)
+     * @param name name of RichResource
+     * @return List of RichResources, empty list if nothing has been found.
+     */
+    public List<RichResource> getRichResourcesByName(String name) {
+        return resourceDAO.getRichResourcesByName(name);
+    }
+
+    /**
+     * Get all RichResources.
+     * @return List of RichResources, empty list if nothing has been found.
+     */
+    public List<RichResource> getRichResources() {
+        return resourceDAO.getRichResources();
+    }
+
+    /**
+     * Get RichResources that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichResources
+     * @return List of RichResources, empty list if nothing has been found.
+     */
+    public List<RichResource> getRichResourcesWithAttrs(List<InputAttribute> attrs) {
+        return resourceDAO.getRichResourcesWithAttrs(attrs);
+    }
+
+    /**
+     * Get RichResources of Facility specified by ID.
+     * @param facilityId id of Facility
+     * @return List of RichResources, empty list if nothing has been found.
+     */
+    public List<RichResource> getRichResourcesOfFacility(Long facilityId) {
+        return resourceDAO.getRichResourcesOfFacility(facilityId);
+    }
+
+    /**
+     * Get RichResources of Vo specified by ID.
+     * @param voId id of Vo
+     * @return List of RichResources, empty list if nothing has been found.
+     */
+    public List<RichResource> getRichResourcesOfVo(Long voId) {
+        return resourceDAO.getRichResourcesOfVo(voId);
     }
 
     /* SERVICE */
@@ -490,31 +771,28 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get Service specified by ID.
      * @param id id of Service
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Service or null if not such found.
      * @throws DatabaseIntegrityException When more than one Service with same id found.
      */
-    public Service getService(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return serviceDAO.getService(id, withAttrs);
+    public Service getService(Long id) throws DatabaseIntegrityException {
+        return serviceDAO.getService(id);
     }
 
     /**
      * Get Services with NAME like specified parameter.
      * @param name name of Service
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    public List<Service> getServicesByName(String name, boolean withAttrs) {
-        return serviceDAO.getServicesByName(name, withAttrs);
+    public List<Service> getServicesByName(String name) {
+        return serviceDAO.getServicesByName(name);
     }
 
     /**
      * Get all Services.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    public List<Service> getServices(boolean withAttrs) {
-        return serviceDAO.getServices(withAttrs);
+    public List<Service> getServices() {
+        return serviceDAO.getServices();
     }
 
     /**
@@ -532,21 +810,67 @@ public class Query implements GraphQLRootResolver {
      * Get Services that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Services
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    public List<Service> getServicesWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return serviceDAO.getServicesWithAttrs(attrs, withAttrs);
+    public List<Service> getServicesWithAttrs(List<InputAttribute> attrs) {
+        return serviceDAO.getServicesWithAttrs(attrs);
     }
 
     /**
      * Get resources of Owner specified by ID.
      * @param ownerId id of Owner
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Services, empty list if nothing has been found.
      */
-    public List<Service> getServicesOfOwner(Long ownerId, boolean withAttrs) {
-        return serviceDAO.getServicesOfOwner(ownerId, withAttrs);
+    public List<Service> getServicesOfOwner(Long ownerId) {
+        return serviceDAO.getServicesOfOwner(ownerId);
+    }
+    
+    /* RICH_SERVICE */
+
+    /**
+     * Get RichService specified by ID.
+     * @param id id of RichService
+     * @return Found RichService or null if not such found.
+     * @throws DatabaseIntegrityException When more than one RichService with same id found.
+     */
+    public RichService getRichService(Long id) throws DatabaseIntegrityException {
+        return serviceDAO.getRichService(id);
+    }
+
+    /**
+     * Get RichServices with NAME like specified parameter.
+     * @param name name of RichService
+     * @return List of RichServices, empty list if nothing has been found.
+     */
+    public List<RichService> getRichServicesByName(String name) {
+        return serviceDAO.getRichServicesByName(name);
+    }
+
+    /**
+     * Get all RichServices.
+     * @return List of RichServices, empty list if nothing has been found.
+     */
+    public List<RichService> getRichServices() {
+        return serviceDAO.getRichServices();
+    }
+
+    /**
+     * Get RichServices that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichServices
+     * @return List of RichServices, empty list if nothing has been found.
+     */
+    public List<RichService> getRichServicesWithAttrs(List<InputAttribute> attrs) {
+        return serviceDAO.getRichServicesWithAttrs(attrs);
+    }
+
+    /**
+     * Get resources of Owner specified by ID.
+     * @param ownerId id of Owner
+     * @return List of RichServices, empty list if nothing has been found.
+     */
+    public List<RichService> getRichServicesOfOwner(Long ownerId) {
+        return serviceDAO.getRichServicesOfOwner(ownerId);
     }
 
     /* USER */
@@ -554,20 +878,18 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get user specified by ID.
      * @param id id of user
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found user or null if not such found.
      */
-    public User getUser(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return userDAO.getUser(id, withAttrs);
+    public User getUser(Long id) throws DatabaseIntegrityException {
+        return userDAO.getUser(id);
     }
 
     /**
      * Get all users.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of users, empty list if nothing has been found.
      */
-    public List<User> getUsers(boolean withAttrs) {
-        return userDAO.getUsers(withAttrs);
+    public List<User> getUsers() {
+        return userDAO.getUsers();
     }
 
     /**
@@ -583,11 +905,10 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get users that have specified attributes. (Exact matching used)
      * @param attrs attributes of users
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of users found, empty list if nothing has been found.
      */
-    public List<User> getUsersWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return userDAO.getUsersWithAttrs(attrs, withAttrs);
+    public List<User> getUsersWithAttrs(List<InputAttribute> attrs) {
+        return userDAO.getUsersWithAttrs(attrs);
     }
 
     /**
@@ -597,52 +918,108 @@ public class Query implements GraphQLRootResolver {
      * @param middleName middle name of user
      * @param lastName family name of user
      * @param titleAfter title after the name
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of users found, empty list if nothing has been found.
      */
     public List<User> getUsersByName(String titleBefore, String firstName, String middleName,
-                              String lastName, String titleAfter, boolean withAttrs) {
-        return userDAO.getUsersByName(titleBefore, firstName, middleName, lastName, titleAfter, withAttrs);
+                              String lastName, String titleAfter) {
+        return userDAO.getUsersByName(titleBefore, firstName, middleName, lastName, titleAfter);
     }
 
     /**
      * Get users by specifying if their acc is serviceAcc.
      * @param isServiceAcc TRUE for serviceAccounts, FALSE otherwise.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of users found, empty list if nothing has been found.
      */
-    public List<User> getUsersByServiceAcc(boolean isServiceAcc, boolean withAttrs) {
-        return userDAO.getUsersByServiceAcc(isServiceAcc, withAttrs);
+    public List<User> getUsersByServiceAcc(boolean isServiceAcc) {
+        return userDAO.getUsersByServiceAcc(isServiceAcc);
     }
 
     /**
      * Get users by specifying if their acc is sponsored.
      * @param isSponsoredAcc TRUE for sponsoredAccounts, FALSE otherwise.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of users found, empty list if nothing has been found.
      */
-    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc, boolean withAttrs) {
-        return userDAO.getUsersBySponsoredAcc(isSponsoredAcc, withAttrs);
+    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        return userDAO.getUsersBySponsoredAcc(isSponsoredAcc);
+    }
+    
+    /* RICH_USER */
+
+    /**
+     * Get user specified by ID.
+     * @param id id of user
+     * @return Found user or null if not such found.
+     */
+    public RichUser getRichUser(Long id) throws DatabaseIntegrityException {
+        return userDAO.getRichUser(id);
+    }
+
+    /**
+     * Get all users.
+     * @return List of users, empty list if nothing has been found.
+     */
+    public List<RichUser> getRichUsers() {
+        return userDAO.getRichUsers();
+    }
+
+    /**
+     * Get users that have specified attributes. (Exact matching used)
+     * @param attrs attributes of users
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<RichUser> getRichUsersWithAttrs(List<InputAttribute> attrs) {
+        return userDAO.getRichUsersWithAttrs(attrs);
+    }
+
+    /**
+     * Get users with specified NAME. (LIKE operator used)
+     * @param titleBefore title before the name
+     * @param firstName given name of user
+     * @param middleName middle name of user
+     * @param lastName family name of user
+     * @param titleAfter title after the name
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<RichUser> getRichUsersByName(String titleBefore, String firstName, String middleName,
+                                     String lastName, String titleAfter) {
+        return userDAO.getRichUsersByName(titleBefore, firstName, middleName, lastName, titleAfter);
+    }
+
+    /**
+     * Get users by specifying if their acc is serviceAcc.
+     * @param isServiceAcc TRUE for serviceAccounts, FALSE otherwise.
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc) {
+        return userDAO.getRichUsersByServiceAcc(isServiceAcc);
+    }
+
+    /**
+     * Get users by specifying if their acc is sponsored.
+     * @param isSponsoredAcc TRUE for sponsoredAccounts, FALSE otherwise.
+     * @return List of users found, empty list if nothing has been found.
+     */
+    public List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        return userDAO.getRichUsersBySponsoredAcc(isSponsoredAcc);
     }
 
     /* USER_EXT_SOURCE */
+    
     /**
      * Get userExtSource specified by ID.
      * @param id id of userExtSource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found userExtSource or null if not such found.
      */
-    public UserExtSource getUserExtSource(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return userExtSourceDAO.getUserExtSource(id, withAttrs);
+    public UserExtSource getUserExtSource(Long id) throws DatabaseIntegrityException {
+        return userExtSourceDAO.getUserExtSource(id);
     }
 
     /**
      * Get all userExtSources.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise 
      * @return List of userExtSources, null if nothing has been found.
      */
-    public List<UserExtSource> getUserExtSources(boolean withAttrs) {
-        return userExtSourceDAO.getUserExtSources(withAttrs);
+    public List<UserExtSource> getUserExtSources() {
+        return userExtSourceDAO.getUserExtSources();
     }
 
     /**
@@ -658,41 +1035,92 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get userExtSources that have specified attributes. (Exact matching used)
      * @param attrs attributes of userExtSources
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return userExtSourceDAO.getUserExtSourcesWithAttrs(attrs, withAttrs);
+    public List<UserExtSource> getUserExtSourcesWithAttrs(List<InputAttribute> attrs) {
+        return userExtSourceDAO.getUserExtSourcesWithAttrs(attrs);
     }
 
     /**
      * Get userExtSources of user specified by ID.
      * @param userId id of user
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<UserExtSource> getUserExtSourcesOfUser(Long userId, boolean withAttrs) {
-        return userExtSourceDAO.getUserExtSourcesOfUser(userId, withAttrs);
+    public List<UserExtSource> getUserExtSourcesOfUser(Long userId) {
+        return userExtSourceDAO.getUserExtSourcesOfUser(userId);
     }
 
     /**
      * Get userExtSources of extSource specified by ID.
      * @param extSourceId id of extSource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId, boolean withAttrs) {
-        return userExtSourceDAO.getUserExtSourcesOfExtSource(extSourceId, withAttrs);
+    public List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId) {
+        return userExtSourceDAO.getUserExtSourcesOfExtSource(extSourceId);
     }
 
     /**
      * Get userExtSources with specified loginExt
      * @param loginExt loginExt of userExtSource
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt, boolean withAttrs) {
-        return userExtSourceDAO.getUserExtSourcesByLoginExt(loginExt, withAttrs);
+    public List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt) {
+        return userExtSourceDAO.getUserExtSourcesByLoginExt(loginExt);
+    }
+    
+    /* RICH_USER_EXT_SOURCE */
+
+    /**
+     * Get userExtSource specified by ID.
+     * @param id id of userExtSource
+     * @return Found userExtSource or null if not such found.
+     */
+    public RichUserExtSource getRichUserExtSource(Long id) throws DatabaseIntegrityException {
+        return userExtSourceDAO.getRichUserExtSource(id);
+    }
+
+    /**
+     * Get all userExtSources.
+     * @return List of userExtSources, null if nothing has been found.
+     */
+    public List<RichUserExtSource> getRichUserExtSources() {
+        return userExtSourceDAO.getRichUserExtSources();
+    }
+
+    /**
+     * Get userExtSources that have specified attributes. (Exact matching used)
+     * @param attrs attributes of userExtSources
+     * @return List of userExtSources found, empty list if nothing has been found.
+     */
+    public List<RichUserExtSource> getRichUserExtSourcesWithAttrs(List<InputAttribute> attrs) {
+        return userExtSourceDAO.getRichUserExtSourcesWithAttrs(attrs);
+    }
+
+    /**
+     * Get userExtSources of user specified by ID.
+     * @param userId id of user
+     * @return List of userExtSources found, empty list if nothing has been found.
+     */
+    public List<RichUserExtSource> getRichUserExtSourcesOfUser(Long userId) {
+        return userExtSourceDAO.getRichUserExtSourcesOfUser(userId);
+    }
+
+    /**
+     * Get userExtSources of extSource specified by ID.
+     * @param extSourceId id of extSource
+     * @return List of userExtSources found, empty list if nothing has been found.
+     */
+    public List<RichUserExtSource> getRichUserExtSourcesOfExtSource(Long extSourceId) {
+        return userExtSourceDAO.getRichUserExtSourcesOfExtSource(extSourceId);
+    }
+
+    /**
+     * Get userExtSources with specified loginExt
+     * @param loginExt loginExt of userExtSource
+     * @return List of userExtSources found, empty list if nothing has been found.
+     */
+    public List<RichUserExtSource> getRichUserExtSourcesByLoginExt(String loginExt) {
+        return userExtSourceDAO.getRichUserExtSourcesByLoginExt(loginExt);
     }
 
     /* VO */
@@ -700,50 +1128,45 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get vo specified by ID.
      * @param id id of vo
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found vo or null if not such found.
      */
-    public Vo getVo(Long id, boolean withAttrs) throws DatabaseIntegrityException {
-        return voDAO.getVo(id, withAttrs);
+    public Vo getVo(Long id) throws DatabaseIntegrityException {
+        return voDAO.getVo(id);
     }
 
     /**
      * Get vos with names like specified parameter. (LIKE operator used, comparing ignores case)
      * @param name substring in name of vo
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of vos, empty list if nothing has been found.
      */
-    public List<Vo> getVosByName(String name, boolean withAttrs) {
-        return voDAO.getVosByName(name, withAttrs);
+    public List<Vo> getVosByName(String name) {
+        return voDAO.getVosByName(name);
     }
 
     /**
      * Get vo specified by SHORT NAME. (EXACT MATCH, comparing ignores case)
      * @param shortName short name of vo
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found vo or null if not such found.
      */
-    public Vo getVoByShortName(String shortName, boolean withAttrs) throws DatabaseIntegrityException {
-        return voDAO.getVoByShortName(shortName, withAttrs);
+    public Vo getVoByShortName(String shortName) throws DatabaseIntegrityException {
+        return voDAO.getVoByShortName(shortName);
     }
 
     /**
      * Get vos with short names like specified parameter. (LIKE operator used, comparing ignores case)
      * @param shortName substring in short_name of vo
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of vos, empty list if nothing has been found.
      */
-    public List<Vo> getVosByShortName(String shortName, boolean withAttrs) {
-        return voDAO.getVosByShortName(shortName, withAttrs);
+    public List<Vo> getVosByShortName(String shortName) {
+        return voDAO.getVosByShortName(shortName);
     }
 
     /**
      * Get all vos.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of vos, empty list if nothing has been found.
      */
-    public List<Vo> getVos(boolean withAttrs) {
-        return voDAO.getVos(withAttrs);
+    public List<Vo> getVos() {
+        return voDAO.getVos();
     }
 
     /**
@@ -759,10 +1182,65 @@ public class Query implements GraphQLRootResolver {
     /**
      * Get vos that have specified attributes. (Exact matching used)
      * @param attrs attributes of vos
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of vos found, empty list if nothing has been found.
      */
-    public List<Vo> getVosWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        return voDAO.getVosWithAttrs(attrs, withAttrs);
+    public List<Vo> getVosWithAttrs(List<InputAttribute> attrs) {
+        return voDAO.getVosWithAttrs(attrs);
     }
+    
+    /* RICH_VO */
+
+    /**
+     * Get vo specified by ID.
+     * @param id id of vo
+     * @return Found vo or null if not such found.
+     */
+    public RichVo getRichVo(Long id) throws DatabaseIntegrityException {
+        return voDAO.getRichVo(id);
+    }
+
+    /**
+     * Get vos with names like specified parameter. (LIKE operator used, comparing ignores case)
+     * @param name substring in name of vo
+     * @return List of vos, empty list if nothing has been found.
+     */
+    public List<RichVo> getRichVosByName(String name) {
+        return voDAO.getRichVosByName(name);
+    }
+
+    /**
+     * Get vo specified by SHORT NAME. (EXACT MATCH, comparing ignores case)
+     * @param shortName short name of vo
+     * @return Found vo or null if not such found.
+     */
+    public RichVo getRichVoByShortName(String shortName) throws DatabaseIntegrityException {
+        return voDAO.getRichVoByShortName(shortName);
+    }
+
+    /**
+     * Get vos with short names like specified parameter. (LIKE operator used, comparing ignores case)
+     * @param shortName substring in short_name of vo
+     * @return List of vos, empty list if nothing has been found.
+     */
+    public List<RichVo> getRichVosByShortName(String shortName) {
+        return voDAO.getRichVosByShortName(shortName);
+    }
+
+    /**
+     * Get all vos.
+     * @return List of vos, empty list if nothing has been found.
+     */
+    public List<RichVo> getRichVos() {
+        return voDAO.getRichVos();
+    }
+
+    /**
+     * Get vos that have specified attributes. (Exact matching used)
+     * @param attrs attributes of vos
+     * @return List of vos found, empty list if nothing has been found.
+     */
+    public List<RichVo> getRichVosWithAttrs(List<InputAttribute> attrs) {
+        return voDAO.getRichVosWithAttrs(attrs);
+    }
+    
 }
