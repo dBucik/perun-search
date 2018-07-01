@@ -47,4 +47,5 @@ public class DestinationDAOImpl implements DestinationDAO {
 
         return jdbcTemplate.query(query, new Object[] {}, MAPPER);
     }
+
 }

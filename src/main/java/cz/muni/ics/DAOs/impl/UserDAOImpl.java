@@ -1,11 +1,14 @@
 package cz.muni.ics.DAOs.impl;
 
+import cz.muni.ics.DAOs.DAOUtils;
 import cz.muni.ics.DAOs.UserDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.UserMapper;
+import cz.muni.ics.mappers.richEntities.RichUserMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.entities.User;
+import cz.muni.ics.models.richEntities.RichUser;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,11 +17,10 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cz.muni.ics.Utils.convertAttrsFromInput;
-
 public class UserDAOImpl implements UserDAO {
 
     private static final UserMapper MAPPER = new UserMapper();
+    private static final RichUserMapper RICH_MAPPER = new RichUserMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -29,10 +31,12 @@ public class UserDAOImpl implements UserDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    /* USER */
+
     @Override
-    public User getUser(Long id, boolean withAttrs) throws DatabaseIntegrityException {
+    public User getUser(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id=?";
-        String query = queryBuilder(where, withAttrs);
+        String query = queryBuilder(where, false);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -44,15 +48,122 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsers(boolean withAttrs) {
-        String query = queryBuilder(null, withAttrs);
+    public List<User> getUsers() {
+        String query = queryBuilder(null, false);
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
+    public List<User> getUsersWithAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichUsersWithAttrs(attrs));
+    }
+
+    @Override
+    public List<User> getUsersByName(String titleBefore, String firstName, String middleName,
+                                     String lastName, String titleAfter)
+    {
+        String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
+                "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
+                "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
+        String query = queryBuilder(where, false);
+        String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
+                ((firstName == null) ? "% " : '%' + firstName + "% ") +
+                ((middleName == null) ? "% " : '%' + middleName + "% ") +
+                ((lastName == null) ? "% " : '%' + lastName + "% ") +
+                ((titleAfter == null) ? "%" : '%' + titleAfter + "% ");
+
+        return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
+    }
+
+    @Override
+    public List<User> getUsersByServiceAcc(boolean isServiceAcc) {
+        String param = isServiceAcc ? "t" : "f";
+        String where = "WHERE t.service_acc = ?";
+        String query = queryBuilder(where, false);
+        return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
+    }
+
+    @Override
+    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        String param = isSponsoredAcc ? "t" : "f";
+        String where = "WHERE t.sponsored_acc = ?";
+        String query = queryBuilder(where, false);
+        return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
+    }
+
+    /* RICH_USER */
+
+    @Override
+    public RichUser getRichUser(Long id) throws DatabaseIntegrityException {
+        String where = "WHERE t.id=?";
+        String query = queryBuilder(where, true);
+
+        try {
+            return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        } catch (IncorrectResultSetColumnCountException e) {
+            throw new DatabaseIntegrityException("More Users with same ID found [id: " + id + ']');
+        }
+    }
+
+    @Override
+    public List<RichUser> getRichUsers() {
+        String query = queryBuilder(null, true);
+        return jdbcTemplate.query(query, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichUser> getRichUsersWithAttrs(List<InputAttribute> attrs) {
+        //TODO: improve
+        List<RichUser> users = getRichUsers();
+        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+
+        users.removeIf(user -> {
+            assert filter != null;
+            return ! user.getAttributes().containsAll(filter);
+        });
+
+        return users;
+    }
+
+    @Override
+    public List<RichUser> getRichUsersByName(String titleBefore, String firstName, String middleName, String lastName, String titleAfter) {
+        String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
+                "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
+                "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
+        String query = queryBuilder(where, true);
+        String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
+                ((firstName == null) ? "% " : '%' + firstName + "% ") +
+                ((middleName == null) ? "% " : '%' + middleName + "% ") +
+                ((lastName == null) ? "% " : '%' + lastName + "% ") +
+                ((titleAfter == null) ? "%" : '%' + titleAfter + "% ");
+
+        return jdbcTemplate.query(query, new Object[] { param }, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc) {
+        String param = isServiceAcc ? "t" : "f";
+        String where = "WHERE t.service_acc = ?";
+        String query = queryBuilder(where, true);
+        return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        String param = isSponsoredAcc ? "t" : "f";
+        String where = "WHERE t.sponsored_acc = ?";
+        String query = queryBuilder(where, true);
+        return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
+    }
+
+    /* ATTRIBUTES */
+
+    @Override
     public List<Attribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        User user = getUser(id, true);
+        RichUser user = getRichUser(id);
         List<Attribute> result = new ArrayList<>();
         if (attrs == null) {
             result.add(new Attribute("id", user.getId().toString()));
@@ -66,53 +177,6 @@ public class UserDAOImpl implements UserDAO {
             result.addAll(user.getAttributesByKeys(attrs));
         }
         return result;
-    }
-
-    @Override
-    public List<User> getUsersWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        //TODO: improve
-        List<User> users = getUsers(withAttrs);
-        List<Attribute> filter = convertAttrsFromInput(attrs);
-
-        users.removeIf(user -> {
-            assert filter != null;
-            return ! user.getAttributes().containsAll(filter);
-        });
-
-        return users;
-    }
-
-    @Override
-    public List<User> getUsersByName(String titleBefore, String firstName, String middleName,
-                                     String lastName, String titleAfter, boolean withAttrs)
-    {
-        String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
-                "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
-                "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
-        String query = queryBuilder(where, withAttrs);
-        String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
-                ((firstName == null) ? "% " : '%' + firstName + "% ") +
-                ((middleName == null) ? "% " : '%' + middleName + "% ") +
-                ((lastName == null) ? "% " : '%' + lastName + "% ") +
-                ((titleAfter == null) ? "%" : '%' + titleAfter + "% ");
-        return jdbcTemplate.query(query,
-                new Object[] {param}, MAPPER);
-    }
-
-    @Override
-    public List<User> getUsersByServiceAcc(boolean isServiceAcc, boolean withAttrs) {
-        String param = isServiceAcc ? "t" : "f";
-        String where = "WHERE t.service_acc = ?";
-        String query = queryBuilder(where, withAttrs);
-        return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
-    }
-
-    @Override
-    public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc, boolean withAttrs) {
-        String param = isSponsoredAcc ? "t" : "f";
-        String where = "WHERE t.sponsored_acc = ?";
-        String query = queryBuilder(where, withAttrs);
-        return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -133,4 +197,5 @@ public class UserDAOImpl implements UserDAO {
         query.append("GROUP BY t.id");
         return query.toString();
     }
+
 }

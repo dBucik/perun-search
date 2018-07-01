@@ -1,12 +1,14 @@
 package cz.muni.ics.DAOs.impl;
 
+import cz.muni.ics.DAOs.DAOUtils;
 import cz.muni.ics.DAOs.MemberDAO;
-import cz.muni.ics.Utils;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.MemberMapper;
+import cz.muni.ics.mappers.richEntities.RichMemberMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.entities.Member;
+import cz.muni.ics.models.richEntities.RichMember;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +20,10 @@ import java.util.List;
 public class MemberDAOImpl implements MemberDAO {
 
     private static final MemberMapper MAPPER = new MemberMapper();
+    private static final RichMemberMapper RICH_MAPPER = new RichMemberMapper();
+
+    private static final Character ACTIVE = '1';
+    private static final Character EXPIRED = '0';
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -29,9 +35,9 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public Member getMember(Long id, boolean withAttrs) throws DatabaseIntegrityException {
+    public Member getMember(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, withAttrs);
+        String query = queryBuilder(where, false);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -43,16 +49,126 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<Member> getMembers(boolean withAttrs) {
-        String query = queryBuilder(null, withAttrs);
+    public List<Member> getMembers() {
+        String query = queryBuilder(null, false);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
+    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichMembersWithAttrs(attrs));
+    }
+
+    @Override
+    public List<Member> getMembersOfUser(Long userId) {
+        String where = "WHERE t.user_id = ?";
+        String query = queryBuilder(where, false);
+
+        return jdbcTemplate.query(query, new Object[] {userId}, MAPPER);
+    }
+
+    @Override
+    public List<Member> getMembersOfVo(Long voId) {
+        String where = "WHERE t.vo_id = ?";
+        String query = queryBuilder(where, false);
+
+        return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
+    }
+
+    @Override
+    public List<Member> getMembersByStatus(String status) {
+        Character param = resolveStatusParam(status);
+        String where = "WHERE t.status = ?";
+        String query = queryBuilder(where, false);
+
+        return jdbcTemplate.query(query, new Object[] { param }, MAPPER);
+    }
+
+    @Override
+    public List<Member> getMembersBySponsored(boolean isSponsored) {
+        String where = "WHERE t.sponsored = ?";
+        String query = queryBuilder(where, false);
+
+        return jdbcTemplate.query(query, new Object[] {isSponsored}, MAPPER);
+    }
+
+    /* RICH_MEMBER */
+
+    @Override
+    public RichMember getRichMember(Long id) throws DatabaseIntegrityException {
+        String where = "WHERE t.id = ?";
+        String query = queryBuilder(where, true);
+
+        try {
+            return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        } catch (IncorrectResultSetColumnCountException e) {
+            throw new DatabaseIntegrityException("More members with same ID found [id: " + id + ']');
+        }
+    }
+
+    @Override
+    public List<RichMember> getRichMembers() {
+        String query = queryBuilder(null, true);
+
+        return jdbcTemplate.query(query, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichMember> getRichMembersWithAttrs(List<InputAttribute> attrs) {
+        //TODO improve
+        List<RichMember> members = getRichMembers();
+        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+
+        members.removeIf(member -> {
+            assert filter != null;
+            return ! member.getAttributes().containsAll(filter);
+        });
+
+        return members;
+    }
+
+    @Override
+    public List<RichMember> getRichMembersOfUser(Long userId) {
+        String where = "WHERE t.user_id = ?";
+        String query = queryBuilder(where, true);
+
+        return jdbcTemplate.query(query, new Object[] {userId}, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichMember> getRichMembersOfVo(Long voId) {
+        String where = "WHERE t.vo_id = ?";
+        String query = queryBuilder(where, true);
+
+        return jdbcTemplate.query(query, new Object[] {voId}, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichMember> getRichMembersByStatus(String status) {
+        Character param = resolveStatusParam(status);
+        String where = "WHERE t.status = ?";
+        String query = queryBuilder(where, true);
+
+        return jdbcTemplate.query(query, new Object[] { param }, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichMember> getRichMembersBySponsored(boolean isSponsored) {
+        String where = "WHERE t.sponsored = ?";
+        String query = queryBuilder(where, true);
+
+        return jdbcTemplate.query(query, new Object[] {isSponsored}, RICH_MAPPER);
+    }
+
+    /* ATTRIBUTES */
+
+    @Override
     public List<Attribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        Member member = getMember(id, true);
+        RichMember member = getRichMember(id);
         List<Attribute> result = new ArrayList<>();
 
         if (attrs == null) {
@@ -67,64 +183,6 @@ public class MemberDAOImpl implements MemberDAO {
         }
 
         return result;
-    }
-
-    @Override
-    public List<Member> getMembersWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        //TODO improve
-        List<Member> members = getMembers(withAttrs);
-        List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
-
-        members.removeIf(member -> {
-           assert filter != null;
-           return ! member.getAttributes().containsAll(filter);
-        });
-
-        return members;
-    }
-
-    @Override
-    public List<Member> getMembersOfUser(Long userId, boolean withAttrs) {
-        String where = "WHERE t.user_id = ?";
-        String query = queryBuilder(where, withAttrs);
-
-        return jdbcTemplate.query(query, new Object[] {userId}, MAPPER);
-    }
-
-    @Override
-    public List<Member> getMembersOfVo(Long voId, boolean withAttrs) {
-        String where = "WHERE t.vo_id = ?";
-        String query = queryBuilder(where, withAttrs);
-
-        return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
-    }
-
-    @Override
-    public List<Member> getMembersByStatus(String status, boolean withAttrs) {
-        char param;
-        switch (status) {
-            case "ACTIVE":
-                param = '1';
-                break;
-            case "EXPIRED":
-                param = '0';
-                break;
-            default:
-                throw new IllegalArgumentException("ACTIVE or EXPIRED expected, got: " + status);
-        }
-
-        String where = "WHERE t.status = ?";
-        String query = queryBuilder(where, withAttrs);
-
-        return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
-    }
-
-    @Override
-    public List<Member> getMembersBySponsored(boolean isSponsored, boolean withAttrs) {
-        String where = "WHERE t.sponsored = ?";
-        String query = queryBuilder(where, withAttrs);
-
-        return jdbcTemplate.query(query, new Object[] {isSponsored}, MAPPER);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -146,4 +204,16 @@ public class MemberDAOImpl implements MemberDAO {
         query.append("GROUP BY t.id");
         return query.toString();
     }
+
+    private Character resolveStatusParam(String status) {
+        switch (status) {
+            case "ACTIVE":
+                return  ACTIVE;
+            case "EXPIRED":
+                return  EXPIRED;
+            default:
+                throw new IllegalArgumentException("ACTIVE or EXPIRED expected, got: " + status);
+        }
+    }
+
 }

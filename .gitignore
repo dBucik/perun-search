@@ -1,8 +1,7 @@
 .idea/*
 target/*
 *.iml
-*/jdbc.properties
-
+jdbc.properties
 
 # Compiled class file
 *.class

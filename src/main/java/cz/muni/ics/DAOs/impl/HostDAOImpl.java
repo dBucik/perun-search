@@ -1,12 +1,14 @@
 package cz.muni.ics.DAOs.impl;
 
+import cz.muni.ics.DAOs.DAOUtils;
 import cz.muni.ics.DAOs.HostDAO;
-import cz.muni.ics.Utils;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.HostMapper;
+import cz.muni.ics.mappers.richEntities.RichHostMapper;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.entities.Host;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.richEntities.RichHost;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,9 +20,12 @@ import java.util.List;
 public class HostDAOImpl implements HostDAO {
 
     private static final HostMapper MAPPER = new HostMapper();
+    private static final RichHostMapper RICH_MAPPER = new RichHostMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
+
+    /* HOST */
 
     @Override
     public void setDataSource(DataSource dataSource) {
@@ -29,9 +34,9 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public Host getHost(Long id, boolean withAttrs) throws DatabaseIntegrityException {
+    public Host getHost(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, withAttrs);
+        String query = queryBuilder(where, false);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -43,25 +48,78 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public List<Host> getHostsByHostname(String hostname, boolean withAttrs) {
+    public List<Host> getHostsByHostname(String hostname) {
         hostname = '%' + hostname + '%';
         String where = "WHERE upper(t.hostname) LIKE upper(?)";
-        String query = queryBuilder(where, withAttrs);
+        String query = queryBuilder(where, false);
 
         return jdbcTemplate.query(query, new Object[] {hostname}, MAPPER);
     }
 
     @Override
-    public List<Host> getHosts(boolean withAttrs) {
-        String query = queryBuilder(null, withAttrs);
+    public List<Host> getHosts() {
+        String query = queryBuilder(null, false);
 
         return jdbcTemplate.query(query, MAPPER);
     }
 
     @Override
+    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs) {
+        return new ArrayList<>(getRichHostsWithAttrs(attrs));
+    }
+
+    /* RICH_HOST */
+
+    @Override
+    public RichHost getRichHost(Long id) throws DatabaseIntegrityException {
+        String where = "WHERE t.id = ?";
+        String query = queryBuilder(where, true);
+
+        try {
+            return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        } catch (IncorrectResultSetColumnCountException e) {
+            throw new DatabaseIntegrityException("More hosts with same ID found [id: " + id + ']');
+        }
+    }
+
+    @Override
+    public List<RichHost> getRichHostsByHostname(String hostname) {
+        hostname = '%' + hostname + '%';
+        String where = "WHERE upper(t.hostname) LIKE upper(?)";
+        String query = queryBuilder(where, true);
+
+        return jdbcTemplate.query(query, new Object[] {hostname}, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichHost> getRichHosts() {
+        String query = queryBuilder(null, true);
+
+        return jdbcTemplate.query(query, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichHost> getRichHostsWithAttrs(List<InputAttribute> attrs) {
+        //TODO: improve
+        List<RichHost> hosts = getRichHosts();
+        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+
+        hosts.removeIf(host -> {
+            assert filter != null;
+            return ! host.getAttributes().containsAll(filter);
+        });
+
+        return hosts;
+    }
+
+    /* ATTRIBUTES */
+
+    @Override
     public List<Attribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        Host host = getHost(id, true);
+        RichHost host = getRichHost(id);
         List<Attribute> result = new ArrayList<>();
 
         if (attrs == null) {
@@ -75,20 +133,6 @@ public class HostDAOImpl implements HostDAO {
         }
 
         return result;
-    }
-
-    @Override
-    public List<Host> getHostsWithAttrs(List<InputAttribute> attrs, boolean withAttrs) {
-        //TODO: improve
-        List<Host> hosts = getHosts(withAttrs);
-        List<Attribute> filter = Utils.convertAttrsFromInput(attrs);
-
-        hosts.removeIf(host -> {
-            assert filter != null;
-            return ! host.getAttributes().containsAll(filter);
-        });
-
-        return hosts;
     }
 
     private String queryBuilder(String where, boolean withAttrs) {

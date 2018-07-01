@@ -4,6 +4,7 @@ import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.entities.Host;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.richEntities.RichHost;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -12,30 +13,71 @@ public interface HostDAO {
 
     void setDataSource(DataSource dataSource);
 
+    /* HOST */
+
     /**
      * Get Host specified by ID.
      * @param id id of Host
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Host or null if not such found.
      * @throws DatabaseIntegrityException More than one Host with same ID found.
      */
-    Host getHost(Long id, boolean withAttrs) throws DatabaseIntegrityException;
+    Host getHost(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get Hosts with HOSTNAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param hostname Hostname of Host
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    List<Host> getHostsByHostname(String hostname, boolean withAttrs);
+    List<Host> getHostsByHostname(String hostname);
 
     /**
      * Get all Hosts.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Hosts, empty list if nothing has been found.
      */
-    List<Host> getHosts(boolean withAttrs);
+    List<Host> getHosts();
+
+    /**
+     * Get Hosts that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of Hosts
+     * @return List of Hosts, empty list if nothing has been found.
+     */
+    List<Host> getHostsWithAttrs(List<InputAttribute> attrs);
+
+    /* RICH_HOST */
+
+    /**
+     * Get RichHost specified by ID.
+     * @param id id of RichHost
+     * @return Found RichHost or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichHost with same ID found.
+     */
+    RichHost getRichHost(Long id) throws DatabaseIntegrityException;
+
+    /**
+     * Get RichHosts with HOSTNAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param hostname RichHostname of RichHost
+     * @return List of RichHosts, empty list if nothing has been found.
+     */
+    List<RichHost> getRichHostsByHostname(String hostname);
+
+    /**
+     * Get all RichHosts.
+     * @return List of RichHosts, empty list if nothing has been found.
+     */
+    List<RichHost> getRichHosts();
+
+    /**
+     * Get RichHosts that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichHosts
+     * @return List of RichHosts, empty list if nothing has been found.
+     */
+    List<RichHost> getRichHostsWithAttrs(List<InputAttribute> attrs);
+
+    /* ATTRIBUTES */
 
     /**
      * Get attributes of Host specified by ID.
@@ -46,12 +88,4 @@ public interface HostDAO {
      */
     List<Attribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
-    /**
-     * Get Hosts that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of Hosts
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
-     * @return List of Hosts, empty list if nothing has been found.
-     */
-    List<Host> getHostsWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
 }

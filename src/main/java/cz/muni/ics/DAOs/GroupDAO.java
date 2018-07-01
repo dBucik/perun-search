@@ -4,6 +4,7 @@ import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.entities.Group;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.richEntities.RichGroup;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -15,27 +16,24 @@ public interface GroupDAO {
     /**
      * Get Group specified by ID.
      * @param id id of Group
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Found Group or null if not such found.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      */
-    Group getGroup(Long id, boolean withAttrs) throws DatabaseIntegrityException;
+    Group getGroup(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get Groups withe NAME like specified parameter.
      * (LIKE operator used, comparing ignores case)
      * @param name name of Group
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    List<Group> getGroupsByName(String name, boolean withAttrs);
+    List<Group> getGroupsByName(String name);
 
     /**
      * Get all Groups.
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    List<Group> getGroups(boolean withAttrs);
+    List<Group> getGroups();
 
     /**
      * Get attributes of Group specified by ID.
@@ -50,26 +48,70 @@ public interface GroupDAO {
      * Get Groups that have specified attributes.
      * (EXACT matching used)
      * @param attrs attributes of Groups
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups found, empty list if nothing has been found.
      */
-    List<Group> getGroupsWithAttrs(List<InputAttribute> attrs, boolean withAttrs);
+    List<Group> getGroupsWithAttrs(List<InputAttribute> attrs);
 
     /**
      * Get parent group of Group specified by ID.
      * @param childGroupId id of Group whose parent has to be found
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return Parent Group.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      *                                    No parent group found for Group with specified ID.
      */
-    Group getParentGroup(Long childGroupId, boolean withAttrs) throws DatabaseIntegrityException;
+    Group getParentGroup(Long childGroupId) throws DatabaseIntegrityException;
 
     /**
      * Get all Groups of VO specified by ID.
      * @param voId id of VO
-     * @param withAttrs TRUE if the entity should contain attributes, FALSE otherwise
      * @return List of Groups, empty list if nothing has been found.
      */
-    List<Group> getGroupsOfVo(Long voId, boolean withAttrs);
+    List<Group> getGroupsOfVo(Long voId);
+
+    /**
+     * Get RichGroup specified by ID.
+     * @param id id of RichGroup
+     * @return Found RichGroup or null if not such found.
+     * @throws DatabaseIntegrityException More than one RichGroup with same ID found.
+     */
+    RichGroup getRichGroup(Long id) throws DatabaseIntegrityException;
+
+    /**
+     * Get RichGroups withe NAME like specified parameter.
+     * (LIKE operator used, comparing ignores case)
+     * @param name name of RichGroup
+     * @return List of RichGroups, empty list if nothing has been found.
+     */
+    List<RichGroup> getRichGroupsByName(String name);
+
+    /**
+     * Get all RichGroups.
+     * @return List of RichGroups, empty list if nothing has been found.
+     */
+    List<RichGroup> getRichGroups();
+
+    /**
+     * Get RichGroups that have specified attributes.
+     * (EXACT matching used)
+     * @param attrs attributes of RichGroups
+     * @return List of RichGroups found, empty list if nothing has been found.
+     */
+    List<RichGroup> getRichGroupsWithAttrs(List<InputAttribute> attrs);
+
+    /**
+     * Get parent richGroup of RichGroup specified by ID.
+     * @param childRichGroupId id of RichGroup whose parent has to be found
+     * @return Parent RichGroup.
+     * @throws DatabaseIntegrityException More than one RichGroup with same ID found.
+     *                                    No parent richGroup found for RichGroup with specified ID.
+     */
+    RichGroup getParentRichGroup(Long childRichGroupId) throws DatabaseIntegrityException;
+
+    /**
+     * Get all RichGroups of VO specified by ID.
+     * @param voId id of VO
+     * @return List of RichGroups, empty list if nothing has been found.
+     */
+    List<RichGroup> getRichGroupsOfVo(Long voId);
+
 }
