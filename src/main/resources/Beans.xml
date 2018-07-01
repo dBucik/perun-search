@@ -15,7 +15,7 @@
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
-    <!-- Definition for studentJDBCTemplate bean -->
+    <!-- Definition for voJdbcTemplate bean -->
     <bean id = "voJdbcTemplate"
           class = "cz.muni.ics.JDBCTemplates.VoJdbcTemplate">
         <property name = "dataSource" ref="dataSource" />

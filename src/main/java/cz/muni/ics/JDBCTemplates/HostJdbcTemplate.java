@@ -1,16 +1,22 @@
 package cz.muni.ics.JDBCTemplates;
 
 import cz.muni.ics.DAOs.HostDAO;
+import cz.muni.ics.mappers.AttributesToJsonMapper;
 import cz.muni.ics.mappers.HostMapper;
+import cz.muni.ics.models.AttributePair;
 import cz.muni.ics.models.Host;
+import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HostJdbcTemplate implements HostDAO {
 
     private static final HostMapper MAPPER = new HostMapper();
+    private static final AttributesToJsonMapper ATTR_MAPPER = new AttributesToJsonMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -23,17 +29,42 @@ public class HostJdbcTemplate implements HostDAO {
 
     @Override
     public Host getHost(Long id) {
-        //TODO query
-        String query = "";
+        //TODO better query
+        String query = "SELECT *  FROM hosts WHERE id=?";
         Host host = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
+
+        String attrQuery = "SELECT an.friendly_name, av.attr_value " +
+                "FROM attr_names an RIGHT OUTER JOIN host_attr_values av " +
+                "ON (an.id = av.attr_id) " +
+                "WHERE av.host_id=?";
+        List<AttributePair> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
+        Map<String, String> attrMap = new HashMap<>();
+        for (AttributePair attr: attrs) {
+            attrMap.put(attr.getAttrName(), attr.getAttrValue());
+        }
+        host.setAttributes(new JSONObject(attrMap));
+
         return host;
     }
 
     @Override
     public List<Host> getHosts() {
-        //TODO query
-        String query = "";
+        //TODO better query
+        String query = "SELECT * FROM hosts";
         List<Host> hosts = jdbcTemplate.query(query, new Object[] {}, MAPPER);
+
+        for (Host host: hosts) {
+            String attrQuery = "SELECT an.friendly_name, av.attr_value " +
+                    "FROM attr_names an RIGHT OUTER JOIN host_attr_values av " +
+                    "ON (an.id = av.attr_id) " +
+                    "WHERE av.host_id=?";
+            List<AttributePair> attrs = jdbcTemplate.query(attrQuery, new Object[] { host.getId()}, ATTR_MAPPER);
+            Map<String, String> attrMap = new HashMap<>();
+            for (AttributePair attr: attrs) {
+                attrMap.put(attr.getAttrName(), attr.getAttrValue());
+            }
+            host.setAttributes(new JSONObject(attrMap));
+        }
         return hosts;
     }
 }

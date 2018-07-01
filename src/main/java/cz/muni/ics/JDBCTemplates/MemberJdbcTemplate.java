@@ -1,16 +1,22 @@
 package cz.muni.ics.JDBCTemplates;
 
 import cz.muni.ics.DAOs.MemberDAO;
+import cz.muni.ics.mappers.AttributesToJsonMapper;
 import cz.muni.ics.mappers.MemberMapper;
+import cz.muni.ics.models.AttributePair;
 import cz.muni.ics.models.Member;
+import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MemberJdbcTemplate implements MemberDAO {
 
     private static final MemberMapper MAPPER = new MemberMapper();
+    private static final AttributesToJsonMapper ATTR_MAPPER = new AttributesToJsonMapper();
 
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
@@ -23,17 +29,43 @@ public class MemberJdbcTemplate implements MemberDAO {
 
     @Override
     public Member getMember(Long id) {
-        //TODO query
-        String query = "";
+        //TODO better query
+        String query = "SELECT * FROM members WHERE id=?";
         Member member = jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
+
+        String attrQuery = "SELECT an.friendly_name, av.attr_value " +
+                "FROM attr_names an RIGHT OUTER JOIN member_attr_values av " +
+                "ON (an.id = av.attr_id) " +
+                "WHERE av.member_id=?";
+        List<AttributePair> attrs = jdbcTemplate.query(attrQuery, new Object[] {id}, ATTR_MAPPER);
+        Map<String, String> attrMap = new HashMap<>();
+        for (AttributePair attr: attrs) {
+            attrMap.put(attr.getAttrName(), attr.getAttrValue());
+        }
+        member.setAttributes(new JSONObject(attrMap));
+
         return member;
     }
 
     @Override
     public List<Member> getMembers() {
-        //TODO query
-        String query = "";
+        //TODO better query
+        String query = "SELECT * FROM members";
         List<Member> members = jdbcTemplate.query(query, new Object[] {}, MAPPER);
+
+        for(Member member: members) {
+            String attrQuery = "SELECT an.friendly_name, av.attr_value " +
+                    "FROM attr_names an RIGHT OUTER JOIN member_attr_values av " +
+                    "ON (an.id = av.attr_id) " +
+                    "WHERE av.member_id=?";
+            List<AttributePair> attrs = jdbcTemplate.query(attrQuery, new Object[] {member.getId()}, ATTR_MAPPER);
+            Map<String, String> attrMap = new HashMap<>();
+            for (AttributePair attr: attrs) {
+                attrMap.put(attr.getAttrName(), attr.getAttrValue());
+            }
+            member.setAttributes(new JSONObject(attrMap));
+        }
+
         return members;
     }
 }

@@ -10,16 +10,26 @@
   <packaging>war</packaging>
 
   <dependencies>
+    <!-- SPRING DATA -->
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jdbc</artifactId>
       <version>1.0.0.BUILD-SNAPSHOT</version>
     </dependency>
+
+    <!-- DATABASE -->
     <dependency>
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>9.1-901-1.jdbc4</version>
     </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>6.0.6</version>
+    </dependency>
+
+    <!-- GRAPHQL -->
     <dependency>
       <groupId>com.graphql-java</groupId>
       <artifactId>graphql-java</artifactId>
@@ -35,11 +45,20 @@
       <artifactId>graphql-java-servlet</artifactId>
       <version>4.0.0</version>
     </dependency>
+
+    <!-- JAVAX SERVLET -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.0.1</version>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- JSON -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20180130</version>
     </dependency>
   </dependencies>
 

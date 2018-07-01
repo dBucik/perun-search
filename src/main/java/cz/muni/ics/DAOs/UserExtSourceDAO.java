@@ -1,6 +1,6 @@
 package cz.muni.ics.DAOs;
 
-import cz.muni.ics.models.ExtSource;
+import cz.muni.ics.models.UserExtSource;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -9,8 +9,8 @@ public interface UserExtSourceDAO {
 
     void setDataSource(DataSource dataSource);
 
-    ExtSource getUserExtSource(Long id);
+    UserExtSource getUserExtSource(Long id);
 
-    List<ExtSource> getUserExtSources();
+    List<UserExtSource> getUserExtSources();
 
 }
