@@ -1,9 +1,9 @@
-input InputAttribute {
+type PerunAttribute {
     key: String!
     value: String
 }
 
-type Attribute {
+input InputAttribute {
     key: String!
     value: String
 }
@@ -24,7 +24,7 @@ type RichExtSource {
     id: Long!
     name: String!
     type: String!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Facility {
@@ -37,7 +37,7 @@ type RichFacility {
     id: Long!
     name: String!
     description: String!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Group {
@@ -54,7 +54,7 @@ type RichGroup {
     description: String!
     parentGroupId: Long!
     voId: Long!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Host {
@@ -69,7 +69,7 @@ type RichHost {
     description: String!
     hostname: String!
     facilityId: Long!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Member {
@@ -86,7 +86,7 @@ type RichMember {
     voId: Long!
     status: String!
     sponsored: Boolean!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Resource {
@@ -103,7 +103,7 @@ type RichResource {
     name: String!
     description: String!
     voId: Long!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Service {
@@ -116,7 +116,7 @@ type RichService {
     id: Long!
     name: String!
     ownerId: Long!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type User {
@@ -139,7 +139,7 @@ type RichUser {
     titleAfter: String!
     serviceAcc: Boolean!
     sponsoredAcc: Boolean!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type UserExtSource {
@@ -156,7 +156,7 @@ type RichUserExtSource {
     loginExt: String!
     extSourcesId: Long!
     loa: Short!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Vo {
@@ -169,7 +169,7 @@ type RichVo {
     id: Long
     name: String!
     shortName: String!
-    attributes: [Attribute!]!
+    attributes: [PerunAttribute!]!
 }
 
 type Query {
@@ -188,7 +188,7 @@ type Query {
     getRichExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichExtSource!]!
 
     # EXT_SOURCE_ATTRS
-    getExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getExtSourceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 
     # FACILITY
     getFacility(id: Long!): Facility
@@ -203,7 +203,7 @@ type Query {
     getRichFacilitiesHavingAttrs(attrs: [InputAttribute!]!): [RichFacility!]!
 
     # FACILITY_ATTRS
-    getFacilityAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getFacilityAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 
     # GROUP
     getGroup(id: Long!): Group
@@ -222,7 +222,7 @@ type Query {
     getRichGroupsHavingAttrs(attrs: [InputAttribute!]!): [RichGroup!]!
 
     # GROUP_ATTRS
-    getGroupAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getGroupAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 
     # HOST
     getHost(id: Long!): Host
@@ -237,7 +237,7 @@ type Query {
     getRichHostsHavingAttrs(attrs: [InputAttribute!]!): [RichHost!]!
 
     # HOST_ATTRS
-    getHostAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getHostAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 
     # MEMBER
     getMember(id: Long!): Member
@@ -258,7 +258,7 @@ type Query {
     getRichMembersHavingAttrs(attrs: [InputAttribute!]!): [RichMember!]!
 
     # MEMBER_ATTRS
-    getMemberAttrs(id: Long!, attrs: [String!]!): [Attribute!]!
+    getMemberAttrs(id: Long!, attrs: [String!]!): [PerunAttribute!]!
 
     # RESOURCE
     getResource(id: Long!): Resource
@@ -277,7 +277,7 @@ type Query {
     getRichResourcesHavingAttrs(attrs: [InputAttribute!]!): [RichResource!]!
 
     # RESOURCE_ATTRS
-    getResourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getResourceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 
     # SERVICE
     getService(id: Long!): Service
@@ -294,7 +294,7 @@ type Query {
     getRichServicesHavingAttrs(attrs: [InputAttribute!]!): [RichService!]!
 
     # SERVICE_ATTRS
-    getServiceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getServiceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 
     # USER
     getUser(id: Long!): User
@@ -313,7 +313,7 @@ type Query {
     getRichUsersHavingAttrs(attrs: [InputAttribute!]!): [RichUser!]!
 
     # USER_ATTRS
-    getUserAttrs(id: Long, attrs: [String!]): [Attribute!]!
+    getUserAttrs(id: Long, attrs: [String!]): [PerunAttribute!]!
 
     # USER_EXT_SOURCE
     getUserExtSource(id: Long!): UserExtSource
@@ -332,7 +332,7 @@ type Query {
     getRichUserExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichUserExtSource!]!
 
     # USER_EXT_SOURCE_ATTRS
-    getUserExtSourceAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getUserExtSourceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 
     # VO
     getVo(id: Long!): Vo
@@ -351,7 +351,7 @@ type Query {
     getRichVosHavingAttrs(attrs: [InputAttribute!]!): [RichVo!]!
 
     # VO_ATTRS
-    getVoAttrs(id: Long!, attrs: [String!]): [Attribute!]!
+    getVoAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
 }
 
 schema {

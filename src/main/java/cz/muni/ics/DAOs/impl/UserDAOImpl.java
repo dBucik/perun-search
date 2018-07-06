@@ -5,8 +5,8 @@ import cz.muni.ics.DAOs.UserDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.UserMapper;
 import cz.muni.ics.mappers.richEntities.RichUserMapper;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.User;
 import cz.muni.ics.models.richEntities.RichUser;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -116,15 +116,15 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<RichUser> getRichUsersHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichUser> users = getRichUsers();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        List<RichUser> all = getRichUsers();
+        List<RichUser> correct = new ArrayList<>();
+        for (RichUser user: all) {
+            if (DAOUtils.hasAttributes(user, attrs)) {
+                correct.add(user);
+            }
+        }
 
-        users.removeIf(user -> {
-            assert filter != null;
-            return ! user.getAttributes().containsAll(filter);
-        });
-
-        return users;
+        return correct;
     }
 
     @Override
@@ -161,22 +161,10 @@ public class UserDAOImpl implements UserDAO {
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichUser user = getRichUser(id);
-        List<Attribute> result = new ArrayList<>();
-        if (attrs == null) {
-            result.add(new Attribute("id", user.getId().toString()));
-            result.add(new Attribute("title_before", user.getTitleBefore()));
-            result.add(new Attribute("first_name", user.getFirstName()));
-            result.add(new Attribute("middle_name", user.getMiddleName()));
-            result.add(new Attribute("last_name", user.getLastName()));
-            result.add(new Attribute("title_after", user.getTitleAfter()));
-            result.addAll(user.getAttributes());
-        } else {
-            result.addAll(user.getAttributesByKeys(attrs));
-        }
-        return result;
+        return user.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -184,7 +172,8 @@ public class UserDAOImpl implements UserDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS user");
         query.append(" FROM users t");

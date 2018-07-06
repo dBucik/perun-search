@@ -16,7 +16,7 @@ public class RichGroupMapper implements RowMapper<RichGroup> {
     public RichGroup mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("group"));
         RichGroup group = MappersUtils.mapGroup(json, new RichGroup());
-        group.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        group.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return group;
     }

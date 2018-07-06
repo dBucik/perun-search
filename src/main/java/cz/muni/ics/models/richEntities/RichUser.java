@@ -1,6 +1,9 @@
 package cz.muni.ics.models.richEntities;
 
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.BooleanAttribute;
+import cz.muni.ics.models.attributes.IntegerAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
+import cz.muni.ics.models.attributes.StringAttribute;
 import cz.muni.ics.models.entities.User;
 
 import java.util.ArrayList;
@@ -11,54 +14,56 @@ import java.util.List;
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class RichUser extends User {
+public class RichUser extends User implements RichPerunEntity {
 
-    private List<Attribute> attributes;
+    private List<PerunAttribute> attributes;
 
-    public List<Attribute> getAttributes() {
+    @Override
+    public List<PerunAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
+    @Override
+    public void setAttributes(List<PerunAttribute> attributes) {
         this.attributes = attributes;
     }
 
-    public List<Attribute> getAttributesByKeys(List<String> keys) {
-        List<Attribute> res = new ArrayList<>();
+    public List<PerunAttribute> getAttributesByKeys(List<String> keys) {
+        List<PerunAttribute> res = new ArrayList<>();
 
         if (keys.contains("id")) {
-            res.add(new Attribute("id", super.getId().toString()));
+            res.add(new IntegerAttribute("id", super.getId().toString()));
         }
 
         if (keys.contains("firstName")) {
-            res.add(new Attribute("firstName", super.getFirstName()));
+            res.add(new StringAttribute("firstName", super.getFirstName()));
         }
 
         if (keys.contains("middleName")) {
-            res.add(new Attribute("middleName", super.getMiddleName()));
+            res.add(new StringAttribute("middleName", super.getMiddleName()));
         }
 
         if (keys.contains("lastName")) {
-            res.add(new Attribute("lastName", super.getLastName()));
+            res.add(new StringAttribute("lastName", super.getLastName()));
         }
 
         if (keys.contains("titleBefore")) {
-            res.add(new Attribute("titleBefore", super.getTitleBefore()));
+            res.add(new StringAttribute("titleBefore", super.getTitleBefore()));
         }
 
         if (keys.contains("titleAfter")) {
-            res.add(new Attribute("titleAfter", super.getTitleAfter()));
+            res.add(new StringAttribute("titleAfter", super.getTitleAfter()));
         }
 
         if (keys.contains("serviceAcc")) {
-            res.add(new Attribute("serviceAcc", super.isServiceAcc().toString()));
+            res.add(new BooleanAttribute("serviceAcc", super.isServiceAcc().toString()));
         }
 
         if (keys.contains("sponsoredAcc")) {
-            res.add(new Attribute("sponsoredAcc", super.isSponsoredAcc().toString()));
+            res.add(new BooleanAttribute("sponsoredAcc", super.isSponsoredAcc().toString()));
         }
 
-        for (Attribute attr: attributes) {
+        for (PerunAttribute attr: attributes) {
             if (keys.contains(attr.getKey())) {
                 res.add(attr);
             }

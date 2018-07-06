@@ -5,7 +5,7 @@ import cz.muni.ics.DAOs.GroupDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.GroupMapper;
 import cz.muni.ics.mappers.richEntities.RichGroupMapper;
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Group;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.richEntities.RichGroup;
@@ -126,15 +126,16 @@ public class GroupDAOImpl implements GroupDAO {
 
     @Override
     public List<RichGroup> getRichGroupsHavingAttrs(List<InputAttribute> attrs) {
-        List<RichGroup> groups = getRichGroups();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        //TODO: improve
+        List<RichGroup> all = getRichGroups();
+        List<RichGroup> correct = new ArrayList<>();
+        for (RichGroup group: all) {
+            if (DAOUtils.hasAttributes(group, attrs)) {
+                correct.add(group);
+            }
+        }
 
-        groups.removeIf(group -> {
-            assert filter != null;
-            return !group.getAttributes().containsAll(filter);
-        });
-
-        return groups;
+        return correct;
     }
 
     @Override
@@ -164,23 +165,10 @@ public class GroupDAOImpl implements GroupDAO {
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichGroup group = getRichGroup(id);
-        List<Attribute> result = new ArrayList<>();
-
-        if (attrs == null) {
-            result.add(new Attribute("id", group.getId().toString()));
-            result.add(new Attribute("name", group.getName()));
-            result.add(new Attribute("description", group.getDescription()));
-            result.add(new Attribute("voId", group.getVoId().toString()));
-            result.add(new Attribute("parentGroupId", group.getParentGroupId().toString()));
-            result.addAll(group.getAttributes());
-        } else {
-            result.addAll(group.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return group.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -189,7 +177,8 @@ public class GroupDAOImpl implements GroupDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS group");
         query.append(" FROM groups t");

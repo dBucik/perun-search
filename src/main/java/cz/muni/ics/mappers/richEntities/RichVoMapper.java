@@ -16,7 +16,7 @@ public class RichVoMapper implements RowMapper<RichVo> {
     public RichVo mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("vo"));
         RichVo vo = MappersUtils.mapVo(json, new RichVo());
-        vo.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        vo.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return vo;
     }

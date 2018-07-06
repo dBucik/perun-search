@@ -16,7 +16,7 @@ public class RichServiceMapper implements RowMapper<RichService> {
     public RichService mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("service"));
         RichService service = MappersUtils.mapService(json, new RichService());
-        service.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        service.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return service;
     }

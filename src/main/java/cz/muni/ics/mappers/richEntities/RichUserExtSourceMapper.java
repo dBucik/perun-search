@@ -16,7 +16,7 @@ public class RichUserExtSourceMapper implements RowMapper<RichUserExtSource> {
     public RichUserExtSource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("userExtSource"));
         RichUserExtSource ues = MappersUtils.mapUserExtSource(json, new RichUserExtSource());
-        ues.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        ues.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return ues;
     }

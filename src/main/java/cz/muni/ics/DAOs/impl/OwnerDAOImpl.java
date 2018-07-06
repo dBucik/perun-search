@@ -2,7 +2,7 @@ package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.OwnerDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.mappers.OwnerMapper;
+import cz.muni.ics.mappers.entities.OwnerMapper;
 import cz.muni.ics.models.entities.Owner;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;

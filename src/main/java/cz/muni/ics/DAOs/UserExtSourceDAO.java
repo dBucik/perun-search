@@ -1,8 +1,8 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.UserExtSource;
 import cz.muni.ics.models.richEntities.RichUserExtSource;
 
@@ -107,6 +107,6 @@ public interface UserExtSourceDAO {
      * @param attrs attributes to be fetched
      * @return List of attributes.
      */
-    List<Attribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
 }

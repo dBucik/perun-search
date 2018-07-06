@@ -1,6 +1,9 @@
 package cz.muni.ics.models.richEntities;
 
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.BooleanAttribute;
+import cz.muni.ics.models.attributes.IntegerAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
+import cz.muni.ics.models.attributes.StringAttribute;
 import cz.muni.ics.models.entities.Member;
 
 import java.util.ArrayList;
@@ -11,42 +14,44 @@ import java.util.List;
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class RichMember extends Member {
+public class RichMember extends Member implements RichPerunEntity {
 
-    private List<Attribute> attributes;
+    private List<PerunAttribute> attributes;
 
-    public List<Attribute> getAttributes() {
+    @Override
+    public List<PerunAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
+    @Override
+    public void setAttributes(List<PerunAttribute> attributes) {
         this.attributes = attributes;
     }
 
-    public List<Attribute> getAttributesByKeys(List<String> keys) {
-        List<Attribute> res = new ArrayList<>();
+    public List<PerunAttribute> getAttributesByKeys(List<String> keys) {
+        List<PerunAttribute> res = new ArrayList<>();
 
         if (keys.contains("id")) {
-            res.add(new Attribute("id", super.getId().toString()));
+            res.add(new IntegerAttribute("id", super.getId().toString()));
         }
 
         if (keys.contains("userId")) {
-            res.add(new Attribute("userId", super.getUserId().toString()));
+            res.add(new IntegerAttribute("userId", super.getUserId().toString()));
         }
 
         if (keys.contains("voId")) {
-            res.add(new Attribute("voId", super.getVoId().toString()));
+            res.add(new IntegerAttribute("voId", super.getVoId().toString()));
         }
 
         if (keys.contains("status")) {
-            res.add(new Attribute("status", super.getStatus()));
+            res.add(new StringAttribute("status", super.getStatus()));
         }
 
         if (keys.contains("sponsored")) {
-            res.add(new Attribute("sponsored", super.getSponsored().toString()));
+            res.add(new BooleanAttribute("sponsored", super.getSponsored().toString()));
         }
 
-        for (Attribute attr: attributes) {
+        for (PerunAttribute attr: attributes) {
             if (keys.contains(attr.getKey())) {
                 res.add(attr);
             }

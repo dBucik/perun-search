@@ -11,10 +11,10 @@ public class BooleanAttribute extends PerunAttribute {
 
 	private Boolean value;
 
-	public BooleanAttribute(String key, Boolean value) {
+	public BooleanAttribute(String key, String value) {
 		super.setKey(key);
 		super.setType(AttributeType.BOOLEAN);
-		this.value = value;
+		setValue(value);
 	}
 
 	@Override

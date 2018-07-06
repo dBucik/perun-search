@@ -5,8 +5,8 @@ import cz.muni.ics.DAOs.ServiceDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.ServiceMapper;
 import cz.muni.ics.mappers.richEntities.RichServiceMapper;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Service;
 import cz.muni.ics.models.richEntities.RichService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -107,15 +107,15 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<RichService> getRichServicesHavingAttrs(List<InputAttribute> attrs) {
         //TODO improve
-        List<RichService> services = getRichServices();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        List<RichService> all = getRichServices();
+        List<RichService> correct = new ArrayList<>();
+        for (RichService service: all) {
+            if (DAOUtils.hasAttributes(service, attrs)) {
+                correct.add(service);
+            }
+        }
 
-        services.removeIf(service -> {
-            assert filter != null;
-            return ! service.getAttributes().containsAll(filter);
-        });
-
-        return services;
+        return correct;
     }
 
     @Override
@@ -129,21 +129,10 @@ public class ServiceDAOImpl implements ServiceDAO {
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichService service = getRichService(id);
-        List<Attribute> result = new ArrayList<>();
-
-        if (attrs == null) {
-            result.add(new Attribute("id", service.getId().toString()));
-            result.add(new Attribute("name", service.getName()));
-            result.add(new Attribute("ownerId", service.getOwnerId().toString()));
-            result.addAll(service.getAttributes());
-        } else {
-            result.addAll(service.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return service.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -152,7 +141,8 @@ public class ServiceDAOImpl implements ServiceDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS service");
         query.append(" FROM services t");

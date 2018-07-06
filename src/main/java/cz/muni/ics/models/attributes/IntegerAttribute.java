@@ -11,10 +11,10 @@ public class IntegerAttribute extends PerunAttribute {
 
 	private Integer value;
 
-	public IntegerAttribute(String key, Integer value) {
+	public IntegerAttribute(String key, String value) {
 		super.setKey(key);
 		super.setType(AttributeType.INTEGER);
-		this.value = value;
+		setValue(value);
 	}
 
 	@Override

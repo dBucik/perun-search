@@ -5,8 +5,8 @@ import cz.muni.ics.DAOs.ResourceDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.ResourceMapper;
 import cz.muni.ics.mappers.richEntities.RichResourceMapper;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Resource;
 import cz.muni.ics.models.richEntities.RichResource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -115,15 +115,15 @@ public class ResourceDAOImpl implements ResourceDAO {
     @Override
     public List<RichResource> getRichResourcesHavingAttrs(List<InputAttribute> attrs) {
         //TODO improve
-        List<RichResource> resources = getRichResources();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        List<RichResource> all = getRichResources();
+        List<RichResource> correct = new ArrayList<>();
+        for (RichResource resource: all) {
+            if (DAOUtils.hasAttributes(resource, attrs)) {
+                correct.add(resource);
+            }
+        }
 
-        resources.removeIf(resource -> {
-            assert filter != null;
-            return ! resource.getAttributes().containsAll(filter);
-        });
-
-        return resources;
+        return correct;
     }
 
     @Override
@@ -145,23 +145,10 @@ public class ResourceDAOImpl implements ResourceDAO {
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getResourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getResourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichResource resource = getRichResource(id);
-        List<Attribute> result = new ArrayList<>();
-
-        if (attrs == null) {
-            result.add(new Attribute("id", resource.getId().toString()));
-            result.add(new Attribute("name", resource.getName()));
-            result.add(new Attribute("description", resource.getDescription()));
-            result.add(new Attribute("facilityId", resource.getFacilityId().toString()));
-            result.add(new Attribute("voId", resource.getVoId().toString()));
-            result.addAll(resource.getAttributes());
-        } else {
-            result.addAll(resource.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return resource.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -170,7 +157,8 @@ public class ResourceDAOImpl implements ResourceDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS resource");
         query.append(" FROM resources t");

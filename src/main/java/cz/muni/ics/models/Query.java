@@ -3,6 +3,7 @@ package cz.muni.ics.models;
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
 import cz.muni.ics.DAOs.*;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.*;
 import cz.muni.ics.models.richEntities.*;
 
@@ -155,7 +156,7 @@ public class Query implements GraphQLRootResolver {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one ExtSource with same ID found.
      */
-    public List<Attribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return extSourceDAO.getExtSourceAttrs(id, attrs);
     }
 
@@ -248,7 +249,7 @@ public class Query implements GraphQLRootResolver {
      * @return List of attributes.
      * * @throws DatabaseIntegrityException More than one Facility with same ID found.
      */
-    public List<Attribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return facilityDAO.getFacilityAttrs(id, attrs);
     }
 
@@ -381,7 +382,7 @@ public class Query implements GraphQLRootResolver {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      */
-    public List<Attribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return groupDAO.getGroupAttrs(id, attrs);
     }
 
@@ -474,7 +475,7 @@ public class Query implements GraphQLRootResolver {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one Host with same ID found.
      */
-    public List<Attribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return hostDAO.getHostAttrs(id, attrs);
     }
 
@@ -618,7 +619,7 @@ public class Query implements GraphQLRootResolver {
      * @return List of attributes
      * @throws DatabaseIntegrityException More than one Member with same ID found.
      */
-    public List<Attribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return memberDAO.getMemberAttrs(id, attrs);
     }
 
@@ -747,7 +748,7 @@ public class Query implements GraphQLRootResolver {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one Resource with same ID found.
      */
-    public List<Attribute> getResourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getResourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return resourceDAO.getResourceAttrs(id, attrs);
     }
 
@@ -856,7 +857,7 @@ public class Query implements GraphQLRootResolver {
      * @return List of attributes
      * @throws DatabaseIntegrityException When more than one Resource with same id found.
      */
-    public List<Attribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return serviceDAO.getServiceAttrs(id, attrs);
     }
 
@@ -988,7 +989,7 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes to be fetched
      * @return List of attributes, empty list if nothing has been found.
      */
-    public List<Attribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return userDAO.getUserAttrs(id, attrs);
     }
 
@@ -1110,7 +1111,7 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes to be fetched
      * @return List of attributes.
      */
-    public List<Attribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return userExtSourceDAO.getUserExtSourceAttrs(id, attrs);
     }
 
@@ -1232,7 +1233,7 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes to be fetched
      * @return List of attributes, empty list if nothing has been found.
      */
-    public List<Attribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return voDAO.getVoAttrs(id, attrs);
     }
 

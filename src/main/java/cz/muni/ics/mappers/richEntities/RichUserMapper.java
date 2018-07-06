@@ -16,7 +16,7 @@ public class RichUserMapper implements RowMapper<RichUser> {
     public RichUser mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("user"));
         RichUser user = MappersUtils.mapUser(json, new RichUser());
-        user.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        user.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return user;
     }

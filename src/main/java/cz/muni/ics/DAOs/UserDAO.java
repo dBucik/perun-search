@@ -1,8 +1,8 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.User;
 import cz.muni.ics.models.richEntities.RichUser;
 
@@ -125,5 +125,5 @@ public interface UserDAO {
      * @return List of attributes, empty list if nothing has been found.
      * @throws DatabaseIntegrityException More than one User with same ID found.
      */
-    List<Attribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 }

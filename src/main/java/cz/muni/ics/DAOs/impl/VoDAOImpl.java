@@ -5,8 +5,8 @@ import cz.muni.ics.DAOs.VoDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.VoMapper;
 import cz.muni.ics.mappers.richEntities.RichVoMapper;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Vo;
 import cz.muni.ics.models.richEntities.RichVo;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -142,33 +142,24 @@ public class VoDAOImpl implements VoDAO {
     @Override
     public List<RichVo> getRichVosHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichVo> vos = getRichVos();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        List<RichVo> all = getRichVos();
+        List<RichVo> correct = new ArrayList<>();
+        for (RichVo vo: all) {
+            if (DAOUtils.hasAttributes(vo, attrs)) {
+                correct.add(vo);
+            }
+        }
 
-        vos.removeIf(vo -> {
-            assert filter != null;
-            return !vo.getAttributes().containsAll(filter);
-        });
-
-        return vos;
+        return correct;
     }
 
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichVo vo = getRichVo(id);
-        List<Attribute> result = new ArrayList<>();
-        if (attrs == null) {
-            result.add(new Attribute("id", vo.getId().toString()));
-            result.add(new Attribute("name", vo.getName()));
-            result.add(new Attribute("shortName", vo.getShortName()));
-            result.addAll(vo.getAttributes());
-        } else {
-            result.addAll(vo.getAttributesByKeys(attrs));
-        }
-        return result;
+        return new ArrayList<>(vo.getAttributesByKeys(attrs));
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -177,7 +168,8 @@ public class VoDAOImpl implements VoDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS vo");
         query.append(" FROM vos t");
@@ -191,8 +183,5 @@ public class VoDAOImpl implements VoDAO {
         query.append(" GROUP BY t.id");
         return query.toString();
     }
-
-    //TODO: authz
-    //TODO: api pre GUI
 
 }

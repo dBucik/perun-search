@@ -16,7 +16,7 @@ public class RichFacilityMapper implements RowMapper<RichFacility> {
     public RichFacility mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("facility"));
         RichFacility facility = MappersUtils.mapFacility(json, new RichFacility());
-        facility.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        facility.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return facility;
     }

@@ -1,6 +1,8 @@
 package cz.muni.ics.models.richEntities;
 
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.IntegerAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
+import cz.muni.ics.models.attributes.StringAttribute;
 import cz.muni.ics.models.entities.Service;
 
 import java.util.ArrayList;
@@ -11,34 +13,36 @@ import java.util.List;
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class RichService extends Service {
+public class RichService extends Service implements RichPerunEntity {
 
-    private List<Attribute> attributes;
+    private List<PerunAttribute> attributes;
 
-    public List<Attribute> getAttributes() {
+    @Override
+    public List<PerunAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
+    @Override
+    public void setAttributes(List<PerunAttribute> attributes) {
         this.attributes = attributes;
     }
 
-    public List<Attribute> getAttributesByKeys(List<String> keys) {
-        List<Attribute> res = new ArrayList<>();
+    public List<PerunAttribute> getAttributesByKeys(List<String> keys) {
+        List<PerunAttribute> res = new ArrayList<>();
 
         if (keys.contains("id")) {
-            res.add(new Attribute("id", super.getId().toString()));
+            res.add(new IntegerAttribute("id", super.getId().toString()));
         }
 
         if (keys.contains("name")) {
-            res.add(new Attribute("name", super.getName()));
+            res.add(new StringAttribute("name", super.getName()));
         }
 
         if (keys.contains("ownerId")) {
-            res.add(new Attribute("ownerId", super.getOwnerId().toString()));
+            res.add(new IntegerAttribute("ownerId", super.getOwnerId().toString()));
         }
 
-        for (Attribute attr: attributes) {
+        for (PerunAttribute attr: attributes) {
             if (keys.contains(attr.getKey())) {
                 res.add(attr);
             }

@@ -5,8 +5,8 @@ import cz.muni.ics.DAOs.UserExtSourceDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.UserExtSourceMapper;
 import cz.muni.ics.mappers.richEntities.RichUserExtSourceMapper;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.UserExtSource;
 import cz.muni.ics.models.richEntities.RichUserExtSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -106,14 +106,15 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     @Override
     public List<RichUserExtSource> getRichUserExtSourcesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichUserExtSource> userExtSources = getRichUserExtSources();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
-        userExtSources.removeIf(extSource -> {
-            assert filter != null;
-            return ! extSource.getAttributes().containsAll(filter);
-        });
+        List<RichUserExtSource> all = getRichUserExtSources();
+        List<RichUserExtSource> correct = new ArrayList<>();
+        for (RichUserExtSource userExtSource: all) {
+            if (DAOUtils.hasAttributes(userExtSource, attrs)) {
+                correct.add(userExtSource);
+            }
+        }
 
-        return userExtSources;
+        return correct;
     }
 
     @Override
@@ -144,22 +145,10 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichUserExtSource userExtSource = getRichUserExtSource(id);
-        List<Attribute> result = new ArrayList<>();
-        if (attrs == null) {
-            result.add(new Attribute("id", userExtSource.getId().toString()));
-            result.add(new Attribute("userId", userExtSource.getUserId().toString()));
-            result.add(new Attribute("loginExt", userExtSource.getLoginExt()));
-            result.add(new Attribute("extSourcesId", userExtSource.getExtSourcesId().toString()));
-            result.add(new Attribute("loa", userExtSource.getLoa().toString()));
-            result.addAll(userExtSource.getAttributes());
-        } else {
-            result.addAll(userExtSource.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return userExtSource.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -168,7 +157,8 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS userExtSource");
         query.append(" FROM user_ext_sources t");

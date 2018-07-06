@@ -3,7 +3,7 @@ package cz.muni.ics.exceptions;
 /**
  * Exception represents error in type of value provided to the attribute
  */
-public class AttributeTypeException extends Exception {
+public class AttributeTypeException extends RuntimeException {
 
 	public AttributeTypeException() {
 		super();

@@ -5,8 +5,8 @@ import cz.muni.ics.DAOs.MemberDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.MemberMapper;
 import cz.muni.ics.mappers.richEntities.RichMemberMapper;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Member;
 import cz.muni.ics.models.richEntities.RichMember;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -118,16 +118,16 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<RichMember> getRichMembersHavingAttrs(List<InputAttribute> attrs) {
-        //TODO improve
-        List<RichMember> members = getRichMembers();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        //TODO improve, fix
+        List<RichMember> all = getRichMembers();
+        List<RichMember> correct = new ArrayList<>();
+        for (RichMember member: all) {
+            if (DAOUtils.hasAttributes(member, attrs)) {
+                correct.add(member);
+            }
+        }
 
-        members.removeIf(member -> {
-            assert filter != null;
-            return ! member.getAttributes().containsAll(filter);
-        });
-
-        return members;
+        return correct;
     }
 
     @Override
@@ -166,23 +166,10 @@ public class MemberDAOImpl implements MemberDAO {
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichMember member = getRichMember(id);
-        List<Attribute> result = new ArrayList<>();
-
-        if (attrs == null) {
-            result.add(new Attribute("id", member.getId().toString()));
-            result.add(new Attribute("userId", member.getUserId().toString()));
-            result.add(new Attribute("voId", member.getVoId().toString()));
-            result.add(new Attribute("status", member.getStatus()));
-            result.add(new Attribute("sponsored", member.getSponsored().toString()));
-            result.addAll(member.getAttributes());
-        } else {
-            result.addAll(member.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return member.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -191,7 +178,8 @@ public class MemberDAOImpl implements MemberDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS member");
         query.append(" FROM members t");

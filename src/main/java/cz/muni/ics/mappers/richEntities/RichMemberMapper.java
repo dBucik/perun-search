@@ -16,7 +16,7 @@ public class RichMemberMapper implements RowMapper<RichMember> {
     public RichMember mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("member"));
         RichMember member = MappersUtils.mapMember(json, new RichMember());
-        member.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        member.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return member;
     }

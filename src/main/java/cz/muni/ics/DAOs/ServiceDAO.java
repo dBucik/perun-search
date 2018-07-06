@@ -1,8 +1,8 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Service;
 import cz.muni.ics.models.richEntities.RichService;
 
@@ -98,6 +98,6 @@ public interface ServiceDAO {
      * @return List of attributes
      * @throws DatabaseIntegrityException When more than one Resource with same id found.
      */
-    List<Attribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
 }

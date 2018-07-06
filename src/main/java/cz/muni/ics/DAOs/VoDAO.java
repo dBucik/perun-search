@@ -1,8 +1,8 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Vo;
 import cz.muni.ics.models.richEntities.RichVo;
 
@@ -120,5 +120,5 @@ public interface VoDAO {
      * @return List of attributes, empty list if nothing has been found.
      * @throws DatabaseIntegrityException More than one VO with same ID found.
      */
-    List<Attribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 }

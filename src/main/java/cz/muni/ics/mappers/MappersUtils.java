@@ -1,7 +1,8 @@
 package cz.muni.ics.mappers;
 
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -277,18 +278,28 @@ public class MappersUtils {
         return vo;
     }
 
-    public static List<Attribute> getAttributes(JSONObject attrsJson) {
-        List<Attribute> attrs = new ArrayList<>();
+    public static List<PerunAttribute> getAttributes(JSONArray attrsArray) {
+        List<PerunAttribute> attrs = new ArrayList<>();
 
-        for (String key: attrsJson.keySet()) {
-            if (!(attrsJson.get(key) instanceof String)) {
-                attrs.add(new Attribute(key, attrsJson.get(key).toString()));
+        for (int i = 0; i < attrsArray.length(); i++) {
+            JSONObject attrJson = attrsArray.getJSONObject(i);
+            String key = attrJson.getString("key");
+            String type = attrJson.getString("type");
+            Object value = attrJson.get("val");
+            Object valueText = attrJson.get("val_text");
+            
+            PerunAttribute attr;
+            if (value != null && !value.equals(JSONObject.NULL)) {
+                attr = PerunAttribute.parse(key, type, value);
             } else {
-                attrs.add(new Attribute(key, attrsJson.getString(key)));
+                attr = PerunAttribute.parse(key, type, valueText);
+            }
+            
+            if (attr != null) {
+                attrs.add(attr);
             }
         }
 
         return attrs;
     }
-
 }

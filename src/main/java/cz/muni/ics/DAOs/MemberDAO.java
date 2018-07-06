@@ -1,8 +1,8 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Member;
 import cz.muni.ics.models.richEntities.RichMember;
 
@@ -124,6 +124,6 @@ public interface MemberDAO {
      * @return List of attributes
      * @throws DatabaseIntegrityException More than one Member with same ID found.
      */
-    List<Attribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
 }

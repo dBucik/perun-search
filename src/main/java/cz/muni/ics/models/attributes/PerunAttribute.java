@@ -1,5 +1,7 @@
 package cz.muni.ics.models.attributes;
 
+import org.json.JSONObject;
+
 public abstract class PerunAttribute {
 
 	private final static String STRING_TYPE = "java.lang.String";
@@ -32,21 +34,28 @@ public abstract class PerunAttribute {
 	public abstract String getValue();
 
 	public static PerunAttribute parse(String key, String type, Object value) {
+		if (value == null || value.equals(JSONObject.NULL)) {
+			return null;
+		}
+		String val = (String) value;
+		if (val.isEmpty()) {
+			return null;
+		}
 		switch (type) {
 			case STRING_TYPE:
-				return new StringAttribute(key, (String) value);
+				return new StringAttribute(key, val);
 			case INT_TYPE:
-				return new IntegerAttribute(key, (Integer) value);
+				return new IntegerAttribute(key, val);
 			case BOOL_TYPE:
-				return new BooleanAttribute(key, (Boolean) value);
+				return new BooleanAttribute(key, val);
 			case LSTRING_TYPE:
-				return new LargeStringAttribute(key, (String) value);
+				return new LargeStringAttribute(key, val);
 			case ARRAY_TYPE:
-				return new ArrayAttribute(key, (String) value);
+				return new ArrayAttribute(key, val);
 			case MAP_TYPE:
-				return new MapAttribute(key, (String) value);
+				return new MapAttribute(key, val);
 			case LARRAY_LIST_TYPE:
-				return new LargeArrayListAttribute(key, (String) value);
+				return new LargeArrayListAttribute(key, val);
 			default:
 				return null;
 		}

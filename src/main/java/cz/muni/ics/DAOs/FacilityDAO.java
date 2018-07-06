@@ -1,7 +1,7 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Facility;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.richEntities.RichFacility;
@@ -91,6 +91,6 @@ public interface FacilityDAO {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one Facility with same ID found.
      */
-    List<Attribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
 }

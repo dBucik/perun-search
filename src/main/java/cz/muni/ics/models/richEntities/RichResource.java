@@ -1,6 +1,8 @@
 package cz.muni.ics.models.richEntities;
 
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.IntegerAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
+import cz.muni.ics.models.attributes.StringAttribute;
 import cz.muni.ics.models.entities.Resource;
 
 import java.util.ArrayList;
@@ -11,42 +13,44 @@ import java.util.List;
  *
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
-public class RichResource extends Resource {
+public class RichResource extends Resource implements RichPerunEntity {
 
-    private List<Attribute> attributes;
+    private List<PerunAttribute> attributes;
 
-    public List<Attribute> getAttributes() {
+    @Override
+    public List<PerunAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
+    @Override
+    public void setAttributes(List<PerunAttribute> attributes) {
         this.attributes = attributes;
     }
 
-    public List<Attribute> getAttributesByKeys(List<String> keys) {
-        List<Attribute> res = new ArrayList<>();
+    public List<PerunAttribute> getAttributesByKeys(List<String> keys) {
+        List<PerunAttribute> res = new ArrayList<>();
 
         if (keys.contains("id")) {
-            res.add(new Attribute("id", super.getId().toString()));
+            res.add(new IntegerAttribute("id", super.getId().toString()));
         }
 
         if (keys.contains("name")) {
-            res.add(new Attribute("name", super.getName()));
+            res.add(new StringAttribute("name", super.getName()));
         }
 
         if (keys.contains("description")) {
-            res.add(new Attribute("description", super.getDescription()));
+            res.add(new StringAttribute("description", super.getDescription()));
         }
 
         if (keys.contains("facilityId")) {
-            res.add(new Attribute("facilityId", super.getFacilityId().toString()));
+            res.add(new IntegerAttribute("facilityId", super.getFacilityId().toString()));
         }
 
         if (keys.contains("voId")) {
-            res.add(new Attribute("voId", super.getVoId().toString()));
+            res.add(new IntegerAttribute("voId", super.getVoId().toString()));
         }
 
-        for (Attribute attr: attributes) {
+        for (PerunAttribute attr: attributes) {
             if (keys.contains(attr.getKey())) {
                 res.add(attr);
             }

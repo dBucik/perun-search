@@ -5,7 +5,7 @@ import cz.muni.ics.DAOs.FacilityDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.FacilityMapper;
 import cz.muni.ics.mappers.richEntities.RichFacilityMapper;
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Facility;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.richEntities.RichFacility;
@@ -94,15 +94,15 @@ public class FacilityDAOImpl implements FacilityDAO {
     @Override
     public List<RichFacility> getRichFacilitiesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichFacility> facilities = getRichFacilities();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        List<RichFacility> all = getRichFacilities();
+        List<RichFacility> correct = new ArrayList<>();
+        for (RichFacility facility: all) {
+            if (DAOUtils.hasAttributes(facility, attrs)) {
+                correct.add(facility);
+            }
+        }
 
-        facilities.removeIf(facility -> {
-            assert filter != null;
-            return !facility.getAttributes().containsAll(filter);
-        });
-
-        return facilities;
+        return correct;
     }
 
     @Override
@@ -117,21 +117,10 @@ public class FacilityDAOImpl implements FacilityDAO {
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichFacility facility = getRichFacility(id);
-        List<Attribute> result = new ArrayList<>();
-
-        if (attrs == null) {
-            result.add(new Attribute("id", facility.getId().toString()));
-            result.add(new Attribute("name", facility.getName()));
-            result.add(new Attribute("description", facility.getDescription()));
-            result.addAll(facility.getAttributes());
-        } else {
-            result.addAll(facility.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return facility.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -140,7 +129,8 @@ public class FacilityDAOImpl implements FacilityDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS facility");
         query.append(" FROM facilities t");

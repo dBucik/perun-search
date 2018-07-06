@@ -1,8 +1,8 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.ExtSource;
 import cz.muni.ics.models.richEntities.RichExtSource;
 
@@ -102,7 +102,7 @@ public interface ExtSourceDAO {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one ExtSource with same ID found.
      */
-    List<Attribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
 
 }

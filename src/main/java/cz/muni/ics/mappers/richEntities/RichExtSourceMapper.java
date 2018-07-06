@@ -16,7 +16,7 @@ public class RichExtSourceMapper implements RowMapper<RichExtSource> {
     public RichExtSource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("extSource"));
         RichExtSource res = MappersUtils.mapExtSource(json, new RichExtSource());
-        res.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        res.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return res;
     }

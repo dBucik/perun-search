@@ -1,4 +1,4 @@
-package cz.muni.ics.mappers;
+package cz.muni.ics.mappers.entities;
 
 import cz.muni.ics.models.entities.Owner;
 import org.jetbrains.annotations.NotNull;

@@ -16,7 +16,7 @@ public class RichResourceMapper implements RowMapper<RichResource> {
     public RichResource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("resource"));
         RichResource resource = MappersUtils.mapResource(json, new RichResource());
-        resource.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        resource.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return resource;
     }

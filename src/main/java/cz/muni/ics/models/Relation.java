@@ -1,5 +1,6 @@
 package cz.muni.ics.models;
 
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.ExtSource;
 import cz.muni.ics.models.entities.Facility;
 import cz.muni.ics.models.entities.Group;
@@ -26,7 +27,7 @@ public class Relation {
     private PerunEntity primaryEntity;
     private PerunEntity secondaryEntity;
     private RelationType type;
-    private List<Attribute> attrs;
+    private List<PerunAttribute> attrs;
 
     public PerunEntity getPrimaryEntity() {
         return primaryEntity;
@@ -52,11 +53,11 @@ public class Relation {
         this.type = type;
     }
 
-    public List<Attribute> getAttrs() {
+    public List<PerunAttribute> getAttrs() {
         return attrs;
     }
 
-    public void setAttrs(List<Attribute> attrs) {
+    public void setAttrs(List<PerunAttribute> attrs) {
         this.attrs = attrs;
     }
 

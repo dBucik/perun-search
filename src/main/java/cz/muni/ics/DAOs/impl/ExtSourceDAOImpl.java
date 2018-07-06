@@ -5,7 +5,7 @@ import cz.muni.ics.DAOs.ExtSourceDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.ExtSourceMapper;
 import cz.muni.ics.mappers.richEntities.RichExtSourceMapper;
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.ExtSource;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.richEntities.RichExtSource;
@@ -119,33 +119,24 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     @Override
     public List<RichExtSource> getRichExtSourcesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichExtSource> extSources = getRichExtSources();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
-        extSources.removeIf(extSource -> {
-            assert filter != null;
-            return ! extSource.getAttributes().containsAll(filter);
-        });
+        List<RichExtSource> all = getRichExtSources();
+        List<RichExtSource> correct = new ArrayList<>();
+        for (RichExtSource extSource: all) {
+            if (DAOUtils.hasAttributes(extSource, attrs)) {
+                correct.add(extSource);
+            }
+        }
 
-        return extSources;
+        return correct;
     }
 
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichExtSource extSource = getRichExtSource(id);
-        List<Attribute> result = new ArrayList<>();
-        if (attrs == null) {
-            result.add(new Attribute("id", extSource.getId().toString()));
-            result.add(new Attribute("name", extSource.getName()));
-            result.add(new Attribute("type", extSource.getType()));
-            result.addAll(extSource.getAttributes());
-        } else {
-            result.addAll(extSource.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return extSource.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -154,7 +145,8 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS extSource");
         query.append(" FROM ext_sources t");

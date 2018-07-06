@@ -1,7 +1,7 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Group;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.richEntities.RichGroup;
@@ -118,6 +118,6 @@ public interface GroupDAO {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one Group with same ID found.
      */
-    List<Attribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 
 }

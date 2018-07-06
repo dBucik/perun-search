@@ -5,7 +5,7 @@ import cz.muni.ics.DAOs.HostDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.HostMapper;
 import cz.muni.ics.mappers.richEntities.RichHostMapper;
-import cz.muni.ics.models.Attribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Host;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.richEntities.RichHost;
@@ -103,36 +103,24 @@ public class HostDAOImpl implements HostDAO {
     @Override
     public List<RichHost> getRichHostsHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichHost> hosts = getRichHosts();
-        List<Attribute> filter = DAOUtils.convertAttrsFromInput(attrs);
+        List<RichHost> all = getRichHosts();
+        List<RichHost> correct = new ArrayList<>();
+        for (RichHost host: all) {
+            if (DAOUtils.hasAttributes(host, attrs)) {
+                correct.add(host);
+            }
+        }
 
-        hosts.removeIf(host -> {
-            assert filter != null;
-            return ! host.getAttributes().containsAll(filter);
-        });
-
-        return hosts;
+        return correct;
     }
 
     /* ATTRIBUTES */
 
     @Override
-    public List<Attribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
+    public List<PerunAttribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
         RichHost host = getRichHost(id);
-        List<Attribute> result = new ArrayList<>();
-
-        if (attrs == null) {
-            result.add(new Attribute("id", host.getId().toString()));
-            result.add(new Attribute("hostname", host.getHostname()));
-            result.add(new Attribute("description", host.getDescription()));
-            result.add(new Attribute("facilityId", host.getFacilityId().toString()));
-            result.addAll(host.getAttributes());
-        } else {
-            result.addAll(host.getAttributesByKeys(attrs));
-        }
-
-        return result;
+        return host.getAttributesByKeys(attrs);
     }
 
     private String queryBuilder(String where, boolean withAttrs) {
@@ -141,7 +129,8 @@ public class HostDAOImpl implements HostDAO {
         query.append("SELECT to_jsonb(t)");
         if (withAttrs) {
             query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_object_agg(friendly_name, attr_value))");
+            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
+                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
         }
         query.append(" AS host");
         query.append(" FROM hosts t");

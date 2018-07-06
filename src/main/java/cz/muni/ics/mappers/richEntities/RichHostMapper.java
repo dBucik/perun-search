@@ -16,7 +16,7 @@ public class RichHostMapper implements RowMapper<RichHost> {
     public RichHost mapRow(@NotNull ResultSet rs, int i) throws SQLException {
         JSONObject json = new JSONObject(rs.getString("host"));
         RichHost host = MappersUtils.mapHost(json, new RichHost());
-        host.setAttributes(MappersUtils.getAttributes(json.getJSONObject("attributes")));
+        host.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
 
         return host;
     }

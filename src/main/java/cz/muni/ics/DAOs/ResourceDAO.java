@@ -1,8 +1,8 @@
 package cz.muni.ics.DAOs;
 
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
-import cz.muni.ics.models.Attribute;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Resource;
 import cz.muni.ics.models.richEntities.RichResource;
 
@@ -114,6 +114,6 @@ public interface ResourceDAO {
      * @return List of attributes.
      * @throws DatabaseIntegrityException More than one Resource with same ID found.
      */
-    List<Attribute> getResourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<PerunAttribute> getResourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
     
 }
