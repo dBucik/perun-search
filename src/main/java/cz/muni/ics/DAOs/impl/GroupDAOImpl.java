@@ -5,6 +5,7 @@ import cz.muni.ics.DAOs.GroupDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.GroupMapper;
 import cz.muni.ics.mappers.richEntities.RichGroupMapper;
+import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Group;
 import cz.muni.ics.models.InputAttribute;
@@ -36,7 +37,7 @@ public class GroupDAOImpl implements GroupDAO {
     @Override
     public Group getGroup(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.GROUP);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
@@ -51,14 +52,14 @@ public class GroupDAOImpl implements GroupDAO {
     public List<Group> getGroupsByName(String name) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.GROUP);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
     public List<Group> getGroups() {
-        String query = queryBuilder(null, false);
+        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.GROUP);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -73,7 +74,7 @@ public class GroupDAOImpl implements GroupDAO {
         Group child = getGroup(childGroupId);
 
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.GROUP);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{child.getParentGroupId()}, MAPPER);
@@ -87,7 +88,7 @@ public class GroupDAOImpl implements GroupDAO {
     @Override
     public List<Group> getGroupsOfVo(Long voId) {
         String where = "WHERE t.vo_id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.GROUP);
 
         return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
     }
@@ -97,7 +98,7 @@ public class GroupDAOImpl implements GroupDAO {
     @Override
     public RichGroup getRichGroup(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.GROUP);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, RICH_MAPPER);
@@ -112,14 +113,14 @@ public class GroupDAOImpl implements GroupDAO {
     public List<RichGroup> getRichGroupsByName(String name) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.GROUP);
 
         return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
     }
 
     @Override
     public List<RichGroup> getRichGroups() {
-        String query = queryBuilder(null, true);
+        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.GROUP);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
@@ -143,7 +144,7 @@ public class GroupDAOImpl implements GroupDAO {
         Group child = getGroup(childRichGroupId);
 
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.GROUP);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{child.getParentGroupId()}, RICH_MAPPER);
@@ -157,7 +158,7 @@ public class GroupDAOImpl implements GroupDAO {
     @Override
     public List<RichGroup> getRichGroupsOfVo(Long voId) {
         String where = "WHERE t.vo_id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.GROUP);
 
         return jdbcTemplate.query(query, new Object[] {voId}, RICH_MAPPER);
     }
@@ -169,28 +170,6 @@ public class GroupDAOImpl implements GroupDAO {
         //TODO: improve
         RichGroup group = getRichGroup(id);
         return group.getAttributesByKeys(attrs);
-    }
-
-    private String queryBuilder(String where, boolean withAttrs) {
-        //TODO: check table names
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t)");
-        if (withAttrs) {
-            query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
-                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
-        }
-        query.append(" AS group");
-        query.append(" FROM groups t");
-        if (withAttrs) {
-            query.append(" JOIN group_attr_values av ON av.group_id = t.id");
-            query.append(" JOIN attr_names an ON an.id = av.attr_id");
-        }
-        if (where != null) {
-            query.append(' ').append(where.trim());
-        }
-        query.append(" GROUP BY t.id");
-        return query.toString();
     }
 
 }

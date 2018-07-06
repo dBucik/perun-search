@@ -5,6 +5,7 @@ import cz.muni.ics.DAOs.HostDAO;
 import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.HostMapper;
 import cz.muni.ics.mappers.richEntities.RichHostMapper;
+import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Host;
 import cz.muni.ics.models.InputAttribute;
@@ -36,7 +37,7 @@ public class HostDAOImpl implements HostDAO {
     @Override
     public Host getHost(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.HOST);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -51,14 +52,14 @@ public class HostDAOImpl implements HostDAO {
     public List<Host> getHostsByHostname(String hostname) {
         hostname = '%' + hostname + '%';
         String where = "WHERE upper(t.hostname) LIKE upper(?)";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, new Object[] {hostname}, MAPPER);
     }
 
     @Override
     public List<Host> getHosts() {
-        String query = queryBuilder(null, false);
+        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -73,7 +74,7 @@ public class HostDAOImpl implements HostDAO {
     @Override
     public RichHost getRichHost(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.HOST);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -88,14 +89,14 @@ public class HostDAOImpl implements HostDAO {
     public List<RichHost> getRichHostsByHostname(String hostname) {
         hostname = '%' + hostname + '%';
         String where = "WHERE upper(t.hostname) LIKE upper(?)";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, new Object[] {hostname}, RICH_MAPPER);
     }
 
     @Override
     public List<RichHost> getRichHosts() {
-        String query = queryBuilder(null, true);
+        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
@@ -123,25 +124,4 @@ public class HostDAOImpl implements HostDAO {
         return host.getAttributesByKeys(attrs);
     }
 
-    private String queryBuilder(String where, boolean withAttrs) {
-        //TODO: check table names
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t)");
-        if (withAttrs) {
-            query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
-                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
-        }
-        query.append(" AS host");
-        query.append(" FROM hosts t");
-        if (withAttrs) {
-            query.append(" JOIN host_attr_values av ON av.host_id = t.id");
-            query.append(" JOIN attr_names an ON an.id = av.attr_id");
-        }
-        if (where != null) {
-            query.append(' ').append(where.trim());
-        }
-        query.append(" GROUP BY t.id");
-        return query.toString();
-    }
 }

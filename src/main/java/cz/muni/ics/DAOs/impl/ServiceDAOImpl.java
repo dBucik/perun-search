@@ -6,6 +6,7 @@ import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.ServiceMapper;
 import cz.muni.ics.mappers.richEntities.RichServiceMapper;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Service;
 import cz.muni.ics.models.richEntities.RichService;
@@ -34,7 +35,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public Service getService(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.SERVICE);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -48,14 +49,14 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getServicesByName(String name) {
         String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
     public List<Service> getServices() {
-        String query = queryBuilder(null, false);
+        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -68,7 +69,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getServicesOfOwner(Long ownerId) {
         String where = "WHERE t.owner_id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, new Object[] {ownerId}, MAPPER);
     }
@@ -78,7 +79,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public RichService getRichService(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.SERVICE);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -92,14 +93,14 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<RichService> getRichServicesByName(String name) {
         String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
     }
 
     @Override
     public List<RichService> getRichServices() {
-        String query = queryBuilder(null, true);
+        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
@@ -121,7 +122,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<RichService> getRichServicesOfOwner(Long ownerId) {
         String where = "WHERE t.owner_id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, new Object[] {ownerId}, RICH_MAPPER);
     }
@@ -133,29 +134,6 @@ public class ServiceDAOImpl implements ServiceDAO {
         //TODO: improve
         RichService service = getRichService(id);
         return service.getAttributesByKeys(attrs);
-    }
-
-    private String queryBuilder(String where, boolean withAttrs) {
-        //TODO: check table names
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t)");
-        if (withAttrs) {
-            query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
-                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
-        }
-        query.append(" AS service");
-        query.append(" FROM services t");
-        if (withAttrs) {
-            query.append(" JOIN service_required_attrs av ON av.service_id = t.id");
-            query.append(" JOIN attr_names an ON an.id = av.attr_id");
-        }
-        if (where != null) {
-            query.append(' ').append(where.trim());
-        }
-        query.append(" GROUP BY t.id");
-
-        return query.toString();
     }
 
 }

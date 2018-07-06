@@ -6,6 +6,7 @@ import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.UserExtSourceMapper;
 import cz.muni.ics.mappers.richEntities.RichUserExtSourceMapper;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.UserExtSource;
 import cz.muni.ics.models.richEntities.RichUserExtSource;
@@ -34,7 +35,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     @Override
     public UserExtSource getUserExtSource(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER_EXT_SOURCE);
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -46,7 +47,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
 
     @Override
     public List<UserExtSource> getUserExtSources() {
-        String query = queryBuilder(null, false);
+        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -59,7 +60,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     @Override
     public List<UserExtSource> getUserExtSourcesOfUser(Long userId) {
         String where = "WHERE t.user_id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] { userId }, MAPPER);
     }
@@ -67,7 +68,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     @Override
     public List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId) {
         String where = "WHERE t.ext_source_id = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] { extSourceId }, MAPPER);
     }
@@ -76,7 +77,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     public List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt) {
         loginExt = '%' + loginExt + '%';
         String where = "WHERE upper(t.login_ext) LIKE upper(?)";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] { loginExt }, MAPPER);
     }
@@ -86,7 +87,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     @Override
     public RichUserExtSource getRichUserExtSource(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER_EXT_SOURCE);
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, RICH_MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -98,7 +99,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
 
     @Override
     public List<RichUserExtSource> getRichUserExtSources() {
-        String query = queryBuilder(null, true);
+        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
@@ -120,7 +121,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     @Override
     public List<RichUserExtSource> getRichUserExtSourcesOfUser(Long userId) {
         String where = "WHERE t.user_id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] { userId }, RICH_MAPPER);
     }
@@ -128,7 +129,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     @Override
     public List<RichUserExtSource> getRichUserExtSourcesOfExtSource(Long extSourceId) {
         String where = "WHERE t.ext_source_id = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] { extSourceId }, RICH_MAPPER);
     }
@@ -137,7 +138,7 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
     public List<RichUserExtSource> getRichUserExtSourcesByLoginExt(String loginExt) {
         loginExt = '%' + loginExt + '%';
         String where = "WHERE upper(t.login_ext) LIKE upper(?)";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER_EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] { loginExt }, RICH_MAPPER);
     }
@@ -149,28 +150,6 @@ public class UserExtSourceDAOImpl implements UserExtSourceDAO {
         //TODO: improve
         RichUserExtSource userExtSource = getRichUserExtSource(id);
         return userExtSource.getAttributesByKeys(attrs);
-    }
-
-    private String queryBuilder(String where, boolean withAttrs) {
-        //TODO: check table names
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t)");
-        if (withAttrs) {
-            query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
-                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
-        }
-        query.append(" AS userExtSource");
-        query.append(" FROM user_ext_sources t");
-        if (withAttrs) {
-            query.append(" JOIN user_ext_source_attr_values av ON av.user_ext_source_id = t.id");
-            query.append(" JOIN attr_names an ON an.id = av.attr_id");
-        }
-        if (where != null) {
-            query.append(' ').append(where.trim());
-        }
-        query.append(" GROUP BY t.id");
-        return query.toString();
     }
 
 }

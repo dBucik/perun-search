@@ -6,6 +6,7 @@ import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.UserMapper;
 import cz.muni.ics.mappers.richEntities.RichUserMapper;
 import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.User;
 import cz.muni.ics.models.richEntities.RichUser;
@@ -36,7 +37,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUser(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id=?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -49,7 +50,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getUsers() {
-        String query = queryBuilder(null, false);
+        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.USER);
         return jdbcTemplate.query(query, MAPPER);
     }
 
@@ -65,7 +66,7 @@ public class UserDAOImpl implements UserDAO {
         String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
                 "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
                 "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
         String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
                 ((firstName == null) ? "% " : '%' + firstName + "% ") +
                 ((middleName == null) ? "% " : '%' + middleName + "% ") +
@@ -79,7 +80,7 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getUsersByServiceAcc(boolean isServiceAcc) {
         String param = isServiceAcc ? "t" : "f";
         String where = "WHERE t.service_acc = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
@@ -87,7 +88,7 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc) {
         String param = isSponsoredAcc ? "t" : "f";
         String where = "WHERE t.sponsored_acc = ?";
-        String query = queryBuilder(where, false);
+        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
@@ -96,7 +97,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public RichUser getRichUser(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id=?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -109,7 +110,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<RichUser> getRichUsers() {
-        String query = queryBuilder(null, true);
+        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.USER);
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
@@ -132,7 +133,7 @@ public class UserDAOImpl implements UserDAO {
         String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
                 "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
                 "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
         String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
                 ((firstName == null) ? "% " : '%' + firstName + "% ") +
                 ((middleName == null) ? "% " : '%' + middleName + "% ") +
@@ -146,7 +147,7 @@ public class UserDAOImpl implements UserDAO {
     public List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc) {
         String param = isServiceAcc ? "t" : "f";
         String where = "WHERE t.service_acc = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
         return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
     }
 
@@ -154,7 +155,7 @@ public class UserDAOImpl implements UserDAO {
     public List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
         String param = isSponsoredAcc ? "t" : "f";
         String where = "WHERE t.sponsored_acc = ?";
-        String query = queryBuilder(where, true);
+        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
         return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
     }
 
@@ -165,27 +166,6 @@ public class UserDAOImpl implements UserDAO {
         //TODO: improve
         RichUser user = getRichUser(id);
         return user.getAttributesByKeys(attrs);
-    }
-
-    private String queryBuilder(String where, boolean withAttrs) {
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT to_jsonb(t)");
-        if (withAttrs) {
-            query.append(" ||");
-            query.append(" jsonb_build_object('attributes', json_agg(jsonb_build_object('key', friendly_name," +
-                    " 'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
-        }
-        query.append(" AS user");
-        query.append(" FROM users t");
-        if (withAttrs) {
-            query.append(" JOIN user_attr_values av ON av.user_id = t.id");
-            query.append(" JOIN attr_names an ON an.id = av.attr_id");
-        }
-        if (where != null) {
-            query.append(' ').append(where.trim());
-        }
-        query.append(" GROUP BY t.id");
-        return query.toString();
     }
 
 }
