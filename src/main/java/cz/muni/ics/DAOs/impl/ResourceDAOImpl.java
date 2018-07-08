@@ -35,7 +35,7 @@ public class ResourceDAOImpl implements ResourceDAO {
     @Override
     public Resource getResource(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.RESOURCE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.RESOURCE);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -49,14 +49,14 @@ public class ResourceDAOImpl implements ResourceDAO {
     @Override
     public List<Resource> getResourcesByName(String name) {
         String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.RESOURCE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.RESOURCE);
         
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
     public List<Resource> getResources() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.RESOURCE);
+        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.RESOURCE);
         
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -69,7 +69,7 @@ public class ResourceDAOImpl implements ResourceDAO {
     @Override
     public List<Resource> getResourcesOfFacility(Long facilityId) {
         String where = "WHERE facility_id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.RESOURCE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.RESOURCE);
 
         return jdbcTemplate.query(query, new Object[] {facilityId}, MAPPER);
     }
@@ -77,7 +77,7 @@ public class ResourceDAOImpl implements ResourceDAO {
     @Override
     public List<Resource> getResourcesOfVo(Long voId) {
         String where = "WHERE vo_id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.RESOURCE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.RESOURCE);
 
         return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
     }
@@ -86,8 +86,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 
     @Override
     public RichResource getRichResource(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.RESOURCE);
+        String entityWhere = "WHERE t.id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.RESOURCE);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -100,18 +100,36 @@ public class ResourceDAOImpl implements ResourceDAO {
 
     @Override
     public List<RichResource> getRichResourcesByName(String name) {
-        String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.RESOURCE);
+        String entityWhere = "WHERE upper(t.name) LIKE  upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.RESOURCE);
 
         return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
     }
 
     @Override
     public List<RichResource> getRichResources() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.RESOURCE);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.RESOURCE);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
+
+    @Override
+    public List<RichResource> getRichResourcesOfFacility(Long facilityId) {
+        String entityWhere = "WHERE facility_id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.RESOURCE);
+
+        return jdbcTemplate.query(query, new Object[] {facilityId}, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichResource> getRichResourcesOfVo(Long voId) {
+        String entityWhere = "WHERE vo_id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.RESOURCE);
+
+        return jdbcTemplate.query(query, new Object[] {voId}, RICH_MAPPER);
+    }
+
+    /* ATTRIBUTES */
 
     @Override
     public List<RichResource> getRichResourcesHavingAttrs(List<InputAttribute> attrs) {
@@ -126,24 +144,6 @@ public class ResourceDAOImpl implements ResourceDAO {
 
         return correct;
     }
-
-    @Override
-    public List<RichResource> getRichResourcesOfFacility(Long facilityId) {
-        String where = "WHERE facility_id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.RESOURCE);
-
-        return jdbcTemplate.query(query, new Object[] {facilityId}, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichResource> getRichResourcesOfVo(Long voId) {
-        String where = "WHERE vo_id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.RESOURCE);
-
-        return jdbcTemplate.query(query, new Object[] {voId}, RICH_MAPPER);
-    }
-
-    /* ATTRIBUTES */
 
     @Override
     public List<PerunAttribute> getResourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {

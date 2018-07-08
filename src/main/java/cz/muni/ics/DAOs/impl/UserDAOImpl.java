@@ -37,7 +37,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUser(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id=?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -50,7 +50,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getUsers() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.USER);
+        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.USER);
         return jdbcTemplate.query(query, MAPPER);
     }
 
@@ -66,7 +66,7 @@ public class UserDAOImpl implements UserDAO {
         String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
                 "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
                 "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER);
         String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
                 ((firstName == null) ? "% " : '%' + firstName + "% ") +
                 ((middleName == null) ? "% " : '%' + middleName + "% ") +
@@ -80,7 +80,7 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getUsersByServiceAcc(boolean isServiceAcc) {
         String param = isServiceAcc ? "t" : "f";
         String where = "WHERE t.service_acc = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER);
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
@@ -88,7 +88,7 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getUsersBySponsoredAcc(boolean isSponsoredAcc) {
         String param = isSponsoredAcc ? "t" : "f";
         String where = "WHERE t.sponsored_acc = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.USER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER);
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
@@ -96,8 +96,8 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public RichUser getRichUser(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id=?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
+        String entityWhere = "WHERE t.id=?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -110,8 +110,39 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<RichUser> getRichUsers() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.USER);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.USER);
         return jdbcTemplate.query(query, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichUser> getRichUsersByName(String titleBefore, String firstName, String middleName, String lastName, String titleAfter) {
+        String entityWhere = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
+                "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
+                "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER);
+        String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
+                ((firstName == null) ? "% " : '%' + firstName + "% ") +
+                ((middleName == null) ? "% " : '%' + middleName + "% ") +
+                ((lastName == null) ? "% " : '%' + lastName + "% ") +
+                ((titleAfter == null) ? "%" : '%' + titleAfter + "% ");
+
+        return jdbcTemplate.query(query, new Object[] { param }, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc) {
+        String param = isServiceAcc ? "t" : "f";
+        String entityWhere = "WHERE t.service_acc = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER);
+        return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        String param = isSponsoredAcc ? "t" : "f";
+        String entityWhere = "WHERE t.sponsored_acc = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER);
+        return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
     }
 
     @Override
@@ -126,37 +157,6 @@ public class UserDAOImpl implements UserDAO {
         }
 
         return correct;
-    }
-
-    @Override
-    public List<RichUser> getRichUsersByName(String titleBefore, String firstName, String middleName, String lastName, String titleAfter) {
-        String where = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
-                "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
-                "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
-        String param = ((titleBefore == null) ? "% " : '%' + titleBefore + "% ") +
-                ((firstName == null) ? "% " : '%' + firstName + "% ") +
-                ((middleName == null) ? "% " : '%' + middleName + "% ") +
-                ((lastName == null) ? "% " : '%' + lastName + "% ") +
-                ((titleAfter == null) ? "%" : '%' + titleAfter + "% ");
-
-        return jdbcTemplate.query(query, new Object[] { param }, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc) {
-        String param = isServiceAcc ? "t" : "f";
-        String where = "WHERE t.service_acc = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
-        return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
-        String param = isSponsoredAcc ? "t" : "f";
-        String where = "WHERE t.sponsored_acc = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.USER);
-        return jdbcTemplate.query(query, new Object[] {param}, RICH_MAPPER);
     }
 
     /* ATTRIBUTES */

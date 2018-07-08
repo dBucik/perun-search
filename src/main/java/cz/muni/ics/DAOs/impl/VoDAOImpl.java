@@ -35,7 +35,7 @@ public class VoDAOImpl implements VoDAO {
     @Override
     public Vo getVo(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.VO);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.VO);
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -49,7 +49,7 @@ public class VoDAOImpl implements VoDAO {
     public List<Vo> getVosByName(String name) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.VO);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.VO);
 
         return jdbcTemplate.query(query, new Object[] { name }, MAPPER);
     }
@@ -57,7 +57,7 @@ public class VoDAOImpl implements VoDAO {
     @Override
     public Vo getVoByShortName(String shortName) throws DatabaseIntegrityException {
         String where = "WHERE upper(t.short_name) = upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.VO);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.VO);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{ shortName }, MAPPER);
@@ -72,14 +72,14 @@ public class VoDAOImpl implements VoDAO {
     public List<Vo> getVosByShortName(String shortName) {
         shortName = '%' + shortName + '%';
         String where = "WHERE upper(t.short_name) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.VO);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.VO);
 
         return jdbcTemplate.query(query, new Object[] { shortName }, MAPPER);
     }
 
     @Override
     public List<Vo> getVos() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.VO);
+        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.VO);
         return jdbcTemplate.query(query, MAPPER);
     }
 
@@ -92,8 +92,8 @@ public class VoDAOImpl implements VoDAO {
 
     @Override
     public RichVo getRichVo(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.VO);
+        String entityWhere = "WHERE t.id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{ id }, RICH_MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -106,16 +106,16 @@ public class VoDAOImpl implements VoDAO {
     @Override
     public List<RichVo> getRichVosByName(String name) {
         name = '%' + name + '%';
-        String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.VO);
+        String entityWhere = "WHERE upper(t.name) LIKE upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
 
         return jdbcTemplate.query(query, new Object[] { name }, RICH_MAPPER);
     }
 
     @Override
     public RichVo getRichVoByShortName(String shortName) throws DatabaseIntegrityException {
-        String where = "WHERE upper(t.short_name) = upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.VO);
+        String entityWhere = "WHERE upper(t.short_name) = upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{ shortName }, RICH_MAPPER);
@@ -128,15 +128,15 @@ public class VoDAOImpl implements VoDAO {
 
     @Override
     public List<RichVo> getRichVosByShortName(String shortName) {
-        String where = "WHERE upper(t.short_name) = upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.VO);
+        String entityWhere = "WHERE upper(t.short_name) = upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
 
         return jdbcTemplate.query(query, new Object[]{ shortName }, RICH_MAPPER);
     }
 
     @Override
     public List<RichVo> getRichVos() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.VO);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.VO);
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 

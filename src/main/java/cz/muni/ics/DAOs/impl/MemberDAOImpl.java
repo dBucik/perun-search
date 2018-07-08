@@ -38,7 +38,7 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public Member getMember(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.MEMBER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.MEMBER);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -51,7 +51,7 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<Member> getMembers() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.MEMBER);
+        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -64,7 +64,7 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public List<Member> getMembersOfUser(Long userId) {
         String where = "WHERE t.user_id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.MEMBER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] {userId}, MAPPER);
     }
@@ -72,7 +72,7 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public List<Member> getMembersOfVo(Long voId) {
         String where = "WHERE t.vo_id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.MEMBER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
     }
@@ -81,7 +81,7 @@ public class MemberDAOImpl implements MemberDAO {
     public List<Member> getMembersByStatus(String status) {
         Character param = resolveStatusParam(status);
         String where = "WHERE t.status = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.MEMBER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] { param }, MAPPER);
     }
@@ -89,7 +89,7 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public List<Member> getMembersBySponsored(boolean isSponsored) {
         String where = "WHERE t.sponsored = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.MEMBER);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] {isSponsored}, MAPPER);
     }
@@ -98,8 +98,8 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public RichMember getRichMember(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.MEMBER);
+        String entityWhere = "WHERE t.id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -112,7 +112,7 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<RichMember> getRichMembers() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.MEMBER);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
@@ -133,16 +133,16 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<RichMember> getRichMembersOfUser(Long userId) {
-        String where = "WHERE t.user_id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.MEMBER);
+        String entityWhere = "WHERE t.user_id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] {userId}, RICH_MAPPER);
     }
 
     @Override
     public List<RichMember> getRichMembersOfVo(Long voId) {
-        String where = "WHERE t.vo_id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.MEMBER);
+        String entityWhere = "WHERE t.vo_id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] {voId}, RICH_MAPPER);
     }
@@ -150,16 +150,16 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public List<RichMember> getRichMembersByStatus(String status) {
         Character param = resolveStatusParam(status);
-        String where = "WHERE t.status = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.MEMBER);
+        String entityWhere = "WHERE t.status = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] { param }, RICH_MAPPER);
     }
 
     @Override
     public List<RichMember> getRichMembersBySponsored(boolean isSponsored) {
-        String where = "WHERE t.sponsored = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.MEMBER);
+        String entityWhere = "WHERE t.sponsored = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, new Object[] {isSponsored}, RICH_MAPPER);
     }

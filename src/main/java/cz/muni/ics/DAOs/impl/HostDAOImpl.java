@@ -37,7 +37,7 @@ public class HostDAOImpl implements HostDAO {
     @Override
     public Host getHost(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.HOST);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.HOST);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -52,14 +52,14 @@ public class HostDAOImpl implements HostDAO {
     public List<Host> getHostsByHostname(String hostname) {
         hostname = '%' + hostname + '%';
         String where = "WHERE upper(t.hostname) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.HOST);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, new Object[] {hostname}, MAPPER);
     }
 
     @Override
     public List<Host> getHosts() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.HOST);
+        String query = DAOUtils.simpleQueryBuilder(null,  PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -73,8 +73,8 @@ public class HostDAOImpl implements HostDAO {
 
     @Override
     public RichHost getRichHost(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.HOST);
+        String entityWhere = "WHERE t.id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.HOST);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -88,15 +88,15 @@ public class HostDAOImpl implements HostDAO {
     @Override
     public List<RichHost> getRichHostsByHostname(String hostname) {
         hostname = '%' + hostname + '%';
-        String where = "WHERE upper(t.hostname) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.HOST);
+        String entityWhere = "WHERE upper(t.hostname) LIKE upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, new Object[] {hostname}, RICH_MAPPER);
     }
 
     @Override
     public List<RichHost> getRichHosts() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.HOST);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }

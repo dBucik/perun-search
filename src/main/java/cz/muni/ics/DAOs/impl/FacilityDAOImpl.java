@@ -37,7 +37,7 @@ public class FacilityDAOImpl implements FacilityDAO {
     @Override
     public Facility getFacility(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.FACILITY);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.FACILITY);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -50,7 +50,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 
     @Override
     public List<Facility> getFacilities() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.FACILITY);
+        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.FACILITY);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -64,7 +64,7 @@ public class FacilityDAOImpl implements FacilityDAO {
     public List<Facility> getFacilitiesByName(String name) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.FACILITY);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.FACILITY);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
@@ -73,8 +73,8 @@ public class FacilityDAOImpl implements FacilityDAO {
 
     @Override
     public RichFacility getRichFacility(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.FACILITY);
+        String entityWhere = "WHERE t.id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.FACILITY);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -87,9 +87,18 @@ public class FacilityDAOImpl implements FacilityDAO {
 
     @Override
     public List<RichFacility> getRichFacilities() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.FACILITY);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.FACILITY);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichFacility> getRichFacilitiesByName(String name) {
+        name = '%' + name + '%';
+        String entityWhere = "WHERE upper(t.name) LIKE upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.FACILITY);
+
+        return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
     }
 
     @Override
@@ -104,15 +113,6 @@ public class FacilityDAOImpl implements FacilityDAO {
         }
 
         return correct;
-    }
-
-    @Override
-    public List<RichFacility> getRichFacilitiesByName(String name) {
-        name = '%' + name + '%';
-        String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.FACILITY);
-
-        return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
     }
 
     /* ATTRIBUTES */

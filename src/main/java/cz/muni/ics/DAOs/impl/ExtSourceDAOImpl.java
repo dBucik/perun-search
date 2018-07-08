@@ -37,7 +37,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     @Override
     public ExtSource getExtSource(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.EXT_SOURCE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.EXT_SOURCE);
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -49,7 +49,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
 
     @Override
     public List<ExtSource> getExtSources() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.EXT_SOURCE);
+        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.EXT_SOURCE);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -58,7 +58,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     public List<ExtSource> getExtSourcesByName(String name) {
         name = '%' + name + '%';
         String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.EXT_SOURCE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
@@ -67,7 +67,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     public List<ExtSource> getExtSourcesByType(String type) {
         type = '%' + type + '%';
         String where = "WHERE upper(t.type) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.EXT_SOURCE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] {type}, MAPPER);
     }
@@ -81,8 +81,8 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
 
     @Override
     public RichExtSource getRichExtSource(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.EXT_SOURCE);
+        String entityWhere = "WHERE t.id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.EXT_SOURCE);
         try {
             return jdbcTemplate.queryForObject(query, new Object[] {id}, RICH_MAPPER);
         } catch (EmptyResultDataAccessException e) {
@@ -94,7 +94,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
 
     @Override
     public List<RichExtSource> getRichExtSources() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.EXT_SOURCE);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.EXT_SOURCE);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
@@ -102,8 +102,8 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     @Override
     public List<RichExtSource> getRichExtSourcesByName(String name) {
         name = '%' + name + '%';
-        String where = "WHERE upper(t.name) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.EXT_SOURCE);
+        String entityWhere = "WHERE upper(t.name) LIKE upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
     }
@@ -111,8 +111,8 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     @Override
     public List<RichExtSource> getRichExtSourcesByType(String type) {
         type = '%' + type + '%';
-        String where = "WHERE upper(t.type) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.EXT_SOURCE);
+        String entityWhere = "WHERE upper(t.type) LIKE upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.EXT_SOURCE);
 
         return jdbcTemplate.query(query, new Object[] {type}, RICH_MAPPER);
     }

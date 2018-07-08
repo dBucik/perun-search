@@ -35,7 +35,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public Service getService(Long id) throws DatabaseIntegrityException {
         String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.SERVICE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.SERVICE);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
@@ -49,14 +49,14 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getServicesByName(String name) {
         String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.SERVICE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
     @Override
     public List<Service> getServices() {
-        String query = DAOUtils.queryBuilder(null, false, PerunEntityType.SERVICE);
+        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, MAPPER);
     }
@@ -69,7 +69,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getServicesOfOwner(Long ownerId) {
         String where = "WHERE t.owner_id = ?";
-        String query = DAOUtils.queryBuilder(where, false, PerunEntityType.SERVICE);
+        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, new Object[] {ownerId}, MAPPER);
     }
@@ -78,8 +78,8 @@ public class ServiceDAOImpl implements ServiceDAO {
 
     @Override
     public RichService getRichService(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.SERVICE);
+        String entityWhere = "WHERE t.id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
 
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
@@ -92,17 +92,25 @@ public class ServiceDAOImpl implements ServiceDAO {
 
     @Override
     public List<RichService> getRichServicesByName(String name) {
-        String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.SERVICE);
+        String entityWhere = "WHERE upper(t.name) LIKE  upper(?)";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
     }
 
     @Override
     public List<RichService> getRichServices() {
-        String query = DAOUtils.queryBuilder(null, true, PerunEntityType.SERVICE);
+        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
+    }
+
+    @Override
+    public List<RichService> getRichServicesOfOwner(Long ownerId) {
+        String entityWhere = "WHERE t.owner_id = ?";
+        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
+
+        return jdbcTemplate.query(query, new Object[] {ownerId}, RICH_MAPPER);
     }
 
     @Override
@@ -117,14 +125,6 @@ public class ServiceDAOImpl implements ServiceDAO {
         }
 
         return correct;
-    }
-
-    @Override
-    public List<RichService> getRichServicesOfOwner(Long ownerId) {
-        String where = "WHERE t.owner_id = ?";
-        String query = DAOUtils.queryBuilder(where, true, PerunEntityType.SERVICE);
-
-        return jdbcTemplate.query(query, new Object[] {ownerId}, RICH_MAPPER);
     }
 
     /* ATTRIBUTES */
