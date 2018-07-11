@@ -58,7 +58,7 @@ public class MemberDAOImpl implements MemberDAO {
 
     @Override
     public List<Member> getMembersHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichMembersHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichMembersHavingAttrs(attrs));
     }
 
     @Override
@@ -94,10 +94,10 @@ public class MemberDAOImpl implements MemberDAO {
         return jdbcTemplate.query(query, new Object[] {isSponsored}, MAPPER);
     }
 
-    /* RICH_MEMBER */
+    /* COMPLETE_RICH_MEMBER */
 
     @Override
-    public RichMember getRichMember(Long id) throws DatabaseIntegrityException {
+    public RichMember getCompleteRichMember(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
@@ -111,16 +111,16 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<RichMember> getRichMembers() {
+    public List<RichMember> getCompleteRichMembers() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.MEMBER);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public List<RichMember> getRichMembersHavingAttrs(List<InputAttribute> attrs) {
-        //TODO improve, fix
-        List<RichMember> all = getRichMembers();
+    public List<RichMember> getCompleteRichMembersHavingAttrs(List<InputAttribute> attrs) {
+        //TODO improve
+        List<RichMember> all = getCompleteRichMembers();
         List<RichMember> correct = new ArrayList<>();
         for (RichMember member: all) {
             if (DAOUtils.hasAttributes(member, attrs)) {
@@ -132,7 +132,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<RichMember> getRichMembersOfUser(Long userId) {
+    public List<RichMember> getCompleteRichMembersOfUser(Long userId) {
         String entityWhere = "WHERE t.user_id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
@@ -140,7 +140,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<RichMember> getRichMembersOfVo(Long voId) {
+    public List<RichMember> getCompleteRichMembersOfVo(Long voId) {
         String entityWhere = "WHERE t.vo_id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
@@ -148,7 +148,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<RichMember> getRichMembersByStatus(String status) {
+    public List<RichMember> getCompleteRichMembersByStatus(String status) {
         Character param = resolveStatusParam(status);
         String entityWhere = "WHERE t.status = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
@@ -157,7 +157,7 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     @Override
-    public List<RichMember> getRichMembersBySponsored(boolean isSponsored) {
+    public List<RichMember> getCompleteRichMembersBySponsored(boolean isSponsored) {
         String entityWhere = "WHERE t.sponsored = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.MEMBER);
 
@@ -169,7 +169,7 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public List<PerunAttribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichMember member = getRichMember(id);
+        RichMember member = getCompleteRichMember(id);
         return member.getAttributesByKeys(attrs);
     }
 

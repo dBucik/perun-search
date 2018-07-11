@@ -64,7 +64,7 @@ public interface UserDAO {
      */
     List<User> getUsersHavingAttrs(List<InputAttribute> attrs);
 
-    /* RICH_USER */
+    /* COMPLETE_RICH_USER */
 
     /**
      * Get User specified by ID.
@@ -72,13 +72,13 @@ public interface UserDAO {
      * @return Found User or null if not such found.
      * @throws DatabaseIntegrityException More than one User with same ID found.
      */
-    RichUser getRichUser(Long id) throws DatabaseIntegrityException;
+    RichUser getCompleteRichUser(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichUsers.
      * @return List of RichUsers, empty list if nothing has been found.
      */
-    List<RichUser> getRichUsers();
+    List<RichUser> getCompleteRichUsers();
 
     /**
      * Get RichUsers with NAME like specified params.
@@ -90,22 +90,22 @@ public interface UserDAO {
      * @param titleAfter title after the name
      * @return List of RichUsers found, empty list if nothing has been found.
      */
-    List<RichUser> getRichUsersByName(String titleBefore, String firstName, String middleName,
-                              String lastName, String titleAfter);
+    List<RichUser> getCompleteRichUsersByName(String titleBefore, String firstName, String middleName,
+                                              String lastName, String titleAfter);
 
     /**
      * Get RichUsers by specifying if their acc is serviceAcc.
      * @param isServiceAcc TRUE for serviceAccounts, FALSE otherwise.
      * @return List of RichUsers found, empty list if nothing has been found.
      */
-    List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc);
+    List<RichUser> getCompleteRichUsersByServiceAcc(boolean isServiceAcc);
 
     /**
      * Get RichUsers by specifying if their acc is sponsored.
      * @param isSponsoredAcc TRUE for sponsoredAccounts, FALSE otherwise.
      * @return List of RichUsers found, empty list if nothing has been found.
      */
-    List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc);
+    List<RichUser> getCompleteRichUsersBySponsoredAcc(boolean isSponsoredAcc);
 
     /**
      * Get RichUsers that have specified attributes.
@@ -113,7 +113,7 @@ public interface UserDAO {
      * @param attrs attributes of RichUsers
      * @return List of RichUsers found, empty list if nothing has been found.
      */
-    List<RichUser> getRichUsersHavingAttrs(List<InputAttribute> attrs);
+    List<RichUser> getCompleteRichUsersHavingAttrs(List<InputAttribute> attrs);
 
     
     /* ATTRIBUTES */

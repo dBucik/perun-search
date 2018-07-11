@@ -53,7 +53,7 @@ public interface ExtSourceDAO {
      */
     List<ExtSource> getExtSourcesHavingAttrs(List<InputAttribute> attrs);
 
-    /* RICH_EXT_SOURCE */
+    /* COMPLETE_RICH_EXT_SOURCE */
 
     /**
      * Get RichExtSource specified by ID.
@@ -61,13 +61,13 @@ public interface ExtSourceDAO {
      * @return Found richExtSource or null if not such found.
      * @throws DatabaseIntegrityException More than one RichExtSource with same ID found.
      */
-    RichExtSource getRichExtSource(Long id) throws DatabaseIntegrityException;
+    RichExtSource getCompleteRichExtSource(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichExtSources.
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    List<RichExtSource> getRichExtSources();
+    List<RichExtSource> getCompleteRichExtSources();
     
     /**
      * Get RichExtSources with NAME like specified parameter.
@@ -75,7 +75,7 @@ public interface ExtSourceDAO {
      * @param name name of RichExtSource
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    List<RichExtSource> getRichExtSourcesByName(String name);
+    List<RichExtSource> getCompleteRichExtSourcesByName(String name);
 
     /**
      * Get RichExtSources with TYPE like specified parameter.
@@ -83,7 +83,7 @@ public interface ExtSourceDAO {
      * @param type type of RichExtSource
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    List<RichExtSource> getRichExtSourcesByType(String type);
+    List<RichExtSource> getCompleteRichExtSourcesByType(String type);
 
     /**
      * Get RichExtSources that have specified attributes.
@@ -91,7 +91,7 @@ public interface ExtSourceDAO {
      * @param attrs attributes of RichExtSources
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    List<RichExtSource> getRichExtSourcesHavingAttrs(List<InputAttribute> attrs);
+    List<RichExtSource> getCompleteRichExtSourcesHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

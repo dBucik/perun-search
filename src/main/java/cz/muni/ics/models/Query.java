@@ -105,16 +105,16 @@ public class Query implements GraphQLRootResolver {
      * @return Found extSource or null if not such found.
      * @throws DatabaseIntegrityException More than one RichExtSource with same ID found.
      */
-    public RichExtSource getRichExtSource(Long id) throws DatabaseIntegrityException {
-        return extSourceDAO.getRichExtSource(id);
+    public RichExtSource getCompleteRichExtSource(Long id) throws DatabaseIntegrityException {
+        return extSourceDAO.getCompleteRichExtSource(id);
     }
 
     /**
      * Get all RichExtSources.
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    public List<RichExtSource> getRichExtSources() {
-        return extSourceDAO.getRichExtSources();
+    public List<RichExtSource> getCompleteRichExtSources() {
+        return extSourceDAO.getCompleteRichExtSources();
     }
 
     /**
@@ -123,8 +123,8 @@ public class Query implements GraphQLRootResolver {
      * @param name name of RichExtSource
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    public List<RichExtSource> getRichExtSourcesByName(String name) {
-        return extSourceDAO.getRichExtSourcesByName(name);
+    public List<RichExtSource> getCompleteRichExtSourcesByName(String name) {
+        return extSourceDAO.getCompleteRichExtSourcesByName(name);
     }
 
     /**
@@ -133,8 +133,8 @@ public class Query implements GraphQLRootResolver {
      * @param type type of RichExtSource
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    public List<RichExtSource> getRichExtSourcesByType(String type) {
-        return extSourceDAO.getRichExtSourcesByType(type);
+    public List<RichExtSource> getCompleteRichExtSourcesByType(String type) {
+        return extSourceDAO.getCompleteRichExtSourcesByType(type);
     }
 
     /**
@@ -143,8 +143,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of RichExtSources
      * @return List of RichExtSources, empty list if nothing has been found.
      */
-    public List<RichExtSource> getRichExtSourcesHavingAttrs(List<InputAttribute> attrs) {
-        return extSourceDAO.getRichExtSourcesHavingAttrs(attrs);
+    public List<RichExtSource> getCompleteRichExtSourcesHavingAttrs(List<InputAttribute> attrs) {
+        return extSourceDAO.getCompleteRichExtSourcesHavingAttrs(attrs);
     }
 
     /* EXT_SOURCE_ATTRS */
@@ -208,16 +208,16 @@ public class Query implements GraphQLRootResolver {
      * @return Found RichFacility or null if not such found.
      * @throws DatabaseIntegrityException More than one RichFacility with same ID found.
      */
-    public RichFacility getRichFacility(Long id) throws DatabaseIntegrityException {
-        return facilityDAO.getRichFacility(id);
+    public RichFacility getCompleteRichFacility(Long id) throws DatabaseIntegrityException {
+        return facilityDAO.getCompleteRichFacility(id);
     }
 
     /**
      * Get all RichFacilities.
      * @return List of RichFacilities, empty list if nothing has been found.
      */
-    public List<RichFacility> getRichFacilities() {
-        return facilityDAO.getRichFacilities();
+    public List<RichFacility> getCompleteRichFacilities() {
+        return facilityDAO.getCompleteRichFacilities();
     }
 
     /**
@@ -226,8 +226,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of RichFacilities
      * @return List of RichFacilities found, empty list if nothing has been found.
      */
-    public List<RichFacility> getRichFacilitiesHavingAttrs(List<InputAttribute> attrs) {
-        return facilityDAO.getRichFacilitiesHavingAttrs(attrs);
+    public List<RichFacility> getCompleteRichFacilitiesHavingAttrs(List<InputAttribute> attrs) {
+        return facilityDAO.getCompleteRichFacilitiesHavingAttrs(attrs);
     }
 
     /**
@@ -236,8 +236,8 @@ public class Query implements GraphQLRootResolver {
      * @param name name of RichFacility
      * @return List of RichFacilities, empty list if nothing has been found.
      */
-    public List<RichFacility> getRichFacilitiesByName(String name) {
-        return facilityDAO.getRichFacilitiesByName(name);
+    public List<RichFacility> getCompleteRichFacilitiesByName(String name) {
+        return facilityDAO.getCompleteRichFacilitiesByName(name);
     }
 
     /* FACILITY_ATTRS */
@@ -321,16 +321,16 @@ public class Query implements GraphQLRootResolver {
      * @return Found RichGroup or null if not such found.
      * @throws DatabaseIntegrityException More than one RichGroup with same ID found.
      */
-    public RichGroup getRichGroup(Long id) throws DatabaseIntegrityException {
-        return groupDAO.getRichGroup(id);
+    public RichGroup getCompleteRichGroup(Long id) throws DatabaseIntegrityException {
+        return groupDAO.getCompleteRichGroup(id);
     }
 
     /**
      * Get all RichGroups.
      * @return List of RichGroups, empty list if nothing has been found.
      */
-    public List<RichGroup> getRichGroups() {
-        return groupDAO.getRichGroups();
+    public List<RichGroup> getCompleteRichGroups() {
+        return groupDAO.getCompleteRichGroups();
     }
 
     /**
@@ -339,8 +339,8 @@ public class Query implements GraphQLRootResolver {
      * @param name name of RichGroup
      * @return List of RichGroups, empty list if nothing has been found.
      */
-    public List<RichGroup> getRichGroupsByName(String name) {
-        return groupDAO.getRichGroupsByName(name);
+    public List<RichGroup> getCompleteRichGroupsByName(String name) {
+        return groupDAO.getCompleteRichGroupsByName(name);
     }
 
     /**
@@ -351,7 +351,7 @@ public class Query implements GraphQLRootResolver {
      *                                    No parent group found for RichGroup with specified ID.
      */
     public RichGroup getParentRichGroup(Long childRichGroupId) throws DatabaseIntegrityException {
-        return groupDAO.getParentRichGroup(childRichGroupId);
+        return groupDAO.getCompleteParentRichGroup(childRichGroupId);
     }
 
     /**
@@ -359,8 +359,8 @@ public class Query implements GraphQLRootResolver {
      * @param voId id of VO
      * @return List of RichGroups, empty list if nothing has been found.
      */
-    public List<RichGroup> getRichGroupsOfVo(Long voId) {
-        return groupDAO.getRichGroupsOfVo(voId);
+    public List<RichGroup> getCompleteRichGroupsOfVo(Long voId) {
+        return groupDAO.getCompleteRichGroupsOfVo(voId);
     }
 
     /**
@@ -369,8 +369,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of RichGroups
      * @return List of RichGroups found, empty list if nothing has been found.
      */
-    public List<RichGroup> getRichGroupsHavingAttrs(List<InputAttribute> attrs) {
-        return groupDAO.getRichGroupsHavingAttrs(attrs);
+    public List<RichGroup> getCompleteRichGroupsHavingAttrs(List<InputAttribute> attrs) {
+        return groupDAO.getCompleteRichGroupsHavingAttrs(attrs);
     }
 
     /* GROUP_ATTRS */
@@ -434,16 +434,16 @@ public class Query implements GraphQLRootResolver {
      * @return Found RichHost or null if not such found.
      * @throws DatabaseIntegrityException More than one RichHost with same ID found.
      */
-    public RichHost getRichHost(Long id) throws DatabaseIntegrityException {
-        return hostDAO.getRichHost(id);
+    public RichHost getCompleteRichHost(Long id) throws DatabaseIntegrityException {
+        return hostDAO.getCompleteRichHost(id);
     }
 
     /**
      * Get all RichHosts.
      * @return List of RichHosts, empty list if nothing has been found.
      */
-    public List<RichHost> getRichHosts() {
-        return hostDAO.getRichHosts();
+    public List<RichHost> getCompleteRichHosts() {
+        return hostDAO.getCompleteRichHosts();
     }
 
     /**
@@ -452,8 +452,8 @@ public class Query implements GraphQLRootResolver {
      * @param hostname RichHostname of RichHost
      * @return List of RichHosts, empty list if nothing has been found.
      */
-    public List<RichHost> getRichHostsByHostname(String hostname) {
-        return hostDAO.getRichHostsByHostname(hostname);
+    public List<RichHost> getCompleteRichHostsByHostname(String hostname) {
+        return hostDAO.getCompleteRichHostsByHostname(hostname);
     }
 
     /**
@@ -462,8 +462,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of RichHosts
      * @return List of RichHosts, empty list if nothing has been found.
      */
-    public List<RichHost> getRichHostsHavingAttrs(List<InputAttribute> attrs) {
-        return hostDAO.getRichHostsHavingAttrs(attrs);
+    public List<RichHost> getCompleteRichHostsHavingAttrs(List<InputAttribute> attrs) {
+        return hostDAO.getCompleteRichHostsHavingAttrs(attrs);
     }
 
     /* HOST_ATTRS */
@@ -553,16 +553,16 @@ public class Query implements GraphQLRootResolver {
      * @return Found RichMember or null if not such found.
      * @throws DatabaseIntegrityException More than one RichMember with same ID found.
      */
-    public RichMember getRichMember(Long id) throws DatabaseIntegrityException {
-        return memberDAO.getRichMember(id);
+    public RichMember getCompleteRichMember(Long id) throws DatabaseIntegrityException {
+        return memberDAO.getCompleteRichMember(id);
     }
 
     /**
      * Get all RichMembers.
      * @return List of RichMembers, null if nothing has been found.
      */
-    public List<RichMember> getRichMembers() {
-        return memberDAO.getRichMembers();
+    public List<RichMember> getCompleteRichMembers() {
+        return memberDAO.getCompleteRichMembers();
     }
 
     /**
@@ -570,8 +570,8 @@ public class Query implements GraphQLRootResolver {
      * @param userId id of user
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    public List<RichMember> getRichMembersOfUser(Long userId) {
-        return memberDAO.getRichMembersOfUser(userId);
+    public List<RichMember> getCompleteRichMembersOfUser(Long userId) {
+        return memberDAO.getCompleteRichMembersOfUser(userId);
     }
 
     /**
@@ -579,8 +579,8 @@ public class Query implements GraphQLRootResolver {
      * @param voId id of vo.
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    public List<RichMember> getRichMembersOfVo(Long voId) {
-        return memberDAO.getRichMembersOfVo(voId);
+    public List<RichMember> getCompleteRichMembersOfVo(Long voId) {
+        return memberDAO.getCompleteRichMembersOfVo(voId);
     }
 
     /**
@@ -588,8 +588,8 @@ public class Query implements GraphQLRootResolver {
      * @param status ACTIVE or EXPIRED values are accepted
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    public List<RichMember> getRichMembersByStatus(String status) {
-        return memberDAO.getRichMembersByStatus(status);
+    public List<RichMember> getCompleteRichMembersByStatus(String status) {
+        return memberDAO.getCompleteRichMembersByStatus(status);
     }
 
     /**
@@ -597,8 +597,8 @@ public class Query implements GraphQLRootResolver {
      * @param isSponsored TRUE if RichMember is sponsored, FALSE otherwise
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    public List<RichMember> getRichMembersBySponsored(boolean isSponsored) {
-        return memberDAO.getRichMembersBySponsored(isSponsored);
+    public List<RichMember> getCompleteRichMembersBySponsored(boolean isSponsored) {
+        return memberDAO.getCompleteRichMembersBySponsored(isSponsored);
     }
 
     /**
@@ -606,8 +606,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of RichMembers
      * @return List of RichMembers found, empty list if nothing has been found.
      */
-    public List<RichMember> getRichMembersHavingAttrs(List<InputAttribute> attrs) {
-        return memberDAO.getRichMembersHavingAttrs(attrs);
+    public List<RichMember> getCompleteRichMembersHavingAttrs(List<InputAttribute> attrs) {
+        return memberDAO.getCompleteRichMembersHavingAttrs(attrs);
     }
 
     /* MEMBER_ATTRS */
@@ -689,16 +689,16 @@ public class Query implements GraphQLRootResolver {
      * @return Found RichResource or null if not such found.
      * @throws DatabaseIntegrityException More than one RichResource with same ID found.
      */
-    public RichResource getRichResource(Long id) throws DatabaseIntegrityException {
-        return resourceDAO.getRichResource(id);
+    public RichResource getCompleteRichResource(Long id) throws DatabaseIntegrityException {
+        return resourceDAO.getCompleteRichResource(id);
     }
 
     /**
      * Get all RichResources.
      * @return List of RichResources, empty list if nothing has been found.
      */
-    public List<RichResource> getRichResources() {
-        return resourceDAO.getRichResources();
+    public List<RichResource> getCompleteRichResources() {
+        return resourceDAO.getCompleteRichResources();
     }
 
     /**
@@ -707,8 +707,8 @@ public class Query implements GraphQLRootResolver {
      * @param name name of RichResource
      * @return List of RichResources, empty list if nothing has been found.
      */
-    public List<RichResource> getRichResourcesByName(String name) {
-        return resourceDAO.getRichResourcesByName(name);
+    public List<RichResource> getCompleteRichResourcesByName(String name) {
+        return resourceDAO.getCompleteRichResourcesByName(name);
     }
 
     /**
@@ -716,8 +716,8 @@ public class Query implements GraphQLRootResolver {
      * @param facilityId id of Facility
      * @return List of RichResources, empty list if nothing has been found.
      */
-    public List<RichResource> getRichResourcesOfFacility(Long facilityId) {
-        return resourceDAO.getRichResourcesOfFacility(facilityId);
+    public List<RichResource> getCompleteRichResourcesOfFacility(Long facilityId) {
+        return resourceDAO.getCompleteRichResourcesOfFacility(facilityId);
     }
 
     /**
@@ -725,8 +725,8 @@ public class Query implements GraphQLRootResolver {
      * @param voId id of Vo
      * @return List of RichResources, empty list if nothing has been found.
      */
-    public List<RichResource> getRichResourcesOfVo(Long voId) {
-        return resourceDAO.getRichResourcesOfVo(voId);
+    public List<RichResource> getCompleteRichResourcesOfVo(Long voId) {
+        return resourceDAO.getCompleteRichResourcesOfVo(voId);
     }
 
     /**
@@ -735,8 +735,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of RichResources
      * @return List of RichResources, empty list if nothing has been found.
      */
-    public List<RichResource> getRichResourcesHavingAttrs(List<InputAttribute> attrs) {
-        return resourceDAO.getRichResourcesHavingAttrs(attrs);
+    public List<RichResource> getCompleteRichResourcesHavingAttrs(List<InputAttribute> attrs) {
+        return resourceDAO.getCompleteRichResourcesHavingAttrs(attrs);
     }
 
     /* RESOURCE_ATTRS */
@@ -808,16 +808,16 @@ public class Query implements GraphQLRootResolver {
      * @return Found RichService or null if not such found.
      * @throws DatabaseIntegrityException When more than one RichService with same id found.
      */
-    public RichService getRichService(Long id) throws DatabaseIntegrityException {
-        return serviceDAO.getRichService(id);
+    public RichService getCompleteRichService(Long id) throws DatabaseIntegrityException {
+        return serviceDAO.getCompleteRichService(id);
     }
 
     /**
      * Get all RichServices.
      * @return List of RichServices, empty list if nothing has been found.
      */
-    public List<RichService> getRichServices() {
-        return serviceDAO.getRichServices();
+    public List<RichService> getCompleteRichServices() {
+        return serviceDAO.getCompleteRichServices();
     }
 
     /**
@@ -825,8 +825,8 @@ public class Query implements GraphQLRootResolver {
      * @param name name of RichService
      * @return List of RichServices, empty list if nothing has been found.
      */
-    public List<RichService> getRichServicesByName(String name) {
-        return serviceDAO.getRichServicesByName(name);
+    public List<RichService> getCompleteRichServicesByName(String name) {
+        return serviceDAO.getCompleteRichServicesByName(name);
     }
 
     /**
@@ -834,8 +834,8 @@ public class Query implements GraphQLRootResolver {
      * @param ownerId id of Owner
      * @return List of RichServices, empty list if nothing has been found.
      */
-    public List<RichService> getRichServicesOfOwner(Long ownerId) {
-        return serviceDAO.getRichServicesOfOwner(ownerId);
+    public List<RichService> getCompleteRichServicesOfOwner(Long ownerId) {
+        return serviceDAO.getCompleteRichServicesOfOwner(ownerId);
     }
 
     /**
@@ -844,8 +844,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of RichServices
      * @return List of RichServices, empty list if nothing has been found.
      */
-    public List<RichService> getRichServicesHavingAttrs(List<InputAttribute> attrs) {
-        return serviceDAO.getRichServicesHavingAttrs(attrs);
+    public List<RichService> getCompleteRichServicesHavingAttrs(List<InputAttribute> attrs) {
+        return serviceDAO.getCompleteRichServicesHavingAttrs(attrs);
     }
 
     /* SERVICE_ATTRS */
@@ -928,16 +928,16 @@ public class Query implements GraphQLRootResolver {
      * @param id id of user
      * @return Found user or null if not such found.
      */
-    public RichUser getRichUser(Long id) throws DatabaseIntegrityException {
-        return userDAO.getRichUser(id);
+    public RichUser getCompleteRichUser(Long id) throws DatabaseIntegrityException {
+        return userDAO.getCompleteRichUser(id);
     }
 
     /**
      * Get all users.
      * @return List of users, empty list if nothing has been found.
      */
-    public List<RichUser> getRichUsers() {
-        return userDAO.getRichUsers();
+    public List<RichUser> getCompleteRichUsers() {
+        return userDAO.getCompleteRichUsers();
     }
 
     /**
@@ -949,9 +949,9 @@ public class Query implements GraphQLRootResolver {
      * @param titleAfter title after the name
      * @return List of users found, empty list if nothing has been found.
      */
-    public List<RichUser> getRichUsersByName(String titleBefore, String firstName, String middleName,
+    public List<RichUser> getCompleteRichUsersByName(String titleBefore, String firstName, String middleName,
                                      String lastName, String titleAfter) {
-        return userDAO.getRichUsersByName(titleBefore, firstName, middleName, lastName, titleAfter);
+        return userDAO.getCompleteRichUsersByName(titleBefore, firstName, middleName, lastName, titleAfter);
     }
 
     /**
@@ -959,8 +959,8 @@ public class Query implements GraphQLRootResolver {
      * @param isServiceAcc TRUE for serviceAccounts, FALSE otherwise.
      * @return List of users found, empty list if nothing has been found.
      */
-    public List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc) {
-        return userDAO.getRichUsersByServiceAcc(isServiceAcc);
+    public List<RichUser> getCompleteRichUsersByServiceAcc(boolean isServiceAcc) {
+        return userDAO.getCompleteRichUsersByServiceAcc(isServiceAcc);
     }
 
     /**
@@ -968,8 +968,8 @@ public class Query implements GraphQLRootResolver {
      * @param isSponsoredAcc TRUE for sponsoredAccounts, FALSE otherwise.
      * @return List of users found, empty list if nothing has been found.
      */
-    public List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
-        return userDAO.getRichUsersBySponsoredAcc(isSponsoredAcc);
+    public List<RichUser> getCompleteRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
+        return userDAO.getCompleteRichUsersBySponsoredAcc(isSponsoredAcc);
     }
 
     /**
@@ -977,8 +977,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of users
      * @return List of users found, empty list if nothing has been found.
      */
-    public List<RichUser> getRichUsersHavingAttrs(List<InputAttribute> attrs) {
-        return userDAO.getRichUsersHavingAttrs(attrs);
+    public List<RichUser> getCompleteRichUsersHavingAttrs(List<InputAttribute> attrs) {
+        return userDAO.getCompleteRichUsersHavingAttrs(attrs);
     }
 
     /* USER_ATTRS */
@@ -1055,16 +1055,16 @@ public class Query implements GraphQLRootResolver {
      * @param id id of userExtSource
      * @return Found userExtSource or null if not such found.
      */
-    public RichUserExtSource getRichUserExtSource(Long id) throws DatabaseIntegrityException {
-        return userExtSourceDAO.getRichUserExtSource(id);
+    public RichUserExtSource getCompleteRichUserExtSource(Long id) throws DatabaseIntegrityException {
+        return userExtSourceDAO.getCompleteRichUserExtSource(id);
     }
 
     /**
      * Get all userExtSources.
      * @return List of userExtSources, null if nothing has been found.
      */
-    public List<RichUserExtSource> getRichUserExtSources() {
-        return userExtSourceDAO.getRichUserExtSources();
+    public List<RichUserExtSource> getCompleteRichUserExtSources() {
+        return userExtSourceDAO.getCompleteRichUserExtSources();
     }
 
     /**
@@ -1072,8 +1072,8 @@ public class Query implements GraphQLRootResolver {
      * @param userId id of user
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<RichUserExtSource> getRichUserExtSourcesOfUser(Long userId) {
-        return userExtSourceDAO.getRichUserExtSourcesOfUser(userId);
+    public List<RichUserExtSource> getCompleteRichUserExtSourcesOfUser(Long userId) {
+        return userExtSourceDAO.getCompleteRichUserExtSourcesOfUser(userId);
     }
 
     /**
@@ -1081,8 +1081,8 @@ public class Query implements GraphQLRootResolver {
      * @param extSourceId id of extSource
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<RichUserExtSource> getRichUserExtSourcesOfExtSource(Long extSourceId) {
-        return userExtSourceDAO.getRichUserExtSourcesOfExtSource(extSourceId);
+    public List<RichUserExtSource> getCompleteRichUserExtSourcesOfExtSource(Long extSourceId) {
+        return userExtSourceDAO.getCompleteRichUserExtSourcesOfExtSource(extSourceId);
     }
 
     /**
@@ -1090,8 +1090,8 @@ public class Query implements GraphQLRootResolver {
      * @param loginExt loginExt of userExtSource
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<RichUserExtSource> getRichUserExtSourcesByLoginExt(String loginExt) {
-        return userExtSourceDAO.getRichUserExtSourcesByLoginExt(loginExt);
+    public List<RichUserExtSource> getCompleteRichUserExtSourcesByLoginExt(String loginExt) {
+        return userExtSourceDAO.getCompleteRichUserExtSourcesByLoginExt(loginExt);
     }
 
     /**
@@ -1099,8 +1099,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of userExtSources
      * @return List of userExtSources found, empty list if nothing has been found.
      */
-    public List<RichUserExtSource> getRichUserExtSourcesHavingAttrs(List<InputAttribute> attrs) {
-        return userExtSourceDAO.getRichUserExtSourcesHavingAttrs(attrs);
+    public List<RichUserExtSource> getCompleteRichUserExtSourcesHavingAttrs(List<InputAttribute> attrs) {
+        return userExtSourceDAO.getCompleteRichUserExtSourcesHavingAttrs(attrs);
     }
 
     /* USER_EXT_SOURCE_ATTRS */
@@ -1177,16 +1177,16 @@ public class Query implements GraphQLRootResolver {
      * @param id id of vo
      * @return Found vo or null if not such found.
      */
-    public RichVo getRichVo(Long id) throws DatabaseIntegrityException {
-        return voDAO.getRichVo(id);
+    public RichVo getCompleteRichVo(Long id) throws DatabaseIntegrityException {
+        return voDAO.getCompleteRichVo(id);
     }
 
     /**
      * Get all vos.
      * @return List of vos, empty list if nothing has been found.
      */
-    public List<RichVo> getRichVos() {
-        return voDAO.getRichVos();
+    public List<RichVo> getCompleteRichVos() {
+        return voDAO.getCompleteRichVos();
     }
 
     /**
@@ -1194,8 +1194,8 @@ public class Query implements GraphQLRootResolver {
      * @param name substring in name of vo
      * @return List of vos, empty list if nothing has been found.
      */
-    public List<RichVo> getRichVosByName(String name) {
-        return voDAO.getRichVosByName(name);
+    public List<RichVo> getCompleteRichVosByName(String name) {
+        return voDAO.getCompleteRichVosByName(name);
     }
 
     /**
@@ -1203,8 +1203,8 @@ public class Query implements GraphQLRootResolver {
      * @param shortName short name of vo
      * @return Found vo or null if not such found.
      */
-    public RichVo getRichVoByShortName(String shortName) throws DatabaseIntegrityException {
-        return voDAO.getRichVoByShortName(shortName);
+    public RichVo getCompleteRichVoByShortName(String shortName) throws DatabaseIntegrityException {
+        return voDAO.getCompleteRichVoByShortName(shortName);
     }
 
     /**
@@ -1212,8 +1212,8 @@ public class Query implements GraphQLRootResolver {
      * @param shortName substring in short_name of vo
      * @return List of vos, empty list if nothing has been found.
      */
-    public List<RichVo> getRichVosByShortName(String shortName) {
-        return voDAO.getRichVosByShortName(shortName);
+    public List<RichVo> getCompleteRichVosByShortName(String shortName) {
+        return voDAO.getCompleteRichVosByShortName(shortName);
     }
 
     /**
@@ -1221,8 +1221,8 @@ public class Query implements GraphQLRootResolver {
      * @param attrs attributes of vos
      * @return List of vos found, empty list if nothing has been found.
      */
-    public List<RichVo> getRichVosHavingAttrs(List<InputAttribute> attrs) {
-        return voDAO.getRichVosHavingAttrs(attrs);
+    public List<RichVo> getCompleteRichVosHavingAttrs(List<InputAttribute> attrs) {
+        return voDAO.getCompleteRichVosHavingAttrs(attrs);
     }
 
     /* VO_ATTRS */

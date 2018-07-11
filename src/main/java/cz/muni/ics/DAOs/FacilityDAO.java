@@ -50,7 +50,7 @@ public interface FacilityDAO {
      */
     List<Facility> getFacilitiesHavingAttrs(List<InputAttribute> attrs);
 
-    /* RICH_FACILITY */
+    /* COMPLETE_RICH_FACILITY */
 
     /**
      * Get RichFacility specified by ID.
@@ -58,13 +58,13 @@ public interface FacilityDAO {
      * @return Found RichFacility or null if not such found.
      * @throws DatabaseIntegrityException More than one RichFacility with same ID found.
      */
-    RichFacility getRichFacility(Long id) throws DatabaseIntegrityException;
+    RichFacility getCompleteRichFacility(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichFacilities.
      * @return List of RichFacilities, empty list if nothing has been found.
      */
-    List<RichFacility> getRichFacilities();
+    List<RichFacility> getCompleteRichFacilities();
 
     /**
      * Get RichFacilities with NAME like specified parameter.
@@ -72,7 +72,7 @@ public interface FacilityDAO {
      * @param name name of RichFacility
      * @return List of RichFacilities, empty list if nothing has been found.
      */
-    List<RichFacility> getRichFacilitiesByName(String name);
+    List<RichFacility> getCompleteRichFacilitiesByName(String name);
 
     /**
      * Get RichFacilities that have specified attributes.
@@ -80,7 +80,7 @@ public interface FacilityDAO {
      * @param attrs attributes of RichFacilities
      * @return List of RichFacilities found, empty list if nothing has been found.
      */
-    List<RichFacility> getRichFacilitiesHavingAttrs(List<InputAttribute> attrs);
+    List<RichFacility> getCompleteRichFacilitiesHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

@@ -66,7 +66,7 @@ public class GroupDAOImpl implements GroupDAO {
 
     @Override
     public List<Group> getGroupsHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichGroupsHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichGroupsHavingAttrs(attrs));
     }
 
     @Override
@@ -93,10 +93,10 @@ public class GroupDAOImpl implements GroupDAO {
         return jdbcTemplate.query(query, new Object[] {voId}, MAPPER);
     }
 
-    /* RICH_GROUP */
+    /* COMPLETE_RICH_GROUP */
 
     @Override
-    public RichGroup getRichGroup(Long id) throws DatabaseIntegrityException {
+    public RichGroup getCompleteRichGroup(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.GROUP);
 
@@ -110,7 +110,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<RichGroup> getRichGroupsByName(String name) {
+    public List<RichGroup> getCompleteRichGroupsByName(String name) {
         name = '%' + name + '%';
         String entityWhere = "WHERE upper(t.name) LIKE upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.GROUP);
@@ -119,14 +119,14 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<RichGroup> getRichGroups() {
+    public List<RichGroup> getCompleteRichGroups() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.GROUP);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public RichGroup getParentRichGroup(Long childRichGroupId) throws DatabaseIntegrityException {
+    public RichGroup getCompleteParentRichGroup(Long childRichGroupId) throws DatabaseIntegrityException {
         Group child = getGroup(childRichGroupId);
 
         String entityWhere = "WHERE t.id = ?";
@@ -142,7 +142,7 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<RichGroup> getRichGroupsOfVo(Long voId) {
+    public List<RichGroup> getCompleteRichGroupsOfVo(Long voId) {
         String entityWhere = "WHERE t.vo_id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.GROUP);
 
@@ -150,9 +150,9 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public List<RichGroup> getRichGroupsHavingAttrs(List<InputAttribute> attrs) {
+    public List<RichGroup> getCompleteRichGroupsHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichGroup> all = getRichGroups();
+        List<RichGroup> all = getCompleteRichGroups();
         List<RichGroup> correct = new ArrayList<>();
         for (RichGroup group: all) {
             if (DAOUtils.hasAttributes(group, attrs)) {
@@ -168,7 +168,7 @@ public class GroupDAOImpl implements GroupDAO {
     @Override
     public List<PerunAttribute> getGroupAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichGroup group = getRichGroup(id);
+        RichGroup group = getCompleteRichGroup(id);
         return group.getAttributesByKeys(attrs);
     }
 

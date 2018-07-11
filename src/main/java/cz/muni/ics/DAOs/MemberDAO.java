@@ -64,7 +64,7 @@ public interface MemberDAO {
      */
     List<Member> getMembersHavingAttrs(List<InputAttribute> attrs);
     
-    /* RICH_MEMBER*/
+    /* COMPLETE_RICH_MEMBER*/
 
     /**
      * Get RichMember specified by ID.
@@ -72,48 +72,48 @@ public interface MemberDAO {
      * @return Found RichMember or null if not such found.
      * @throws DatabaseIntegrityException More than one RichMember with same ID found.
      */
-    RichMember getRichMember(Long id) throws DatabaseIntegrityException;
+    RichMember getCompleteRichMember(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichMembers.
      * @return List of RichMembers, null if nothing has been found.
      */
-    List<RichMember> getRichMembers();
+    List<RichMember> getCompleteRichMembers();
 
     /**
      * Get RichMembers of user specified by ID.
      * @param userId id of user
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    List<RichMember> getRichMembersOfUser(Long userId);
+    List<RichMember> getCompleteRichMembersOfUser(Long userId);
 
     /**
      * Get RichMembers of vo specified by ID.
      * @param voId id of vo.
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    List<RichMember> getRichMembersOfVo(Long voId);
+    List<RichMember> getCompleteRichMembersOfVo(Long voId);
 
     /**
      * Get RichMembers with specified STATUS.
      * @param status ACTIVE or EXPIRED values are accepted
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    List<RichMember> getRichMembersByStatus(String status);
+    List<RichMember> getCompleteRichMembersByStatus(String status);
 
     /**
      * Get RichMembers with specified value for sponsorship.
      * @param isSponsored TRUE if RichMember is sponsored, FALSE otherwise
      * @return List of RichMembers, empty list if nothing has been found.
      */
-    List<RichMember> getRichMembersBySponsored(boolean isSponsored);
+    List<RichMember> getCompleteRichMembersBySponsored(boolean isSponsored);
 
     /**
      * Get RichMembers that have specified attributes. (Exact matching used)
      * @param attrs attributes of RichMembers
      * @return List of RichMembers found, empty list if nothing has been found.
      */
-    List<RichMember> getRichMembersHavingAttrs(List<InputAttribute> attrs);
+    List<RichMember> getCompleteRichMembersHavingAttrs(List<InputAttribute> attrs);
     
     /* ATTRIBUTES */
     

@@ -74,13 +74,13 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
 
     @Override
     public List<ExtSource> getExtSourcesHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichExtSourcesHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichExtSourcesHavingAttrs(attrs));
     }
 
-    /* RICH_EXT_SOURCE */
+    /* COMPLETE_RICH_EXT_SOURCE */
 
     @Override
-    public RichExtSource getRichExtSource(Long id) throws DatabaseIntegrityException {
+    public RichExtSource getCompleteRichExtSource(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.EXT_SOURCE);
         try {
@@ -93,14 +93,14 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public List<RichExtSource> getRichExtSources() {
+    public List<RichExtSource> getCompleteRichExtSources() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.EXT_SOURCE);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public List<RichExtSource> getRichExtSourcesByName(String name) {
+    public List<RichExtSource> getCompleteRichExtSourcesByName(String name) {
         name = '%' + name + '%';
         String entityWhere = "WHERE upper(t.name) LIKE upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.EXT_SOURCE);
@@ -109,7 +109,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public List<RichExtSource> getRichExtSourcesByType(String type) {
+    public List<RichExtSource> getCompleteRichExtSourcesByType(String type) {
         type = '%' + type + '%';
         String entityWhere = "WHERE upper(t.type) LIKE upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.EXT_SOURCE);
@@ -118,9 +118,9 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     }
 
     @Override
-    public List<RichExtSource> getRichExtSourcesHavingAttrs(List<InputAttribute> attrs) {
+    public List<RichExtSource> getCompleteRichExtSourcesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichExtSource> all = getRichExtSources();
+        List<RichExtSource> all = getCompleteRichExtSources();
         List<RichExtSource> correct = new ArrayList<>();
         for (RichExtSource extSource: all) {
             if (DAOUtils.hasAttributes(extSource, attrs)) {
@@ -136,7 +136,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     @Override
     public List<PerunAttribute> getExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichExtSource extSource = getRichExtSource(id);
+        RichExtSource extSource = getCompleteRichExtSource(id);
         return extSource.getAttributesByKeys(attrs);
     }
 

@@ -51,7 +51,7 @@ public interface ServiceDAO {
      */
     List<Service> getServicesHavingAttrs(List<InputAttribute> attrs);
 
-    /* RICH_SERVICE */
+    /* COMPLETE_RICH_SERVICE */
 
     /**
      * Get RichService specified by ID.
@@ -59,27 +59,27 @@ public interface ServiceDAO {
      * @return Found RichService or null if not such found.
      * @throws DatabaseIntegrityException When more than one RichService with same id found.
      */
-    RichService getRichService(Long id) throws DatabaseIntegrityException;
+    RichService getCompleteRichService(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichServices.
      * @return List of RichServices, empty list if nothing has been found.
      */
-    List<RichService> getRichServices();
+    List<RichService> getCompleteRichServices();
 
     /**
      * Get RichServices with NAME like specified parameter.
      * @param name name of RichService
      * @return List of RichServices, empty list if nothing has been found.
      */
-    List<RichService> getRichServicesByName(String name);
+    List<RichService> getCompleteRichServicesByName(String name);
 
     /**
      * Get resources of Owner specified by ID.
      * @param ownerId id of Owner
      * @return List of RichServices, empty list if nothing has been found.
      */
-    List<RichService> getRichServicesOfOwner(Long ownerId);
+    List<RichService> getCompleteRichServicesOfOwner(Long ownerId);
 
     /**
      * Get RichServices that have specified attributes.
@@ -87,7 +87,7 @@ public interface ServiceDAO {
      * @param attrs attributes of RichServices
      * @return List of RichServices, empty list if nothing has been found.
      */
-    List<RichService> getRichServicesHavingAttrs(List<InputAttribute> attrs);
+    List<RichService> getCompleteRichServicesHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

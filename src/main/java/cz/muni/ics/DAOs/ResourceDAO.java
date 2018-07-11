@@ -59,7 +59,7 @@ public interface ResourceDAO {
      */
     List<Resource> getResourcesHavingAttrs(List<InputAttribute> attrs);
 
-    /* RICH_RESOURCE */
+    /* COMPLETE_RICH_RESOURCE */
 
     /**
      * Get RichResource specified by ID.
@@ -67,13 +67,13 @@ public interface ResourceDAO {
      * @return Found RichResource or null if not such found.
      * @throws DatabaseIntegrityException More than one RichResource with same ID found.
      */
-    RichResource getRichResource(Long id) throws DatabaseIntegrityException;
+    RichResource getCompleteRichResource(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichResources.
      * @return List of RichResources, empty list if nothing has been found.
      */
-    List<RichResource> getRichResources();
+    List<RichResource> getCompleteRichResources();
 
     /**
      * Get RichResource with NAME like specified parameter.
@@ -81,21 +81,21 @@ public interface ResourceDAO {
      * @param name name of RichResource
      * @return List of RichResources, empty list if nothing has been found.
      */
-    List<RichResource> getRichResourcesByName(String name);
+    List<RichResource> getCompleteRichResourcesByName(String name);
 
     /**
      * Get RichResources of Facility specified by ID.
      * @param facilityId id of Facility
      * @return List of RichResources, empty list if nothing has been found.
      */
-    List<RichResource> getRichResourcesOfFacility(Long facilityId);
+    List<RichResource> getCompleteRichResourcesOfFacility(Long facilityId);
 
     /**
      * Get RichResources of Vo specified by ID.
      * @param voId id of Vo
      * @return List of RichResources, empty list if nothing has been found.
      */
-    List<RichResource> getRichResourcesOfVo(Long voId);
+    List<RichResource> getCompleteRichResourcesOfVo(Long voId);
 
     /**
      * Get RichResources that have specified attributes.
@@ -103,7 +103,7 @@ public interface ResourceDAO {
      * @param attrs attributes of RichResources
      * @return List of RichResources, empty list if nothing has been found.
      */
-    List<RichResource> getRichResourcesHavingAttrs(List<InputAttribute> attrs);
+    List<RichResource> getCompleteRichResourcesHavingAttrs(List<InputAttribute> attrs);
     
     /* ATTRIBUTES */
     

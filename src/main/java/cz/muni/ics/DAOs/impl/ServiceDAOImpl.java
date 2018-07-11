@@ -63,7 +63,7 @@ public class ServiceDAOImpl implements ServiceDAO {
 
     @Override
     public List<Service> getServicesHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichServicesHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichServicesHavingAttrs(attrs));
     }
 
     @Override
@@ -74,10 +74,10 @@ public class ServiceDAOImpl implements ServiceDAO {
         return jdbcTemplate.query(query, new Object[] {ownerId}, MAPPER);
     }
 
-    /* RICH SERVICE */
+    /* COMPLETE_RICH SERVICE */
 
     @Override
-    public RichService getRichService(Long id) throws DatabaseIntegrityException {
+    public RichService getCompleteRichService(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
 
@@ -91,7 +91,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<RichService> getRichServicesByName(String name) {
+    public List<RichService> getCompleteRichServicesByName(String name) {
         String entityWhere = "WHERE upper(t.name) LIKE  upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
 
@@ -99,14 +99,14 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<RichService> getRichServices() {
+    public List<RichService> getCompleteRichServices() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.SERVICE);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public List<RichService> getRichServicesOfOwner(Long ownerId) {
+    public List<RichService> getCompleteRichServicesOfOwner(Long ownerId) {
         String entityWhere = "WHERE t.owner_id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
 
@@ -114,9 +114,9 @@ public class ServiceDAOImpl implements ServiceDAO {
     }
 
     @Override
-    public List<RichService> getRichServicesHavingAttrs(List<InputAttribute> attrs) {
+    public List<RichService> getCompleteRichServicesHavingAttrs(List<InputAttribute> attrs) {
         //TODO improve
-        List<RichService> all = getRichServices();
+        List<RichService> all = getCompleteRichServices();
         List<RichService> correct = new ArrayList<>();
         for (RichService service: all) {
             if (DAOUtils.hasAttributes(service, attrs)) {
@@ -132,7 +132,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<PerunAttribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichService service = getRichService(id);
+        RichService service = getCompleteRichService(id);
         return service.getAttributesByKeys(attrs);
     }
 

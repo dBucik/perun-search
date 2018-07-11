@@ -57,7 +57,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 
     @Override
     public List<Facility> getFacilitiesHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichFacilitiesHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichFacilitiesHavingAttrs(attrs));
     }
 
     @Override
@@ -69,10 +69,10 @@ public class FacilityDAOImpl implements FacilityDAO {
         return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
     }
 
-    /* RICH_FACILITY */
+    /* COMPLETE_RICH_FACILITY */
 
     @Override
-    public RichFacility getRichFacility(Long id) throws DatabaseIntegrityException {
+    public RichFacility getCompleteRichFacility(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.FACILITY);
 
@@ -86,14 +86,14 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public List<RichFacility> getRichFacilities() {
+    public List<RichFacility> getCompleteRichFacilities() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.FACILITY);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public List<RichFacility> getRichFacilitiesByName(String name) {
+    public List<RichFacility> getCompleteRichFacilitiesByName(String name) {
         name = '%' + name + '%';
         String entityWhere = "WHERE upper(t.name) LIKE upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.FACILITY);
@@ -102,9 +102,9 @@ public class FacilityDAOImpl implements FacilityDAO {
     }
 
     @Override
-    public List<RichFacility> getRichFacilitiesHavingAttrs(List<InputAttribute> attrs) {
+    public List<RichFacility> getCompleteRichFacilitiesHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichFacility> all = getRichFacilities();
+        List<RichFacility> all = getCompleteRichFacilities();
         List<RichFacility> correct = new ArrayList<>();
         for (RichFacility facility: all) {
             if (DAOUtils.hasAttributes(facility, attrs)) {
@@ -120,7 +120,7 @@ public class FacilityDAOImpl implements FacilityDAO {
     @Override
     public List<PerunAttribute> getFacilityAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichFacility facility = getRichFacility(id);
+        RichFacility facility = getCompleteRichFacility(id);
         return facility.getAttributesByKeys(attrs);
     }
 

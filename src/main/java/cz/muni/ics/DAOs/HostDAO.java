@@ -45,7 +45,7 @@ public interface HostDAO {
      */
     List<Host> getHostsHavingAttrs(List<InputAttribute> attrs);
 
-    /* RICH_HOST */
+    /* COMPLETE_RICH_HOST */
 
     /**
      * Get RichHost specified by ID.
@@ -53,13 +53,13 @@ public interface HostDAO {
      * @return Found RichHost or null if not such found.
      * @throws DatabaseIntegrityException More than one RichHost with same ID found.
      */
-    RichHost getRichHost(Long id) throws DatabaseIntegrityException;
+    RichHost getCompleteRichHost(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichHosts.
      * @return List of RichHosts, empty list if nothing has been found.
      */
-    List<RichHost> getRichHosts();
+    List<RichHost> getCompleteRichHosts();
 
     /**
      * Get RichHosts with HOSTNAME like specified parameter.
@@ -67,7 +67,7 @@ public interface HostDAO {
      * @param hostname RichHostname of RichHost
      * @return List of RichHosts, empty list if nothing has been found.
      */
-    List<RichHost> getRichHostsByHostname(String hostname);
+    List<RichHost> getCompleteRichHostsByHostname(String hostname);
 
     /**
      * Get RichHosts that have specified attributes.
@@ -75,7 +75,7 @@ public interface HostDAO {
      * @param attrs attributes of RichHosts
      * @return List of RichHosts, empty list if nothing has been found.
      */
-    List<RichHost> getRichHostsHavingAttrs(List<InputAttribute> attrs);
+    List<RichHost> getCompleteRichHostsHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

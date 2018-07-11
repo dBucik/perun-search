@@ -56,7 +56,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getUsersHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichUsersHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichUsersHavingAttrs(attrs));
     }
 
     @Override
@@ -92,10 +92,10 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.query(query, new Object[] {param}, MAPPER);
     }
 
-    /* RICH_USER */
+    /* COMPLETE_RICH_USER */
 
     @Override
-    public RichUser getRichUser(Long id) throws DatabaseIntegrityException {
+    public RichUser getCompleteRichUser(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id=?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER);
 
@@ -109,13 +109,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<RichUser> getRichUsers() {
+    public List<RichUser> getCompleteRichUsers() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.USER);
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public List<RichUser> getRichUsersByName(String titleBefore, String firstName, String middleName, String lastName, String titleAfter) {
+    public List<RichUser> getCompleteRichUsersByName(String titleBefore, String firstName, String middleName, String lastName, String titleAfter) {
         String entityWhere = "WHERE upper(COALESCE(t.title_before || ' ', 'A') || COALESCE(t.first_name || ' ', '') || " +
                 "COALESCE(t.middle_name || ' ', '') || COALESCE(t.last_name || ' ', '') || " +
                 "COALESCE(t.title_after || ' ', '')) AS full_name LIKE upper(?)";
@@ -130,7 +130,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<RichUser> getRichUsersByServiceAcc(boolean isServiceAcc) {
+    public List<RichUser> getCompleteRichUsersByServiceAcc(boolean isServiceAcc) {
         String param = isServiceAcc ? "t" : "f";
         String entityWhere = "WHERE t.service_acc = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER);
@@ -138,7 +138,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<RichUser> getRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
+    public List<RichUser> getCompleteRichUsersBySponsoredAcc(boolean isSponsoredAcc) {
         String param = isSponsoredAcc ? "t" : "f";
         String entityWhere = "WHERE t.sponsored_acc = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER);
@@ -146,9 +146,9 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<RichUser> getRichUsersHavingAttrs(List<InputAttribute> attrs) {
+    public List<RichUser> getCompleteRichUsersHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichUser> all = getRichUsers();
+        List<RichUser> all = getCompleteRichUsers();
         List<RichUser> correct = new ArrayList<>();
         for (RichUser user: all) {
             if (DAOUtils.hasAttributes(user, attrs)) {
@@ -164,7 +164,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<PerunAttribute> getUserAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichUser user = getRichUser(id);
+        RichUser user = getCompleteRichUser(id);
         return user.getAttributesByKeys(attrs);
     }
 

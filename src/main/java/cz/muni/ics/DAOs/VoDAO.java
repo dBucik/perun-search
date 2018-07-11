@@ -62,7 +62,7 @@ public interface VoDAO {
      */
     List<Vo> getVosHavingAttrs(List<InputAttribute> attrs);
     
-    /* RICH_VO */
+    /* COMPLETE_RICH_VO */
 
     /**
      * Get RichVO specified by ID.
@@ -70,13 +70,13 @@ public interface VoDAO {
      * @return Found RichVO or null if not such found
      * @throws DatabaseIntegrityException More than one RichVO with same ID found.
      */
-    RichVo getRichVo(Long id) throws DatabaseIntegrityException;
+    RichVo getCompleteRichVo(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichVOs.
      * @return List of RichVOs, empty list if nothing has been found.
      */
-    List<RichVo> getRichVos();
+    List<RichVo> getCompleteRichVos();
 
     /**
      * Get RichVO with names like specified parameter.
@@ -84,7 +84,7 @@ public interface VoDAO {
      * @param name substring in name of RichVO
      * @return List of RichVOs, empty list if nothing has been found.
      */
-    List<RichVo> getRichVosByName(String name);
+    List<RichVo> getCompleteRichVosByName(String name);
 
     /**
      * Get RichVO specified by SHORT NAME.
@@ -93,7 +93,7 @@ public interface VoDAO {
      * @return Found RichVO or null if not such found.
      * @throws DatabaseIntegrityException More than one RichVO with same shortName found.
      */
-    RichVo getRichVoByShortName(String shortName) throws DatabaseIntegrityException;
+    RichVo getCompleteRichVoByShortName(String shortName) throws DatabaseIntegrityException;
 
     /**
      * Get RichVOs with short names like specified parameter.
@@ -101,7 +101,7 @@ public interface VoDAO {
      * @param shortName substring in short_name of vo
      * @return List of vos, empty list if nothing has been found.
      */
-    List<RichVo> getRichVosByShortName(String shortName);
+    List<RichVo> getCompleteRichVosByShortName(String shortName);
 
     /**
      * Get RichVOs that have specified attributes.
@@ -109,7 +109,7 @@ public interface VoDAO {
      * @param attrs attributes of RichVOs
      * @return List of RichVOs found, empty list if nothing has been found.
      */
-    List<RichVo> getRichVosHavingAttrs(List<InputAttribute> attrs);
+    List<RichVo> getCompleteRichVosHavingAttrs(List<InputAttribute> attrs);
     
     /* ATTRIBUTES */
     

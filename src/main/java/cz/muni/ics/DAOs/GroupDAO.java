@@ -61,7 +61,7 @@ public interface GroupDAO {
      */
     List<Group> getGroupsHavingAttrs(List<InputAttribute> attrs);
 
-    /* RICH_GROUP */
+    /* COMPLETE_RICH_GROUP */
 
     /**
      * Get RichGroup specified by ID.
@@ -69,13 +69,13 @@ public interface GroupDAO {
      * @return Found RichGroup or null if not such found.
      * @throws DatabaseIntegrityException More than one RichGroup with same ID found.
      */
-    RichGroup getRichGroup(Long id) throws DatabaseIntegrityException;
+    RichGroup getCompleteRichGroup(Long id) throws DatabaseIntegrityException;
 
     /**
      * Get all RichGroups.
      * @return List of RichGroups, empty list if nothing has been found.
      */
-    List<RichGroup> getRichGroups();
+    List<RichGroup> getCompleteRichGroups();
 
     /**
      * Get RichGroups withe NAME like specified parameter.
@@ -83,7 +83,7 @@ public interface GroupDAO {
      * @param name name of RichGroup
      * @return List of RichGroups, empty list if nothing has been found.
      */
-    List<RichGroup> getRichGroupsByName(String name);
+    List<RichGroup> getCompleteRichGroupsByName(String name);
 
     /**
      * Get parent richGroup of RichGroup specified by ID.
@@ -92,14 +92,14 @@ public interface GroupDAO {
      * @throws DatabaseIntegrityException More than one RichGroup with same ID found.
      *                                    No parent richGroup found for RichGroup with specified ID.
      */
-    RichGroup getParentRichGroup(Long childRichGroupId) throws DatabaseIntegrityException;
+    RichGroup getCompleteParentRichGroup(Long childRichGroupId) throws DatabaseIntegrityException;
 
     /**
      * Get all RichGroups of VO specified by ID.
      * @param voId id of VO
      * @return List of RichGroups, empty list if nothing has been found.
      */
-    List<RichGroup> getRichGroupsOfVo(Long voId);
+    List<RichGroup> getCompleteRichGroupsOfVo(Long voId);
 
     /**
      * Get RichGroups that have specified attributes.
@@ -107,7 +107,7 @@ public interface GroupDAO {
      * @param attrs attributes of RichGroups
      * @return List of RichGroups found, empty list if nothing has been found.
      */
-    List<RichGroup> getRichGroupsHavingAttrs(List<InputAttribute> attrs);
+    List<RichGroup> getCompleteRichGroupsHavingAttrs(List<InputAttribute> attrs);
 
     /* ATTRIBUTES */
 

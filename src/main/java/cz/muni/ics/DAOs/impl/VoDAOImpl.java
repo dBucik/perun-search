@@ -85,13 +85,13 @@ public class VoDAOImpl implements VoDAO {
 
     @Override
     public List<Vo> getVosHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichVosHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichVosHavingAttrs(attrs));
     }
 
-    /* RICH_VO */
+    /* COMPLETE_RICH_VO */
 
     @Override
-    public RichVo getRichVo(Long id) throws DatabaseIntegrityException {
+    public RichVo getCompleteRichVo(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
         try {
@@ -104,7 +104,7 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<RichVo> getRichVosByName(String name) {
+    public List<RichVo> getCompleteRichVosByName(String name) {
         name = '%' + name + '%';
         String entityWhere = "WHERE upper(t.name) LIKE upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
@@ -113,7 +113,7 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public RichVo getRichVoByShortName(String shortName) throws DatabaseIntegrityException {
+    public RichVo getCompleteRichVoByShortName(String shortName) throws DatabaseIntegrityException {
         String entityWhere = "WHERE upper(t.short_name) = upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
 
@@ -127,7 +127,7 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<RichVo> getRichVosByShortName(String shortName) {
+    public List<RichVo> getCompleteRichVosByShortName(String shortName) {
         String entityWhere = "WHERE upper(t.short_name) = upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.VO);
 
@@ -135,15 +135,15 @@ public class VoDAOImpl implements VoDAO {
     }
 
     @Override
-    public List<RichVo> getRichVos() {
+    public List<RichVo> getCompleteRichVos() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.VO);
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public List<RichVo> getRichVosHavingAttrs(List<InputAttribute> attrs) {
+    public List<RichVo> getCompleteRichVosHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichVo> all = getRichVos();
+        List<RichVo> all = getCompleteRichVos();
         List<RichVo> correct = new ArrayList<>();
         for (RichVo vo: all) {
             if (DAOUtils.hasAttributes(vo, attrs)) {
@@ -159,7 +159,7 @@ public class VoDAOImpl implements VoDAO {
     @Override
     public List<PerunAttribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichVo vo = getRichVo(id);
+        RichVo vo = getCompleteRichVo(id);
         return new ArrayList<>(vo.getAttributesByKeys(attrs));
     }
 

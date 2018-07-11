@@ -66,13 +66,13 @@ public class HostDAOImpl implements HostDAO {
 
     @Override
     public List<Host> getHostsHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getRichHostsHavingAttrs(attrs));
+        return new ArrayList<>(getCompleteRichHostsHavingAttrs(attrs));
     }
 
-    /* RICH_HOST */
+    /* COMPLETE_RICH_HOST */
 
     @Override
-    public RichHost getRichHost(Long id) throws DatabaseIntegrityException {
+    public RichHost getCompleteRichHost(Long id) throws DatabaseIntegrityException {
         String entityWhere = "WHERE t.id = ?";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.HOST);
 
@@ -86,7 +86,7 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public List<RichHost> getRichHostsByHostname(String hostname) {
+    public List<RichHost> getCompleteRichHostsByHostname(String hostname) {
         hostname = '%' + hostname + '%';
         String entityWhere = "WHERE upper(t.hostname) LIKE upper(?)";
         String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.HOST);
@@ -95,16 +95,16 @@ public class HostDAOImpl implements HostDAO {
     }
 
     @Override
-    public List<RichHost> getRichHosts() {
+    public List<RichHost> getCompleteRichHosts() {
         String query = DAOUtils.queryBuilder(null, null, PerunEntityType.HOST);
 
         return jdbcTemplate.query(query, RICH_MAPPER);
     }
 
     @Override
-    public List<RichHost> getRichHostsHavingAttrs(List<InputAttribute> attrs) {
+    public List<RichHost> getCompleteRichHostsHavingAttrs(List<InputAttribute> attrs) {
         //TODO: improve
-        List<RichHost> all = getRichHosts();
+        List<RichHost> all = getCompleteRichHosts();
         List<RichHost> correct = new ArrayList<>();
         for (RichHost host: all) {
             if (DAOUtils.hasAttributes(host, attrs)) {
@@ -120,7 +120,7 @@ public class HostDAOImpl implements HostDAO {
     @Override
     public List<PerunAttribute> getHostAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         //TODO: improve
-        RichHost host = getRichHost(id);
+        RichHost host = getCompleteRichHost(id);
         return host.getAttributesByKeys(attrs);
     }
 

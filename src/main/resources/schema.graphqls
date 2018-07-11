@@ -180,12 +180,12 @@ type Query {
     getExtSourcesByType(type: String!): [ExtSource!]!
     getExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [ExtSource!]!
 
-    # RICH_EXT_SOURCE
-    getRichExtSource(id: Long!): RichExtSource
-    getRichExtSources: [RichExtSource!]!
-    getRichExtSourcesByName(name: String!): [RichExtSource!]!
-    getRichExtSourcesByType(type: String!): [RichExtSource!]!
-    getRichExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichExtSource!]!
+    # COMPLETE_RICH_EXT_SOURCE
+    getCompleteRichExtSource(id: Long!): RichExtSource
+    getCompleteRichExtSources: [RichExtSource!]!
+    getCompleteRichExtSourcesByName(name: String!): [RichExtSource!]!
+    getCompleteRichExtSourcesByType(type: String!): [RichExtSource!]!
+    getCompleteRichExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichExtSource!]!
 
     # EXT_SOURCE_ATTRS
     getExtSourceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
@@ -196,11 +196,11 @@ type Query {
     getFacilitiesByName(name: String!): [Facility!]!
     getFacilitiesHavingAttrs(attrs: [InputAttribute!]!): [Facility!]!
 
-    # RICH_FACILITY
-    getRichFacility(id: Long!): RichFacility
-    getRichFacilities: [RichFacility!]!
-    getRichFacilitiesByName(name: String!): [RichFacility!]!
-    getRichFacilitiesHavingAttrs(attrs: [InputAttribute!]!): [RichFacility!]!
+    # COMPLETE_RICH_FACILITY
+    getCompleteRichFacility(id: Long!): RichFacility
+    getCompleteRichFacilities: [RichFacility!]!
+    getCompleteRichFacilitiesByName(name: String!): [RichFacility!]!
+    getCompleteRichFacilitiesHavingAttrs(attrs: [InputAttribute!]!): [RichFacility!]!
 
     # FACILITY_ATTRS
     getFacilityAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
@@ -213,13 +213,13 @@ type Query {
     getGroupsOfVo(voId: Long!): [Group!]!
     getGroupsHavingAttrs(attrs: [InputAttribute!]!): [Group!]!
 
-    # RICH_GROUP
-    getRichGroup(id: Long!): RichGroup
-    getRichGroups: [RichGroup!]!
-    getRichGroupsByName(name: String!): [RichGroup!]!
+    # COMPLETE_RICH_GROUP
+    getCompleteRichGroup(id: Long!): RichGroup
+    getCompleteRichGroups: [RichGroup!]!
+    getCompleteRichGroupsByName(name: String!): [RichGroup!]!
     getParentRichGroup(childRichGroupId: Long!): RichGroup!
-    getRichGroupsOfVo(voId: Long!): [RichGroup!]!
-    getRichGroupsHavingAttrs(attrs: [InputAttribute!]!): [RichGroup!]!
+    getCompleteRichGroupsOfVo(voId: Long!): [RichGroup!]!
+    getCompleteRichGroupsHavingAttrs(attrs: [InputAttribute!]!): [RichGroup!]!
 
     # GROUP_ATTRS
     getGroupAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
@@ -230,11 +230,11 @@ type Query {
     getHostsByHostname(hostname: String!): [Host!]!
     getHostsHavingAttrs(attrs: [InputAttribute!]!): [Host!]!
 
-    # RICH_HOST
-    getRichHost(id: Long!): RichHost
-    getRichHosts: [RichHost!]!
-    getRichHostsByHostname(hostname: String!): [RichHost!]!
-    getRichHostsHavingAttrs(attrs: [InputAttribute!]!): [RichHost!]!
+    # COMPLETE_RICH_HOST
+    getCompleteRichHost(id: Long!): RichHost
+    getCompleteRichHosts: [RichHost!]!
+    getCompleteRichHostsByHostname(hostname: String!): [RichHost!]!
+    getCompleteRichHostsHavingAttrs(attrs: [InputAttribute!]!): [RichHost!]!
 
     # HOST_ATTRS
     getHostAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
@@ -248,14 +248,14 @@ type Query {
     getMembersBySponsored(isSponsored: Boolean!): [Member!]!
     getMembersHavingAttrs(attrs: [InputAttribute!]!): [Member!]!
 
-    # RICH_MEMBER
-    getRichMember(id: Long!): RichMember
-    getRichMembers: [RichMember!]!
-    getRichMembersOfUser(userId: Long!): [RichMember!]!
-    getRichMembersOfVo(voId: Long!): [RichMember!]!
-    getRichMembersByStatus(status: String!): [RichMember!]!
-    getRichMembersBySponsored(isSponsored: Boolean!): [RichMember!]!
-    getRichMembersHavingAttrs(attrs: [InputAttribute!]!): [RichMember!]!
+    # COMPLETE_RICH_MEMBER
+    getCompleteRichMember(id: Long!): RichMember
+    getCompleteRichMembers: [RichMember!]!
+    getCompleteRichMembersOfUser(userId: Long!): [RichMember!]!
+    getCompleteRichMembersOfVo(voId: Long!): [RichMember!]!
+    getCompleteRichMembersByStatus(status: String!): [RichMember!]!
+    getCompleteRichMembersBySponsored(isSponsored: Boolean!): [RichMember!]!
+    getCompleteRichMembersHavingAttrs(attrs: [InputAttribute!]!): [RichMember!]!
 
     # MEMBER_ATTRS
     getMemberAttrs(id: Long!, attrs: [String!]!): [PerunAttribute!]!
@@ -268,13 +268,13 @@ type Query {
     getResourcesOfVo(voId: Long!): [Resource!]!
     getResourcesHavingAttrs(attrs: [InputAttribute!]!): [Resource!]!
 
-    # RICH_RESOURCE
-    getRichResource(id: Long!): RichResource
-    getRichResources: [RichResource!]!
-    getRichResourcesByName(name: String!): [RichResource!]!
-    getRichResourcesOfFacility(facilityId: Long!): [RichResource!]!
-    getRichResourcesOfVo(voId: Long!): [RichResource!]!
-    getRichResourcesHavingAttrs(attrs: [InputAttribute!]!): [RichResource!]!
+    # COMPLETE_RICH_RESOURCE
+    getCompleteRichResource(id: Long!): RichResource
+    getCompleteRichResources: [RichResource!]!
+    getCompleteRichResourcesByName(name: String!): [RichResource!]!
+    getCompleteRichResourcesOfFacility(facilityId: Long!): [RichResource!]!
+    getCompleteRichResourcesOfVo(voId: Long!): [RichResource!]!
+    getCompleteRichResourcesHavingAttrs(attrs: [InputAttribute!]!): [RichResource!]!
 
     # RESOURCE_ATTRS
     getResourceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
@@ -286,12 +286,12 @@ type Query {
     getServicesOfOwner(ownerId: Long!): [Service!]!
     getServicesHavingAttrs(attrs: [InputAttribute!]!): [Service!]!
 
-    # RICH_SERVICE
-    getRichService(id: Long!): RichService
-    getRichServices: [RichService!]!
-    getRichServicesByName(name: String!): [RichService!]!
-    getRichServicesOfOwner(ownerId: Long!): [RichService!]!
-    getRichServicesHavingAttrs(attrs: [InputAttribute!]!): [RichService!]!
+    # COMPLETE_RICH_SERVICE
+    getCompleteRichService(id: Long!): RichService
+    getCompleteRichServices: [RichService!]!
+    getCompleteRichServicesByName(name: String!): [RichService!]!
+    getCompleteRichServicesOfOwner(ownerId: Long!): [RichService!]!
+    getCompleteRichServicesHavingAttrs(attrs: [InputAttribute!]!): [RichService!]!
 
     # SERVICE_ATTRS
     getServiceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
@@ -304,13 +304,13 @@ type Query {
     getUsersBySponsoredAcc(isSponsoredAcc: Boolean): [User!]!
     getUsersHavingAttrs(attrs: [InputAttribute!]!): [User!]!
 
-    # RICH_USER
-    getRichUser(id: Long!): RichUser
-    getRichUsers: [RichUser!]!
-    getRichUsersByName(titleBefore: String, firstName: String, middleName: String, lastName: String, titleAfter: String): [RichUser!]!
-    getRichUsersByServiceAcc(isServiceAcc: Boolean): [RichUser!]!
-    getRichUsersBySponsoredAcc(isSponsoredAcc: Boolean): [RichUser!]!
-    getRichUsersHavingAttrs(attrs: [InputAttribute!]!): [RichUser!]!
+    # COMPLETE_RICH_USER
+    getCompleteRichUser(id: Long!): RichUser
+    getCompleteRichUsers: [RichUser!]!
+    getCompleteRichUsersByName(titleBefore: String, firstName: String, middleName: String, lastName: String, titleAfter: String): [RichUser!]!
+    getCompleteRichUsersByServiceAcc(isServiceAcc: Boolean): [RichUser!]!
+    getCompleteRichUsersBySponsoredAcc(isSponsoredAcc: Boolean): [RichUser!]!
+    getCompleteRichUsersHavingAttrs(attrs: [InputAttribute!]!): [RichUser!]!
 
     # USER_ATTRS
     getUserAttrs(id: Long, attrs: [String!]): [PerunAttribute!]!
@@ -323,13 +323,13 @@ type Query {
     getUserExtSourcesByLoginExt(loginExt: String!): [UserExtSource!]!
     getUserExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [UserExtSource!]!
 
-    # RICH_USER_EXT_SOURCE
-    getRichUserExtSource(id: Long!): RichUserExtSource
-    getRichUserExtSources: [RichUserExtSource!]!
-    getRichUserExtSourcesOfUser(userId: Long!): [RichUserExtSource!]!
-    getRichUserExtSourcesOfExtSource(extSourceId: Long!): [RichUserExtSource!]!
-    getRichUserExtSourcesByLoginExt(loginExt: String!): [RichUserExtSource!]!
-    getRichUserExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichUserExtSource!]!
+    # COMPLETE_RICH_USER_EXT_SOURCE
+    getCompleteRichUserExtSource(id: Long!): RichUserExtSource
+    getCompleteRichUserExtSources: [RichUserExtSource!]!
+    getCompleteRichUserExtSourcesOfUser(userId: Long!): [RichUserExtSource!]!
+    getCompleteRichUserExtSourcesOfExtSource(extSourceId: Long!): [RichUserExtSource!]!
+    getCompleteRichUserExtSourcesByLoginExt(loginExt: String!): [RichUserExtSource!]!
+    getCompleteRichUserExtSourcesHavingAttrs(attrs: [InputAttribute!]!): [RichUserExtSource!]!
 
     # USER_EXT_SOURCE_ATTRS
     getUserExtSourceAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
@@ -342,13 +342,13 @@ type Query {
     getVosByShortName(shortName: String!): [Vo!]!
     getVosHavingAttrs(attrs: [InputAttribute!]!): [Vo!]!
 
-    # RICH_VO
-    getRichVo(id: Long!): RichVo
-    getRichVos: [RichVo!]
-    getRichVosByName(name: String!): [RichVo!]!
-    getRichVoByShortName(shortName: String!): RichVo
-    getRichVosByShortName(shortName: String!): [RichVo!]!
-    getRichVosHavingAttrs(attrs: [InputAttribute!]!): [RichVo!]!
+    # COMPLETE_RICH_VO
+    getCompleteRichVo(id: Long!): RichVo
+    getCompleteRichVos: [RichVo!]
+    getCompleteRichVosByName(name: String!): [RichVo!]!
+    getCompleteRichVoByShortName(shortName: String!): RichVo
+    getCompleteRichVosByShortName(shortName: String!): [RichVo!]!
+    getCompleteRichVosHavingAttrs(attrs: [InputAttribute!]!): [RichVo!]!
 
     # VO_ATTRS
     getVoAttrs(id: Long!, attrs: [String!]): [PerunAttribute!]!
