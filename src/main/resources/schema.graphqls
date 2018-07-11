@@ -89,6 +89,12 @@ type RichMember {
     attributes: [PerunAttribute!]!
 }
 
+type Owner {
+    id: Long!
+    name: String!
+    type: String!
+}
+
 type Resource {
     id: Long!
     facilityId: Long!
@@ -259,6 +265,11 @@ type Query {
 
     # MEMBER_ATTRS
     getMemberAttrs(id: Long!, attrs: [String!]!): [PerunAttribute!]!
+
+    # OWNER
+    getOwner(id: Long!): Owner
+    getOwnersByName(name: String!): [Owner]!
+    getOwnersByType(type: String!): [Owner]!
 
     # RESOURCE
     getResource(id: Long!): Resource

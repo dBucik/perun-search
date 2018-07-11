@@ -23,6 +23,7 @@ public class Query implements GraphQLRootResolver {
     private final GroupDAO groupDAO;
     private final HostDAO hostDAO;
     private final MemberDAO memberDAO;
+    private final OwnerDAO ownerDAO;
     private final ResourceDAO resourceDAO;
     private final ServiceDAO serviceDAO;
     private final UserDAO userDAO;
@@ -31,7 +32,7 @@ public class Query implements GraphQLRootResolver {
 
     public Query(ExtSourceDAO extSourceDAO,
                  FacilityDAO facilityDAO, GroupDAO groupDAO,
-                 HostDAO hostDAO, MemberDAO memberDAO,
+                 HostDAO hostDAO, MemberDAO memberDAO, OwnerDAO ownerDAO,
                  ResourceDAO resourceDAO, ServiceDAO serviceDAO,
                  UserDAO userDAO, UserExtSourceDAO userExtSourceDAO,
                  VoDAO voDAO) {
@@ -40,6 +41,7 @@ public class Query implements GraphQLRootResolver {
         this.groupDAO = groupDAO;
         this.hostDAO = hostDAO;
         this.memberDAO = memberDAO;
+        this.ownerDAO = ownerDAO;
         this.resourceDAO = resourceDAO;
         this.serviceDAO = serviceDAO;
         this.userDAO = userDAO;
@@ -621,6 +623,38 @@ public class Query implements GraphQLRootResolver {
      */
     public List<PerunAttribute> getMemberAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
         return memberDAO.getMemberAttrs(id, attrs);
+    }
+
+    /* OWNER */
+
+    /**
+     * Get Owner specified by ID.
+     * @param id id of Owner
+     * @return Found Owner or null if not such found.
+     * @throws DatabaseIntegrityException More than one Owner with same ID found.
+     */
+    public Owner getOwner(Long id) throws DatabaseIntegrityException {
+        return ownerDAO.getOwner(id);
+    }
+
+    /**
+     * Get Owner with NAME like specified parameter.
+     * (Operator LIKE used, comparing ignores case)
+     * @param name name of Owner
+     * @return List of Owners, empty list if nothing has been found.
+     */
+    public List<Owner> getOwnersByName(String name) {
+        return ownerDAO.getOwnersByName(name);
+    }
+
+    /**
+     * Get Owner with TYPE like specified parameter.
+     * (Operator LIKE used, comparing ignores case)
+     * @param type type of Owner
+     * @return List of Owners, empty list if nothing has been found.
+     */
+    public List<Owner> getOwnersByType(String type) {
+        return ownerDAO.getOwnersByType(type);
     }
 
     /* RESOURCE */
