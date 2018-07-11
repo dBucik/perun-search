@@ -23,12 +23,10 @@ public class UserDAOImpl implements UserDAO {
     private static final UserMapper MAPPER = new UserMapper();
     private static final RichUserMapper RICH_MAPPER = new RichUserMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

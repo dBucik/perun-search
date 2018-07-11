@@ -15,12 +15,10 @@ public class OwnerDAOImpl implements OwnerDAO {
 
     private static final OwnerMapper MAPPER = new OwnerMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

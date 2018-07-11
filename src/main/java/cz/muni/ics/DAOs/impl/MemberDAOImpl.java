@@ -26,12 +26,10 @@ public class MemberDAOImpl implements MemberDAO {
     private static final Character ACTIVE = '1';
     private static final Character EXPIRED = '0';
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

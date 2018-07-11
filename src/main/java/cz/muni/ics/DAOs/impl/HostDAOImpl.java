@@ -23,14 +23,12 @@ public class HostDAOImpl implements HostDAO {
     private static final HostMapper MAPPER = new HostMapper();
     private static final RichHostMapper RICH_MAPPER = new RichHostMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     /* HOST */
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

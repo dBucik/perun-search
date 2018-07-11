@@ -23,12 +23,10 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
     private static final ExtSourceMapper MAPPER = new ExtSourceMapper();
     private static final RichExtSourceMapper RICH_MAPPER = new RichExtSourceMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

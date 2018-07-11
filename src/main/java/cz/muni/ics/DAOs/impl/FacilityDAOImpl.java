@@ -23,13 +23,11 @@ public class FacilityDAOImpl implements FacilityDAO {
     private static final FacilityMapper MAPPER = new FacilityMapper();
     private static final RichFacilityMapper RICH_MAPPER = new RichFacilityMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     /* FACILITY */

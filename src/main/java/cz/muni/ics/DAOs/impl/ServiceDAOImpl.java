@@ -23,12 +23,10 @@ public class ServiceDAOImpl implements ServiceDAO {
     private static final ServiceMapper MAPPER = new ServiceMapper();
     private static final RichServiceMapper RICH_MAPPER = new RichServiceMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

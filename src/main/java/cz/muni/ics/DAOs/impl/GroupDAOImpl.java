@@ -23,12 +23,10 @@ public class GroupDAOImpl implements GroupDAO {
     private static final GroupMapper MAPPER = new GroupMapper();
     private static final RichGroupMapper RICH_MAPPER = new RichGroupMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

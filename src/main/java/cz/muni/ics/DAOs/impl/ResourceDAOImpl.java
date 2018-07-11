@@ -23,12 +23,10 @@ public class ResourceDAOImpl implements ResourceDAO {
     private static final ResourceMapper MAPPER = new ResourceMapper();
     private static final RichResourceMapper RICH_MAPPER = new RichResourceMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

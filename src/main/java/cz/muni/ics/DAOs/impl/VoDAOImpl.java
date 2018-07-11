@@ -23,12 +23,10 @@ public class VoDAOImpl implements VoDAO {
     private static final VoMapper MAPPER = new VoMapper();
     private static final RichVoMapper RICH_MAPPER = new RichVoMapper();
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
