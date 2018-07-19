@@ -2,26 +2,27 @@ package cz.muni.ics.DAOs;
 
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
-import cz.muni.ics.models.attributes.IntegerAttribute;
-import cz.muni.ics.models.attributes.PerunAttribute;
-import cz.muni.ics.models.attributes.StringAttribute;
-import cz.muni.ics.models.entities.PerunEntity;
-import cz.muni.ics.models.richEntities.RichPerunEntity;
-import cz.muni.ics.models.richEntities.RichVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import cz.muni.ics.models.attributes.InputAttributeType;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.StringJoiner;
 
 public class DAOUtils {
 
 	private static Properties dbTablesProperties;
+	private static String MATCH_TEXT = "LIKE";
+	private static String MATCH_TYPE = "=";
+	private static String GET_AS_TEXT = "->>";
+	private static String GET_AS_TYPE = "->";
+
+	public static final String NO_WHERE = null;
+	public static final List<String> NO_ATTRS_NAMES = null;
+	public static final int NO_ATTRS_NAMES_COUNT = 0;
+	public static final List<InputAttribute> NO_ATTRS = null;
 
 	static {
 		dbTablesProperties = new Properties();
@@ -34,107 +35,138 @@ public class DAOUtils {
 		}
 	}
 
-	public static boolean hasAttributes(RichPerunEntity entity, List<InputAttribute> attrs) {
-		Map<String, String> input = getInputAsMap(attrs);
-		List<PerunAttribute> attributes = entity.getAttributesByKeys(new ArrayList<>(input.keySet()));
-		if (attributes.size() < 1) {
-			//no corresponding attributes were found
-			return false;
-		}
-
-		for (PerunAttribute a: attributes) {
-			if (! a.getValue().contains(input.get(a.getKey()))) {
-				//corresponding attribute has different value
-				return false;
-			}
-		}
-
-		return true;
+	public static String simpleQueryBuilder(String where, PerunEntityType type) {
+		return queryBuilder(true, null, where, type);
 	}
 
-	private static Map<String, String> getInputAsMap(List<InputAttribute> attrs) {
-		Map<String, String> res = new HashMap<>();
-		for (InputAttribute a: attrs) {
-			res.put(a.getKey(), a.getValue());
-		}
-
-		return res;
+	public static String complexQueryBuilder(String innerWhere, String outerWhere, PerunEntityType type) {
+		return queryBuilder(false, innerWhere, outerWhere, type);
 	}
 
-	public static String simpleQueryBuilder (String where, PerunEntityType type) {
+	private static String queryBuilder(boolean isSimple, String innerWhere, String outerWhere, PerunEntityType type) {
 		String prefix = getEntityPrefix(type);
 
-		String entity = dbTablesProperties.getProperty(prefix + ".entityAs");
-		String entityTable = dbTablesProperties.getProperty(prefix + ".entityTable");
-
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT to_jsonb(t)");
-		query.append(" AS ").append(entity);
-		query.append(" FROM ").append(entityTable).append(" t");
-		if (where != null) {
-			query.append(' ').append(where.trim());
-		}
-		query.append(" GROUP BY t.id");
-
-		return query.toString();
-	}
-
-	public static String queryBuilder(String entityWhere, String attrsWhere, PerunEntityType type) {
-		String prefix = getEntityPrefix(type);
-
-		String entity = dbTablesProperties.getProperty(prefix + ".entityAs");
 		String entityTable = dbTablesProperties.getProperty(prefix + ".entityTable");
 		String attrValues = dbTablesProperties.getProperty(prefix + ".attrValuesTable");
 		String entityId = dbTablesProperties.getProperty(prefix + ".attrValuesEntityId");
 		String attrNames = dbTablesProperties.getProperty(prefix + ".attrNamesTable");
 
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT to_jsonb(t) || jsonb_build_object(");
-		query.append("'attributes', json_agg(");
-		query.append("jsonb_build_object('key', friendly_name,'val', attr_value, 'val_text', attr_value_text, 'type', type)))");
-		query.append(" AS ").append(entity);
-		query.append(" FROM ").append(entityTable).append(" t");
-		query.append(" JOIN (");
-		query.append("SELECT ").append(entityId).append(" friendly_name, attr_value, attr_value_text, type");
-		query.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames).append(" an");
-		query.append(" ON av.attr_id = an.id");
-		if (attrsWhere != null) {
-			query.append(" ").append(attrsWhere);
+		query.append("SELECT to_json(ent) AS entity"); //select entity
+		if (! isSimple) {
+			query.append(", attributes.data AS attrs"); //select also attributes
 		}
-		query.append(") AS attrs ON t.id = attr.").append(entityId);
-		if (entityWhere != null) {
-			query.append(" ").append(entityWhere);
+		query.append(" FROM ").append(entityTable).append(" ent"); //entity table
+		if (! isSimple) {
+			query.append(" JOIN (") // select attributes and build JSON
+					.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
+					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type)) AS data")
+					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames).append(" an ON av.attr_id = an.id");
+			if (!Objects.equals(innerWhere, NO_WHERE)) { // select specific attributes by names
+				query.append(' ').append(innerWhere);
+			}
+			query.append(" GROUP BY ").append(entityId) // group attributes by entity id and add join condition
+					.append(") AS attributes ON ent.id = attributes.").append(entityId);
 		}
-		query.append(" GROUP BY t.id");
+		if (!Objects.equals(NO_WHERE, outerWhere)) { // add conditions for entity and attributes
+			query.append(' ').append(outerWhere);
+		}
+
 
 		return query.toString();
 	}
 
-	public static String attributeWhereBuilder(List<InputAttribute> input) {
-		StringBuilder query = new StringBuilder();
-
-		query.append("WHERE");
-		query.append(resolveSubQuery(input.get(0)));
-		for (int i = 1; i < input.size(); i++) {
-			query.append(" OR ");
-			query.append(resolveSubQuery(input.get(i)));
+	public static String innerWhereBuilder(int namesCount) {
+		if (namesCount <= NO_ATTRS_NAMES_COUNT) {
+			return null;
 		}
 
-		return query.toString();
+		String query = "WHERE ";
+		StringJoiner sj = new StringJoiner(" OR ");
+		for (int i = 0; i < namesCount; i++) {
+			sj.add("friendly_name = ?");
+		}
+
+		return query + sj.toString();
 	}
 
-	public static String resolveSubQuery(InputAttribute inputAttribute) {
-		//TODO: used operator??? LIKE vs. =
-		String subquery;
-		if (inputAttribute.getKey() == null) {
-			subquery = "(attr_value LIKE ? OR attr_value_text LIKE ?)";
-		} else if (inputAttribute.getValue() == null) {
-			subquery = "(friendlyName LIKE ?)";
-		} else {
-			subquery = "(friendlyName LIKE ? AND (attr_value LIKE ? OR attr_value_text LIKE ?))";
+	public static String outerWhereBuilder(List<InputAttribute> core, List<InputAttribute> attrs) {
+		if ((core == null || core.isEmpty()) && (attrs == null || attrs.isEmpty())) {
+			return null;
 		}
 
-		return subquery;
+		String query = "WHERE ";
+		StringJoiner sj = new StringJoiner(" AND ");
+		if (core != null) {
+			for (InputAttribute a : core) {
+				String op = resolveMatchOperator(a.getType1());
+				sj.add("ent." + a.getKey() + ' ' + op + " ?"); // TODO: escape name to prevent SQL injection
+			}
+		}
+
+		if (attrs != null) {
+			for (InputAttribute a : attrs) {
+				String op1 = resolveFetchOperator(a.getType1());
+				String op2 = resolveMatchOperator(a.getType1());
+				sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " ?"); // TODO: escape name to prevent SQL injection
+			}
+		}
+
+		return query + sj.toString();
+	}
+
+	public static Object[] buildParams(List<String> attrsNames, List<InputAttribute> core, List<InputAttribute> attrs) {
+		List<Object> params = new LinkedList<>();
+		if (attrsNames != NO_ATTRS_NAMES) {
+			params.addAll(attrsNames); // add attributes names to be fetched
+
+		}
+
+		if (attrs != NO_ATTRS) {
+			for (InputAttribute a: attrs) {
+				params.add(a.getKey()); // add attributes names to be fetched and later used in outer WHERE
+
+			}
+		}
+
+		if (core != NO_ATTRS) { // add core attributes values to outer WHERE
+			params.addAll(addValuesFromInputAttrs(core));
+		}
+
+		if (attrs != NO_ATTRS) { // add attributes values to outer WHERE
+			params.addAll(addValuesFromInputAttrs(attrs));
+		}
+
+		return params.toArray();
+	}
+
+	private static List<Object> addValuesFromInputAttrs(List<InputAttribute> attrs) {
+		List<Object> res = new LinkedList<>();
+		for (InputAttribute a: attrs) {
+			String op = resolveMatchOperator(a.getType1());
+			if (op.equals(MATCH_TEXT)) {
+				res.add('%' + a.getValue() + '%');
+
+			} else {
+				Object val = resolveTrueValue(a.getType1(), a.getValue());
+
+				res.add(val);
+			}
+		}
+
+		return res;
+	}
+
+	private static Object resolveTrueValue(InputAttributeType type, String value) {
+		if (type == null) {
+			return value;
+		}
+
+		switch (type) {
+			case INTEGER: return Integer.parseInt(value);
+			case BOOLEAN: return Boolean.parseBoolean(value);
+			default: return value;
+		}
 	}
 
 	private static String getEntityPrefix(PerunEntityType type) {
@@ -151,6 +183,48 @@ public class DAOUtils {
 			case EXT_SOURCE: return "extSource";
 			case USER_EXT_SOURCE: return "userExtSource";
 			default: return "";
+		}
+	}
+
+	private static String resolveFetchOperator(InputAttributeType type) {
+		if (type == null) {
+			return GET_AS_TEXT;
+		}
+
+		switch (type) {
+			case STRING:
+			case MAP:
+			case ARRAY:
+			case LARGE_LIST:
+			case LARGE_STRING:
+			case EXACT_STRING:
+			case EXACT_LARGE_STRING:
+				return GET_AS_TEXT;
+			case BOOLEAN:
+			case INTEGER:
+			default:
+				return GET_AS_TYPE;
+		}
+	}
+
+	private static String resolveMatchOperator(InputAttributeType type) {
+		if (type == null) {
+			return MATCH_TEXT;
+		}
+
+		switch (type) {
+			case STRING:
+			case MAP:
+			case ARRAY:
+			case LARGE_LIST:
+			case LARGE_STRING:
+				return MATCH_TEXT;
+			case EXACT_STRING:
+			case BOOLEAN:
+			case INTEGER:
+			case EXACT_LARGE_STRING:
+			default:
+				return MATCH_TYPE;
 		}
 	}
 

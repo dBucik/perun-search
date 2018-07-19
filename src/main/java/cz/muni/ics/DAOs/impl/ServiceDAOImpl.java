@@ -2,136 +2,62 @@ package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.DAOUtils;
 import cz.muni.ics.DAOs.ServiceDAO;
-import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.ServiceMapper;
 import cz.muni.ics.mappers.richEntities.RichServiceMapper;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
-import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Service;
 import cz.muni.ics.models.richEntities.RichService;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
+
+import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS;
+import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
+import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class ServiceDAOImpl implements ServiceDAO {
 
-    private static final ServiceMapper MAPPER = new ServiceMapper();
-    private static final RichServiceMapper RICH_MAPPER = new RichServiceMapper();
+	private static final ServiceMapper MAPPER = new ServiceMapper();
+	private static final RichServiceMapper RICH_MAPPER = new RichServiceMapper();
 
-    private JdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+	@Override
+	public void setDataSource(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	}
 
-    @Override
-    public Service getService(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.SERVICE);
+	@Override
+	public List<Service> getServices(List<InputAttribute> core) {
+		String where = DAOUtils.outerWhereBuilder(core, null);
+		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.SERVICE);
+		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
-        try {
-            return jdbcTemplate.queryForObject(query, new Object[]{id}, MAPPER);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (IncorrectResultSetColumnCountException e) {
-            throw new DatabaseIntegrityException("More services with same ID found [id: " + id + ']');
-        }
-    }
+		return jdbcTemplate.query(query, params, MAPPER);
+	}
 
-    @Override
-    public List<Service> getServicesByName(String name) {
-        String where = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.SERVICE);
+	@Override
+	public List<RichService> getRichServices(List<InputAttribute> core, List<InputAttribute> attrs,
+												 List<String> attrsNames) {
+		int size = attrs == null ? 0 : attrs.size();
+		size += attrsNames == null ? 0 : attrsNames.size();
+		String innerWhere = DAOUtils.innerWhereBuilder(size);
+		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
+		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.SERVICE);
+		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
 
-        return jdbcTemplate.query(query, new Object[] {name}, MAPPER);
-    }
+		return jdbcTemplate.query(query, params, RICH_MAPPER);
+	}
 
-    @Override
-    public List<Service> getServices() {
-        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.SERVICE);
+	@Override
+	public List<RichService> getCompleteRichServices(List<InputAttribute> core, List<InputAttribute> attrs) {
+		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
+		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.SERVICE);
+		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
 
-        return jdbcTemplate.query(query, MAPPER);
-    }
-
-    @Override
-    public List<Service> getServicesHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getCompleteRichServicesHavingAttrs(attrs));
-    }
-
-    @Override
-    public List<Service> getServicesOfOwner(Long ownerId) {
-        String where = "WHERE t.owner_id = ?";
-        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.SERVICE);
-
-        return jdbcTemplate.query(query, new Object[] {ownerId}, MAPPER);
-    }
-
-    /* COMPLETE_RICH SERVICE */
-
-    @Override
-    public RichService getCompleteRichService(Long id) throws DatabaseIntegrityException {
-        String entityWhere = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
-
-        try {
-            return jdbcTemplate.queryForObject(query, new Object[]{id}, RICH_MAPPER);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (IncorrectResultSetColumnCountException e) {
-            throw new DatabaseIntegrityException("More services with same ID found [id: " + id + ']');
-        }
-    }
-
-    @Override
-    public List<RichService> getCompleteRichServicesByName(String name) {
-        String entityWhere = "WHERE upper(t.name) LIKE  upper(?)";
-        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
-
-        return jdbcTemplate.query(query, new Object[] {name}, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichService> getCompleteRichServices() {
-        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.SERVICE);
-
-        return jdbcTemplate.query(query, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichService> getCompleteRichServicesOfOwner(Long ownerId) {
-        String entityWhere = "WHERE t.owner_id = ?";
-        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.SERVICE);
-
-        return jdbcTemplate.query(query, new Object[] {ownerId}, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichService> getCompleteRichServicesHavingAttrs(List<InputAttribute> attrs) {
-        //TODO improve
-        List<RichService> all = getCompleteRichServices();
-        List<RichService> correct = new ArrayList<>();
-        for (RichService service: all) {
-            if (DAOUtils.hasAttributes(service, attrs)) {
-                correct.add(service);
-            }
-        }
-
-        return correct;
-    }
-
-    /* ATTRIBUTES */
-
-    @Override
-    public List<PerunAttribute> getServiceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        //TODO: improve
-        RichService service = getCompleteRichService(id);
-        return service.getAttributesByKeys(attrs);
-    }
-
+		return jdbcTemplate.query(query, params, RICH_MAPPER);
+	}
+	
 }

@@ -2,152 +2,62 @@ package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.DAOUtils;
 import cz.muni.ics.DAOs.UserExtSourceDAO;
-import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.mappers.entities.UserExtSourceMapper;
 import cz.muni.ics.mappers.richEntities.RichUserExtSourceMapper;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
-import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.UserExtSource;
 import cz.muni.ics.models.richEntities.RichUserExtSource;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
+
+import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS;
+import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
+import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class UserExtSourceDAOImpl implements UserExtSourceDAO {
 
-    private static final UserExtSourceMapper MAPPER = new UserExtSourceMapper();
-    private static final RichUserExtSourceMapper RICH_MAPPER = new RichUserExtSourceMapper();
+	private static final UserExtSourceMapper MAPPER = new UserExtSourceMapper();
+	private static final RichUserExtSourceMapper RICH_MAPPER = new RichUserExtSourceMapper();
 
-    private JdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+	@Override
+	public void setDataSource(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	}
 
-    @Override
-    public UserExtSource getUserExtSource(Long id) throws DatabaseIntegrityException {
-        String where = "WHERE t.id = ?";
-        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER_EXT_SOURCE);
-        try {
-            return jdbcTemplate.queryForObject(query, new Object[] {id}, MAPPER);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (IncorrectResultSetColumnCountException e) {
-            throw new DatabaseIntegrityException("More UserExtSources with same ID found [id: " + id + ']');
-        }
-    }
+	@Override
+	public List<UserExtSource> getUserExtSources(List<InputAttribute> core) {
+		String where = DAOUtils.outerWhereBuilder(core, null);
+		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER_EXT_SOURCE);
+		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
-    @Override
-    public List<UserExtSource> getUserExtSources() {
-        String query = DAOUtils.simpleQueryBuilder(null, PerunEntityType.USER_EXT_SOURCE);
+		return jdbcTemplate.query(query, params, MAPPER);
+	}
 
-        return jdbcTemplate.query(query, MAPPER);
-    }
+	@Override
+	public List<RichUserExtSource> getRichUserExtSources(List<InputAttribute> core, List<InputAttribute> attrs,
+												 List<String> attrsNames) {
+		int size = attrs == null ? 0 : attrs.size();
+		size += attrsNames == null ? 0 : attrsNames.size();
+		String innerWhere = DAOUtils.innerWhereBuilder(size);
+		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
+		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.USER_EXT_SOURCE);
+		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
 
-    @Override
-    public List<UserExtSource> getUserExtSourcesHavingAttrs(List<InputAttribute> attrs) {
-        return new ArrayList<>(getCompleteRichUserExtSourcesHavingAttrs(attrs));
-    }
+		return jdbcTemplate.query(query, params, RICH_MAPPER);
+	}
 
-    @Override
-    public List<UserExtSource> getUserExtSourcesOfUser(Long userId) {
-        String where = "WHERE t.user_id = ?";
-        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER_EXT_SOURCE);
+	@Override
+	public List<RichUserExtSource> getCompleteRichUserExtSources(List<InputAttribute> core, List<InputAttribute> attrs) {
+		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
+		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.USER_EXT_SOURCE);
+		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
 
-        return jdbcTemplate.query(query, new Object[] { userId }, MAPPER);
-    }
-
-    @Override
-    public List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId) {
-        String where = "WHERE t.ext_source_id = ?";
-        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER_EXT_SOURCE);
-
-        return jdbcTemplate.query(query, new Object[] { extSourceId }, MAPPER);
-    }
-
-    @Override
-    public List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt) {
-        loginExt = '%' + loginExt + '%';
-        String where = "WHERE upper(t.login_ext) LIKE upper(?)";
-        String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.USER_EXT_SOURCE);
-
-        return jdbcTemplate.query(query, new Object[] { loginExt }, MAPPER);
-    }
-
-    /* COMPLETE_RICH_USER_EXT_SOURCE */
-
-    @Override
-    public RichUserExtSource getCompleteRichUserExtSource(Long id) throws DatabaseIntegrityException {
-        String entityWhere = "WHERE t.id = ?";
-        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER_EXT_SOURCE);
-        try {
-            return jdbcTemplate.queryForObject(query, new Object[] {id}, RICH_MAPPER);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        } catch (IncorrectResultSetColumnCountException e) {
-            throw new DatabaseIntegrityException("More UserExtSources with same ID found [id: " + id + ']');
-        }
-    }
-
-    @Override
-    public List<RichUserExtSource> getCompleteRichUserExtSources() {
-        String query = DAOUtils.queryBuilder(null, null, PerunEntityType.USER_EXT_SOURCE);
-
-        return jdbcTemplate.query(query, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichUserExtSource> getCompleteRichUserExtSourcesOfUser(Long userId) {
-        String entityWhere = "WHERE t.user_id = ?";
-        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER_EXT_SOURCE);
-
-        return jdbcTemplate.query(query, new Object[] { userId }, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichUserExtSource> getCompleteRichUserExtSourcesOfExtSource(Long extSourceId) {
-        String entityWhere = "WHERE t.ext_source_id = ?";
-        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER_EXT_SOURCE);
-
-        return jdbcTemplate.query(query, new Object[] { extSourceId }, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichUserExtSource> getCompleteRichUserExtSourcesByLoginExt(String loginExt) {
-        loginExt = '%' + loginExt + '%';
-        String entityWhere = "WHERE upper(t.login_ext) LIKE upper(?)";
-        String query = DAOUtils.queryBuilder(entityWhere, null, PerunEntityType.USER_EXT_SOURCE);
-
-        return jdbcTemplate.query(query, new Object[] { loginExt }, RICH_MAPPER);
-    }
-
-    @Override
-    public List<RichUserExtSource> getCompleteRichUserExtSourcesHavingAttrs(List<InputAttribute> attrs) {
-        //TODO: improve
-        List<RichUserExtSource> all = getCompleteRichUserExtSources();
-        List<RichUserExtSource> correct = new ArrayList<>();
-        for (RichUserExtSource userExtSource: all) {
-            if (DAOUtils.hasAttributes(userExtSource, attrs)) {
-                correct.add(userExtSource);
-            }
-        }
-
-        return correct;
-    }
-
-    /* ATTRIBUTES */
-
-    @Override
-    public List<PerunAttribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException {
-        //TODO: improve
-        RichUserExtSource userExtSource = getCompleteRichUserExtSource(id);
-        return userExtSource.getAttributesByKeys(attrs);
-    }
-
+		return jdbcTemplate.query(query, params, RICH_MAPPER);
+	}
+	
 }

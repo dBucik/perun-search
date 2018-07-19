@@ -1,8 +1,6 @@
 package cz.muni.ics.DAOs;
 
-import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.InputAttribute;
-import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.UserExtSource;
 import cz.muni.ics.models.richEntities.RichUserExtSource;
 
@@ -13,100 +11,11 @@ public interface UserExtSourceDAO {
 
     void setDataSource(DataSource dataSource);
 
-    /* USER_EXT_SOURCE */
+    List<UserExtSource> getUserExtSources(List<InputAttribute> core);
 
-    /**
-     * Get userExtSource specified by ID.
-     * @param id id of userExtSource
-     * @return Found userExtSource or null if not such found.
-     */
-    UserExtSource getUserExtSource(Long id) throws DatabaseIntegrityException;
+    List<RichUserExtSource> getRichUserExtSources(List<InputAttribute> core, List<InputAttribute> attrs,
+										 List<String> attrsNames);
 
-    /**
-     * Get all userExtSources.
-     * @return List of userExtSources, null if nothing has been found.
-     */
-    List<UserExtSource> getUserExtSources();
-
-    /**
-     * Get userExtSources of user specified by ID.
-     * @param userId id of user
-     * @return List of userExtSources found, empty list if nothing has been found.
-     */
-    List<UserExtSource> getUserExtSourcesOfUser(Long userId);
-
-    /**
-     * Get userExtSources of extSource specified by ID.
-     * @param extSourceId id of extSource
-     * @return List of userExtSources found, empty list if nothing has been found.
-     */
-    List<UserExtSource> getUserExtSourcesOfExtSource(Long extSourceId);
-
-    /**
-     * Get userExtSources with specified loginExt
-     * @param loginExt loginExt of userExtSource
-     * @return List of userExtSources found, empty list if nothing has been found.
-     */
-    List<UserExtSource> getUserExtSourcesByLoginExt(String loginExt);
-
-    /**
-     * Get userExtSources that have specified attributes. (Exact matching used)
-     * @param attrs attributes of userExtSources
-     * @return List of userExtSources found, empty list if nothing has been found.
-     */
-    List<UserExtSource> getUserExtSourcesHavingAttrs(List<InputAttribute> attrs);
-
-    /* COMPLETE_RICH_USER_EXT_SOURCE */
-
-    /**
-     * Get richUserExtSource specified by ID.
-     * @param id id of richUserExtSource
-     * @return Found richUserExtSource or null if not such found.
-     */
-    RichUserExtSource getCompleteRichUserExtSource(Long id) throws DatabaseIntegrityException;
-
-    /**
-     * Get all richUserExtSources.
-     * @return List of richUserExtSources, null if nothing has been found.
-     */
-    List<RichUserExtSource> getCompleteRichUserExtSources();
-
-    /**
-     * Get richUserExtSources of user specified by ID.
-     * @param userId id of user
-     * @return List of richUserExtSources found, empty list if nothing has been found.
-     */
-    List<RichUserExtSource> getCompleteRichUserExtSourcesOfUser(Long userId);
-
-    /**
-     * Get richUserExtSources of extSource specified by ID.
-     * @param extSourceId id of extSource
-     * @return List of richUserExtSources found, empty list if nothing has been found.
-     */
-    List<RichUserExtSource> getCompleteRichUserExtSourcesOfExtSource(Long extSourceId);
-
-    /**
-     * Get richUserExtSources with specified loginExt
-     * @param loginExt loginExt of richUserExtSource
-     * @return List of richUserExtSources found, empty list if nothing has been found.
-     */
-    List<RichUserExtSource> getCompleteRichUserExtSourcesByLoginExt(String loginExt);
-
-    /**
-     * Get richUserExtSources that have specified attributes. (Exact matching used)
-     * @param attrs attributes of richUserExtSources
-     * @return List of richUserExtSources found, empty list if nothing has been found.
-     */
-    List<RichUserExtSource> getCompleteRichUserExtSourcesHavingAttrs(List<InputAttribute> attrs);
-
-    /* ATTRIBUTES */
-
-    /**
-     * Get attributes of userExtSource specified by ID.
-     * @param id id of userExtSource
-     * @param attrs attributes to be fetched
-     * @return List of attributes.
-     */
-    List<PerunAttribute> getUserExtSourceAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
+    List<RichUserExtSource> getCompleteRichUserExtSources(List<InputAttribute> core, List<InputAttribute> attrs);
 
 }

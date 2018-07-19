@@ -1,8 +1,6 @@
 package cz.muni.ics.DAOs;
 
-import cz.muni.ics.exceptions.DatabaseIntegrityException;
 import cz.muni.ics.models.InputAttribute;
-import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.Vo;
 import cz.muni.ics.models.richEntities.RichVo;
 
@@ -11,114 +9,13 @@ import java.util.List;
 
 public interface VoDAO {
 
-    void setDataSource(DataSource ds);
+    void setDataSource(DataSource dataSource);
 
-    /* VO */
+    List<Vo> getVos(List<InputAttribute> core);
 
-    /**
-     * Get VO specified by ID.
-     * @param id id of VO
-     * @return Found VO or null if not such found
-     * @throws DatabaseIntegrityException More than one VO with same ID found.
-     */
-    Vo getVo(Long id) throws DatabaseIntegrityException;
+    List<RichVo> getRichVos(List<InputAttribute> core, List<InputAttribute> attrs,
+										 List<String> attrsNames);
 
-    /**
-     * Get all VOs.
-     * @return List of VOs, empty list if nothing has been found.
-     */
-    List<Vo> getVos();
+    List<RichVo> getCompleteRichVos(List<InputAttribute> core, List<InputAttribute> attrs);
 
-    /**
-     * Get VO with names like specified parameter.
-     * (LIKE operator used, comparing ignores case)
-     * @param name substring in name of VO
-     * @return List of VOs, empty list if nothing has been found.
-     */
-    List<Vo> getVosByName(String name);
-
-    /**
-     * Get VO specified by SHORT NAME.
-     * (EXACT matching used, comparing ignores case)
-     * @param shortName short name of VO
-     * @return Found VO or null if not such found.
-     * @throws DatabaseIntegrityException More than one VO with same shortName found.
-     */
-    Vo getVoByShortName(String shortName) throws DatabaseIntegrityException;
-
-    /**
-     * Get VOs with short names like specified parameter.
-     * (LIKE operator used, comparing ignores case)
-     * @param shortName substring in short_name of vo
-     * @return List of vos, empty list if nothing has been found.
-     */
-    List<Vo> getVosByShortName(String shortName);
-
-    /**
-     * Get VOs that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of VOs
-     * @return List of VOs found, empty list if nothing has been found.
-     */
-    List<Vo> getVosHavingAttrs(List<InputAttribute> attrs);
-    
-    /* COMPLETE_RICH_VO */
-
-    /**
-     * Get RichVO specified by ID.
-     * @param id id of RichVO
-     * @return Found RichVO or null if not such found
-     * @throws DatabaseIntegrityException More than one RichVO with same ID found.
-     */
-    RichVo getCompleteRichVo(Long id) throws DatabaseIntegrityException;
-
-    /**
-     * Get all RichVOs.
-     * @return List of RichVOs, empty list if nothing has been found.
-     */
-    List<RichVo> getCompleteRichVos();
-
-    /**
-     * Get RichVO with names like specified parameter.
-     * (LIKE operator used, comparing ignores case)
-     * @param name substring in name of RichVO
-     * @return List of RichVOs, empty list if nothing has been found.
-     */
-    List<RichVo> getCompleteRichVosByName(String name);
-
-    /**
-     * Get RichVO specified by SHORT NAME.
-     * (EXACT matching used, comparing ignores case)
-     * @param shortName short name of RichVO
-     * @return Found RichVO or null if not such found.
-     * @throws DatabaseIntegrityException More than one RichVO with same shortName found.
-     */
-    RichVo getCompleteRichVoByShortName(String shortName) throws DatabaseIntegrityException;
-
-    /**
-     * Get RichVOs with short names like specified parameter.
-     * (LIKE operator used, comparing ignores case)
-     * @param shortName substring in short_name of vo
-     * @return List of vos, empty list if nothing has been found.
-     */
-    List<RichVo> getCompleteRichVosByShortName(String shortName);
-
-    /**
-     * Get RichVOs that have specified attributes.
-     * (EXACT matching used)
-     * @param attrs attributes of RichVOs
-     * @return List of RichVOs found, empty list if nothing has been found.
-     */
-    List<RichVo> getCompleteRichVosHavingAttrs(List<InputAttribute> attrs);
-    
-    /* ATTRIBUTES */
-    
-    /**
-     * Get attributes of VO specified by ID. Only attributes with value are returned.
-     * @param id id of VO
-     * @param attrs attributes to be fetched, null for all attributes with value
-     * @return List of attributes, empty list if nothing has been found.
-     * @throws DatabaseIntegrityException More than one VO with same ID found.
-     */
-    List<PerunAttribute> getVoAttrs(Long id, List<String> attrs) throws DatabaseIntegrityException;
 }
