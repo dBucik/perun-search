@@ -14,9 +14,9 @@ public class UserMapper implements RowMapper<User> {
     @NotNull
     @Override
     public User mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("user"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapUser(json, new User());
+        return MappersUtils.mapUser(entityJson, new User());
     }
 
 }

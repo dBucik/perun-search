@@ -14,9 +14,9 @@ public class UserExtSourceMapper implements RowMapper<UserExtSource> {
     @NotNull
     @Override
     public UserExtSource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("userExtSource"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapUserExtSource(json, new UserExtSource());
+        return MappersUtils.mapUserExtSource(entityJson, new UserExtSource());
     }
 
 }

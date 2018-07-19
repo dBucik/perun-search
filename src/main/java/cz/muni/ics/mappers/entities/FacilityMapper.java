@@ -14,9 +14,9 @@ public class FacilityMapper implements RowMapper<Facility> {
     @NotNull
     @Override
     public Facility mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("facility"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapFacility(json, new Facility());
+        return MappersUtils.mapFacility(entityJson, new Facility());
     }
 
 }

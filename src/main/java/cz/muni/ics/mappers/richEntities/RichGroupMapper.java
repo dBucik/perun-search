@@ -14,11 +14,12 @@ public class RichGroupMapper implements RowMapper<RichGroup> {
     @NotNull
     @Override
     public RichGroup mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("group"));
-        RichGroup group = MappersUtils.mapGroup(json, new RichGroup());
-        group.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichGroup res = MappersUtils.mapGroup(entityJson, new RichGroup());
 
-        return group;
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+        return res;
     }
 
 }

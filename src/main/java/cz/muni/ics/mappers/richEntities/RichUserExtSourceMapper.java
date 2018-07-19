@@ -14,11 +14,12 @@ public class RichUserExtSourceMapper implements RowMapper<RichUserExtSource> {
     @NotNull
     @Override
     public RichUserExtSource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("userExtSource"));
-        RichUserExtSource ues = MappersUtils.mapUserExtSource(json, new RichUserExtSource());
-        ues.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichUserExtSource res = MappersUtils.mapUserExtSource(entityJson, new RichUserExtSource());
 
-        return ues;
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+        return res;
     }
 
 }

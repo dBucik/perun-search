@@ -14,9 +14,9 @@ public class VoMapper implements RowMapper<Vo> {
     @NotNull
     @Override
     public Vo mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("vo"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapVo(json, new Vo());
+        return MappersUtils.mapVo(entityJson, new Vo());
     }
 
 }

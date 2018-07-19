@@ -14,9 +14,9 @@ public class GroupMapper implements RowMapper<Group> {
     @NotNull
     @Override
     public Group mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("group"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapGroup(json, new Group());
+        return MappersUtils.mapGroup(entityJson, new Group());
     }
 
 }

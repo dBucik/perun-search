@@ -14,9 +14,9 @@ public class ServiceMapper implements RowMapper<Service> {
     @NotNull
     @Override
     public Service mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("service"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapService(json, new Service());
+        return MappersUtils.mapService(entityJson, new Service());
     }
 
 }

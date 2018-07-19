@@ -14,11 +14,12 @@ public class RichFacilityMapper implements RowMapper<RichFacility> {
     @NotNull
     @Override
     public RichFacility mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("facility"));
-        RichFacility facility = MappersUtils.mapFacility(json, new RichFacility());
-        facility.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichFacility res = MappersUtils.mapFacility(entityJson, new RichFacility());
 
-        return facility;
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+        return res;
     }
 
 }

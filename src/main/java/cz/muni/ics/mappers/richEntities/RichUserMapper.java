@@ -14,11 +14,12 @@ public class RichUserMapper implements RowMapper<RichUser> {
     @NotNull
     @Override
     public RichUser mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("user"));
-        RichUser user = MappersUtils.mapUser(json, new RichUser());
-        user.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichUser res = MappersUtils.mapUser(entityJson, new RichUser());
 
-        return user;
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+        return res;
     }
 
 }

@@ -37,4 +37,5 @@ public class GraphQLEndpoint extends SimpleGraphQLServlet {
                 .map(e -> e instanceof ExceptionWhileDataFetching ? new SanitizedError((ExceptionWhileDataFetching) e) : e)
                 .collect(Collectors.toList());
     }
+
 }

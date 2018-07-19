@@ -14,9 +14,9 @@ public class ResourceMapper implements RowMapper<Resource> {
     @NotNull
     @Override
     public Resource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("resource"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapResource(json, new Resource());
+        return MappersUtils.mapResource(entityJson, new Resource());
     }
 
 }

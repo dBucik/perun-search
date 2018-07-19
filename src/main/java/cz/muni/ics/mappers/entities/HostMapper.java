@@ -14,9 +14,9 @@ public class HostMapper implements RowMapper<Host> {
     @NotNull
     @Override
     public Host mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("host"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapHost(json, new Host());
+        return MappersUtils.mapHost(entityJson, new Host());
     }
 
 }

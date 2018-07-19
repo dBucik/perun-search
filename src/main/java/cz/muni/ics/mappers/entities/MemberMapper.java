@@ -14,9 +14,9 @@ public class MemberMapper implements RowMapper<Member> {
     @NotNull
     @Override
     public Member mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("member"));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapMember(json, new Member());
+        return MappersUtils.mapMember(entityJson, new Member());
     }
 
 }

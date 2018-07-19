@@ -11,7 +11,6 @@ import java.util.List;
 public class MappersUtils {
 
     public static <T extends ExtSource> T mapExtSource(JSONObject json, T extSource) {
-
         extSource.setId(json.getLong("id"));
 
         if (!(json.get("name") instanceof String)) {
@@ -136,6 +135,16 @@ public class MappersUtils {
         return member;
     }
 
+    public static Owner mapOwner(JSONObject json, Owner owner) {
+        owner.setId(json.getLong("id"));
+        owner.setName(json.getString("name"));
+        owner.setContact(json.getString("contact"));
+        owner.setStatus(json.getString("status"));
+        owner.setType(json.getString("type"));
+
+        return owner;
+    }
+
     public static <T extends Resource> T  mapResource(JSONObject json, T resource) {
         resource.setId(json.getLong("id"));
 
@@ -185,6 +194,8 @@ public class MappersUtils {
     }
 
     public static <T extends UserExtSource> T  mapUserExtSource(JSONObject json, T ues) {
+        ues.setId(json.getLong("id"));
+
         if (!(json.get("login_ext") instanceof String)) {
             ues.setLoginExt(json.get("login_ext").toString());
         } else {
@@ -278,15 +289,14 @@ public class MappersUtils {
         return vo;
     }
 
-    public static List<PerunAttribute> getAttributes(JSONArray attrsArray) {
+    public static List<PerunAttribute> getAttributes(JSONObject json) {
         List<PerunAttribute> attrs = new ArrayList<>();
 
-        for (int i = 0; i < attrsArray.length(); i++) {
-            JSONObject attrJson = attrsArray.getJSONObject(i);
-            String key = attrJson.getString("key");
+        for (String key: json.keySet()) {
+            JSONObject attrJson = json.getJSONObject(key);
             String type = attrJson.getString("type");
-            Object value = attrJson.get("val");
-            Object valueText = attrJson.get("val_text");
+            Object value = attrJson.get("value");
+            Object valueText = attrJson.get("value_text");
             
             PerunAttribute attr;
             if (value != null && !value.equals(JSONObject.NULL)) {
@@ -302,4 +312,5 @@ public class MappersUtils {
 
         return attrs;
     }
+
 }

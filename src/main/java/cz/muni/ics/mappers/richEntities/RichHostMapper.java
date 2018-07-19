@@ -14,11 +14,12 @@ public class RichHostMapper implements RowMapper<RichHost> {
     @NotNull
     @Override
     public RichHost mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("host"));
-        RichHost host = MappersUtils.mapHost(json, new RichHost());
-        host.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichHost res = MappersUtils.mapHost(entityJson, new RichHost());
 
-        return host;
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+        return res;
     }
 
 }

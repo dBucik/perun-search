@@ -14,9 +14,11 @@ public class RichExtSourceMapper implements RowMapper<RichExtSource> {
     @NotNull
     @Override
     public RichExtSource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("extSource"));
-        RichExtSource res = MappersUtils.mapExtSource(json, new RichExtSource());
-        res.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichExtSource res = MappersUtils.mapExtSource(entityJson, new RichExtSource());
+
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
 
         return res;
     }

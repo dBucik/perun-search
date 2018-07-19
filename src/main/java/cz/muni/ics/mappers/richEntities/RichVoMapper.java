@@ -14,11 +14,12 @@ public class RichVoMapper implements RowMapper<RichVo> {
     @NotNull
     @Override
     public RichVo mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("vo"));
-        RichVo vo = MappersUtils.mapVo(json, new RichVo());
-        vo.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichVo res = MappersUtils.mapVo(entityJson, new RichVo());
 
-        return vo;
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+        return res;
     }
 
 }

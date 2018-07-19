@@ -14,11 +14,12 @@ public class RichServiceMapper implements RowMapper<RichService> {
     @NotNull
     @Override
     public RichService mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-        JSONObject json = new JSONObject(rs.getString("service"));
-        RichService service = MappersUtils.mapService(json, new RichService());
-        service.setAttributes(MappersUtils.getAttributes(json.getJSONArray("attributes")));
+        JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        RichService res = MappersUtils.mapService(entityJson, new RichService());
 
-        return service;
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+        return res;
     }
 
 }
