@@ -8,6 +8,8 @@ import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.entities.Group;
 import cz.muni.ics.models.richEntities.RichGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -18,6 +20,8 @@ import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
 import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class GroupDAOImpl implements GroupDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(GroupDAOImpl.class);
 
 	private static final GroupMapper MAPPER = new GroupMapper();
 	private static final RichGroupMapper RICH_MAPPER = new RichGroupMapper();
@@ -35,6 +39,7 @@ public class GroupDAOImpl implements GroupDAO {
 		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.GROUP);
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
 	}
 
@@ -48,6 +53,7 @@ public class GroupDAOImpl implements GroupDAO {
 		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.GROUP);
 		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 
@@ -57,6 +63,7 @@ public class GroupDAOImpl implements GroupDAO {
 		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.GROUP);
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 	

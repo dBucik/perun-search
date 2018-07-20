@@ -9,6 +9,8 @@ import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.entities.ExtSource;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.richEntities.RichExtSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -19,6 +21,8 @@ import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
 import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class ExtSourceDAOImpl implements ExtSourceDAO {
+
+    private static final Logger log = LoggerFactory.getLogger(ExtSourceDAOImpl.class);
 
     private static final ExtSourceMapper MAPPER = new ExtSourceMapper();
     private static final RichExtSourceMapper RICH_MAPPER = new RichExtSourceMapper();
@@ -36,6 +40,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
         String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.EXT_SOURCE);
         Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
+        log.info("Executing query: {}, with params: {}", query, params);
         return jdbcTemplate.query(query, params, MAPPER);
     }
 
@@ -49,6 +54,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
         String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.EXT_SOURCE);
         Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
 
+        log.info("Executing query: {}, with params: {}", query, params);
         return jdbcTemplate.query(query, params, RICH_MAPPER);
     }
 
@@ -58,6 +64,7 @@ public class ExtSourceDAOImpl implements ExtSourceDAO {
         String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.EXT_SOURCE);
         Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
 
+        log.info("Executing query: {}, with params: {}", query, params);
         return jdbcTemplate.query(query, params, RICH_MAPPER);
     }
 

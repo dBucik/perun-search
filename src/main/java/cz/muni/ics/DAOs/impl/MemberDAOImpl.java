@@ -8,6 +8,8 @@ import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.entities.Member;
 import cz.muni.ics.models.richEntities.RichMember;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -18,6 +20,8 @@ import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
 import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class MemberDAOImpl implements MemberDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(MemberDAOImpl.class);
 
 	private static final MemberMapper MAPPER = new MemberMapper();
 	private static final RichMemberMapper RICH_MAPPER = new RichMemberMapper();
@@ -35,6 +39,7 @@ public class MemberDAOImpl implements MemberDAO {
 		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.MEMBER);
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
 	}
 
@@ -48,6 +53,7 @@ public class MemberDAOImpl implements MemberDAO {
 		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.MEMBER);
 		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 
@@ -57,6 +63,7 @@ public class MemberDAOImpl implements MemberDAO {
 		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.MEMBER);
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 	

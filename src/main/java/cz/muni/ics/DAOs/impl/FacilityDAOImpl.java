@@ -8,6 +8,8 @@ import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.entities.Facility;
 import cz.muni.ics.models.richEntities.RichFacility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -18,6 +20,8 @@ import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
 import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class FacilityDAOImpl implements FacilityDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(FacilityDAOImpl.class);
 
 	private static final FacilityMapper MAPPER = new FacilityMapper();
 	private static final RichFacilityMapper RICH_MAPPER = new RichFacilityMapper();
@@ -36,7 +40,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
-
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
 	}
 
@@ -50,6 +54,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.FACILITY);
 		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 
@@ -59,6 +64,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.FACILITY);
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 

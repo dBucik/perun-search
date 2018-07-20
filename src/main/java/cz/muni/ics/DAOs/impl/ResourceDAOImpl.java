@@ -8,6 +8,8 @@ import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.entities.Resource;
 import cz.muni.ics.models.richEntities.RichResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -18,6 +20,8 @@ import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
 import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class ResourceDAOImpl implements ResourceDAO {
+
+	private static final Logger log = LoggerFactory.getLogger(ResourceDAOImpl.class);
 
 	private static final ResourceMapper MAPPER = new ResourceMapper();
 	private static final RichResourceMapper RICH_MAPPER = new RichResourceMapper();
@@ -35,6 +39,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.RESOURCE);
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
 	}
 
@@ -48,6 +53,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.RESOURCE);
 		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 
@@ -57,6 +63,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.RESOURCE);
 		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
 
+		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
 	}
 	

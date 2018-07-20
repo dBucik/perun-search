@@ -4,13 +4,18 @@ import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MappersUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(MappersUtils.class);
+
     public static <T extends ExtSource> T mapExtSource(JSONObject json, T extSource) {
+        log.debug("Mapping ExtSource from json: {}", json);
         extSource.setId(json.getLong("id"));
 
         if (!(json.get("name") instanceof String)) {
@@ -25,10 +30,13 @@ public class MappersUtils {
             extSource.setType(json.getString("type"));
         }
 
+        log.debug("Mapped ExtSource: {}", extSource);
         return extSource;
     }
 
     public static <T extends Facility> T mapFacility(JSONObject json, T facility) {
+        log.debug("Mapping ExtSource from json: {}", json);
+
         facility.setId(json.getLong("id"));
 
         if (!(json.get("name") instanceof String)) {
@@ -43,10 +51,13 @@ public class MappersUtils {
             facility.setDescription(json.getString("dsc"));
         }
 
+        log.debug("Mapped ExtSource: {}", facility);
         return facility;
     }
 
     public static <T extends Group> T  mapGroup(JSONObject json, T group) {
+        log.debug("Mapping Group from json: {}", json);
+
         group.setId(json.getLong("id"));
 
         if (!(json.get("name") instanceof String)) {
@@ -73,10 +84,12 @@ public class MappersUtils {
             group.setParentGroupId(json.getLong("parent_group_id"));
         }
 
+        log.debug("Mapped Group: {}", group);
         return group;
     }
 
     public static <T extends Host> T  mapHost(JSONObject json, T host) {
+        log.debug("Mapping Host from json: {}", json);
 
         host.setId(json.getLong("id"));
 
@@ -98,10 +111,13 @@ public class MappersUtils {
             host.setFacilityId(json.getLong("facility_id"));
         }
 
+        log.debug("Mapped Host: {}", host);
         return host;
     }
 
     public static <T extends Member> T  mapMember(JSONObject json, T member) {
+        log.debug("Mapping Member from json: {}", json);
+
         member.setId(json.getLong("id"));
 
         if (!(json.get("status") instanceof String)) {
@@ -132,20 +148,26 @@ public class MappersUtils {
             member.setSponsored(true);
         }
 
+        log.debug("Mapped Member: {}", member);
         return member;
     }
 
     public static Owner mapOwner(JSONObject json, Owner owner) {
+        log.debug("Mapping Owner from json: {}", json);
+
         owner.setId(json.getLong("id"));
         owner.setName(json.getString("name"));
         owner.setContact(json.getString("contact"));
         owner.setStatus(json.getString("status"));
         owner.setType(json.getString("type"));
 
+        log.debug("Mapped Owner: {}", owner);
         return owner;
     }
 
     public static <T extends Resource> T  mapResource(JSONObject json, T resource) {
+        log.debug("Mapping Resource from json: {}", json);
+
         resource.setId(json.getLong("id"));
 
         if (!(json.get("name") instanceof String)) {
@@ -172,10 +194,13 @@ public class MappersUtils {
             resource.setVoId(json.getLong("vo_id"));
         }
 
+        log.debug("Mapped Resource: {}", resource);
         return resource;
     }
 
     public static <T extends Service> T  mapService(JSONObject json, T service) {
+        log.debug("Mapping Service from json: {}", json);
+
         service.setId(json.getLong("id"));
 
         if (!(json.get("name") instanceof String)) {
@@ -190,10 +215,13 @@ public class MappersUtils {
             service.setOwnerId(json.getLong("owner_id"));
         }
 
+        log.debug("Mapped Service: {}", service);
         return service;
     }
 
     public static <T extends UserExtSource> T  mapUserExtSource(JSONObject json, T ues) {
+        log.debug("Mapping UserExtSource from json: {}", json);
+
         ues.setId(json.getLong("id"));
 
         if (!(json.get("login_ext") instanceof String)) {
@@ -220,10 +248,13 @@ public class MappersUtils {
             ues.setLoa(json.getNumber("loa").shortValue());
         }
 
+        log.debug("Mapped UserExtSource: {}", ues);
         return ues;
     }
 
     public static <T extends User> T  mapUser(JSONObject json, T user) {
+        log.debug("Mapping User from json: {}", json);
+
         user.setId(json.getLong("id"));
 
         if (!(json.get("first_name") instanceof String)) {
@@ -268,10 +299,13 @@ public class MappersUtils {
             user.setSponsoredAcc(true);
         }
 
+        log.debug("Mapped User: {}", user);
         return user;
     }
 
     public static <T extends Vo> T  mapVo(JSONObject json, T vo) {
+        log.debug("Mapping Vo from json: {}", json);
+
         vo.setId(json.getLong("id"));
 
         if (!(json.get("name") instanceof String)) {
@@ -286,10 +320,12 @@ public class MappersUtils {
             vo.setShortName(json.getString("short_name"));
         }
 
+        log.debug("Mapped Vo: {}", vo);
         return vo;
     }
 
     public static List<PerunAttribute> getAttributes(JSONObject json) {
+        log.debug("Get attributes from json: {}", json);
         List<PerunAttribute> attrs = new ArrayList<>();
 
         for (String key: json.keySet()) {
@@ -310,6 +346,7 @@ public class MappersUtils {
             }
         }
 
+        log.debug("Mapped attributes: {}", attrs);
         return attrs;
     }
 

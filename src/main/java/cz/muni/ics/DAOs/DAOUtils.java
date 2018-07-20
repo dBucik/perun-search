@@ -3,6 +3,8 @@ package cz.muni.ics.DAOs;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.attributes.InputAttributeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -13,11 +15,14 @@ import java.util.StringJoiner;
 
 public class DAOUtils {
 
+	private static final Logger log = LoggerFactory.getLogger(DAOUtils.class);
+
 	private static Properties dbTablesProperties;
-	private static String MATCH_TEXT = "LIKE";
-	private static String MATCH_TYPE = "=";
-	private static String GET_AS_TEXT = "->>";
-	private static String GET_AS_TYPE = "->";
+
+	private static final String MATCH_TEXT = "LIKE";
+	private static final String MATCH_TYPE = "=";
+	private static final String GET_AS_TEXT = "->>";
+	private static final String GET_AS_TYPE = "->";
 
 	public static final String NO_WHERE = null;
 	public static final List<String> NO_ATTRS_NAMES = null;
@@ -25,25 +30,31 @@ public class DAOUtils {
 	public static final List<InputAttribute> NO_ATTRS = null;
 
 	static {
+		log.debug("Reading db_tables.properties");
 		dbTablesProperties = new Properties();
 		try {
 			dbTablesProperties.load(
 					Thread.currentThread().getContextClassLoader().getResourceAsStream("db_tables.properties")
 			);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Cannot read db_tables.properties. Reason: {}", e);
+			throw new RuntimeException("Cannot read db_tables.properties");
 		}
 	}
 
 	public static String simpleQueryBuilder(String where, PerunEntityType type) {
+		log.trace("Building simple query (where: {}, type: {})", where, type);
 		return queryBuilder(true, null, where, type);
 	}
 
 	public static String complexQueryBuilder(String innerWhere, String outerWhere, PerunEntityType type) {
+		log.trace("Building complex query (innerWhere: {}, outerWhere: {}, type: {})", innerWhere, outerWhere, type);
 		return queryBuilder(false, innerWhere, outerWhere, type);
 	}
 
 	private static String queryBuilder(boolean isSimple, String innerWhere, String outerWhere, PerunEntityType type) {
+		log.trace("Building query (isSimple: {}, innerWhere: {}, outerWhere: {}, type: {}",
+				isSimple, innerWhere, outerWhere, type);
 		String prefix = getEntityPrefix(type);
 
 		String entityTable = dbTablesProperties.getProperty(prefix + ".entityTable");
@@ -61,7 +72,8 @@ public class DAOUtils {
 			query.append(" JOIN (") // select attributes and build JSON
 					.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
 					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type)) AS data")
-					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames).append(" an ON av.attr_id = an.id");
+					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
+					.append(" an ON av.attr_id = an.id");
 			if (!Objects.equals(innerWhere, NO_WHERE)) { // select specific attributes by names
 				query.append(' ').append(innerWhere);
 			}
@@ -72,13 +84,15 @@ public class DAOUtils {
 			query.append(' ').append(outerWhere);
 		}
 
-
+		log.trace("Built query: {}", query.toString());
 		return query.toString();
 	}
 
 	public static String innerWhereBuilder(int namesCount) {
+		log.trace("Building inner where (namesCount: {})", namesCount);
 		if (namesCount <= NO_ATTRS_NAMES_COUNT) {
-			return null;
+			log.trace("No attrs_names provided, returning NULL");
+			return NO_WHERE;
 		}
 
 		String query = "WHERE ";
@@ -87,11 +101,14 @@ public class DAOUtils {
 			sj.add("friendly_name = ?");
 		}
 
+		log.trace("Built inner WHERE: {}", query + sj.toString());
 		return query + sj.toString();
 	}
 
 	public static String outerWhereBuilder(List<InputAttribute> core, List<InputAttribute> attrs) {
+		log.trace("Building outer where (core: {}, attrs: {})", core, attrs);
 		if ((core == null || core.isEmpty()) && (attrs == null || attrs.isEmpty())) {
+			log.trace("No attrs provided, returning NULL");
 			return null;
 		}
 
@@ -99,33 +116,34 @@ public class DAOUtils {
 		StringJoiner sj = new StringJoiner(" AND ");
 		if (core != null) {
 			for (InputAttribute a : core) {
-				String op = resolveMatchOperator(a.getType1());
+				String op = resolveMatchOperator(a.getAttributeType());
 				sj.add("ent." + a.getKey() + ' ' + op + " ?"); // TODO: escape name to prevent SQL injection
 			}
 		}
 
 		if (attrs != null) {
 			for (InputAttribute a : attrs) {
-				String op1 = resolveFetchOperator(a.getType1());
-				String op2 = resolveMatchOperator(a.getType1());
+				String op1 = resolveFetchOperator(a.getAttributeType());
+				String op2 = resolveMatchOperator(a.getAttributeType());
 				sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " ?"); // TODO: escape name to prevent SQL injection
 			}
 		}
 
+		log.trace("Built outer WHERE: {}", query + sj.toString());
 		return query + sj.toString();
 	}
 
 	public static Object[] buildParams(List<String> attrsNames, List<InputAttribute> core, List<InputAttribute> attrs) {
+		log.trace("Building params array (attrsNames: {}, core: {}, attrs: {})");
+
 		List<Object> params = new LinkedList<>();
 		if (attrsNames != NO_ATTRS_NAMES) {
 			params.addAll(attrsNames); // add attributes names to be fetched
-
 		}
 
 		if (attrs != NO_ATTRS) {
 			for (InputAttribute a: attrs) {
 				params.add(a.getKey()); // add attributes names to be fetched and later used in outer WHERE
-
 			}
 		}
 
@@ -137,18 +155,19 @@ public class DAOUtils {
 			params.addAll(addValuesFromInputAttrs(attrs));
 		}
 
+		log.trace("Built params: {}", params);
 		return params.toArray();
 	}
 
 	private static List<Object> addValuesFromInputAttrs(List<InputAttribute> attrs) {
 		List<Object> res = new LinkedList<>();
 		for (InputAttribute a: attrs) {
-			String op = resolveMatchOperator(a.getType1());
+			String op = resolveMatchOperator(a.getAttributeType());
 			if (op.equals(MATCH_TEXT)) {
 				res.add('%' + a.getValue() + '%');
 
 			} else {
-				Object val = resolveTrueValue(a.getType1(), a.getValue());
+				Object val = resolveTrueValue(a.getAttributeType(), a.getValue());
 
 				res.add(val);
 			}
