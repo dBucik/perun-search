@@ -1,5 +1,6 @@
 package cz.muni.ics.mappers;
 
+import cz.muni.ics.models.Relation;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.*;
 import org.json.JSONArray;
@@ -322,6 +323,20 @@ public class MappersUtils {
 
         log.debug("Mapped Vo: {}", vo);
         return vo;
+    }
+
+    public static Relation mapRelation(JSONObject json, Relation relation) {
+        log.debug("Mapping Relation from json: {}", json);
+
+        relation.setType(Relation.resolveType(json.getString("rel_type")));
+        String priEntityKey = Relation.resolvePrimaryEntityKeyFromRelationType(relation.getType());
+        String secEntityKey = Relation.resolveSecondaryEntityKeyFromRelationType(relation.getType());
+
+        relation.setPrimaryEntityId(json.getLong(priEntityKey));
+        relation.setSecondaryEntity(json.getLong(secEntityKey));
+
+        log.debug("Mapped Relation: {}", relation);
+        return relation;
     }
 
     public static List<PerunAttribute> getAttributes(JSONObject json) {

@@ -24,24 +24,24 @@ import java.util.List;
 
 public class Relation {
 
-    private PerunEntity primaryEntity;
-    private PerunEntity secondaryEntity;
+    private Long primaryEntityId;
+    private Long secondaryEntity;
     private RelationType type;
-    private List<PerunAttribute> attrs;
+    private List<PerunAttribute> attributes;
 
-    public PerunEntity getPrimaryEntity() {
-        return primaryEntity;
+    public Long getPrimaryEntityId() {
+        return primaryEntityId;
     }
 
-    public void setPrimaryEntity(PerunEntity primaryEntity) {
-        this.primaryEntity = primaryEntity;
+    public void setPrimaryEntityId(Long primaryEntityId) {
+        this.primaryEntityId = primaryEntityId;
     }
 
-    public PerunEntity getSecondaryEntity() {
+    public Long getSecondaryEntity() {
         return secondaryEntity;
     }
 
-    public void setSecondaryEntity(PerunEntity secondaryEntity) {
+    public void setSecondaryEntity(Long secondaryEntity) {
         this.secondaryEntity = secondaryEntity;
     }
 
@@ -53,136 +53,85 @@ public class Relation {
         this.type = type;
     }
 
-    public List<PerunAttribute> getAttrs() {
-        return attrs;
+    public List<PerunAttribute> getAttributes() {
+        return attributes;
     }
 
-    public void setAttrs(List<PerunAttribute> attrs) {
-        this.attrs = attrs;
+    public void setAttributes(List<PerunAttribute> attributes) {
+        this.attributes = attributes;
     }
 
-    public Vo getPrimaryAsVo() {
-        if (primaryEntity instanceof Vo) {
-            return (Vo) primaryEntity;
+    public static RelationType resolveType(String type) {
+        switch (type.toUpperCase()) {
+            case "VO_EXT_SOURCE":
+                return RelationType.VO_EXT_SOURCE;
+            case "GROUP_EXT_SOURCE":
+                return RelationType.GROUP_EXT_SOURCE;
+            case "USER_FACILITY":
+                return RelationType.USER_FACILITY;
+            case "RESOURCE_SERVICE":
+                return RelationType.RESOURCE_SERVICE;
+            case "MEMBER_RESOURCE":
+                return RelationType.MEMBER_RESOURCE;
+            case "GROUP_RESOURCE":
+                return RelationType.GROUP_RESOURCE;
+            case "MEMBER_GROUP":
+                return RelationType.MEMBER_GROUP;
+            case "GROUP_GROUP":
+                return RelationType.GROUP_GROUP;
+            case "GROUP_MEMBER":
+                return RelationType.GROUP_MEMBER;
+            case "FACILITY_OWNER":
+                return RelationType.FACILITY_OWNER;
+            default:
+                return null;
         }
-        return null;
     }
 
-    public RichVo getPrimaryAsRichVo() {
-        if (primaryEntity instanceof RichVo) {
-            return (RichVo) primaryEntity;
+    public static String resolvePrimaryEntityKeyFromRelationType(RelationType type) {
+        switch (type) {
+            case VO_EXT_SOURCE:
+                return "vo_id";
+            case USER_FACILITY:
+                return "user_id";
+            case RESOURCE_SERVICE:
+                return "resource_id";
+            case MEMBER_GROUP:
+            case MEMBER_RESOURCE:
+                return "member_id";
+            case GROUP_EXT_SOURCE:
+            case GROUP_GROUP:
+            case GROUP_MEMBER:
+            case GROUP_RESOURCE:
+                return "group_id";
+            case FACILITY_OWNER:
+                return "facility_id";
+            default:
+                return null;
         }
-        return null;
     }
 
-    public User getPrimaryAsUser() {
-        if (primaryEntity instanceof User) {
-            return (User) primaryEntity;
+    public static String resolveSecondaryEntityKeyFromRelationType(RelationType type) {
+        switch (type) {
+            case VO_EXT_SOURCE:
+            case GROUP_EXT_SOURCE:
+                return "ext_source_id";
+            case USER_FACILITY:
+                return "facility_id";
+            case RESOURCE_SERVICE:
+                return "service_id";
+            case MEMBER_RESOURCE:
+            case GROUP_RESOURCE:
+                return "resource_id";
+            case MEMBER_GROUP:
+            case GROUP_GROUP:
+                return "group_id";
+            case GROUP_MEMBER:
+                return "member_id";
+            case FACILITY_OWNER:
+                return "owner_id";
+            default:
+                return null;
         }
-        return null;
     }
-
-    public RichUser getPrimaryAsRichUser() {
-        if (primaryEntity instanceof RichUser) {
-            return (RichUser) primaryEntity;
-        }
-        return null;
-    }
-
-    public Resource getPrimaryAsResource() {
-        if (primaryEntity instanceof Resource) {
-            return (Resource) primaryEntity;
-        }
-        return null;
-    }
-
-    public RichResource getPrimaryAsRichResource() {
-        if (primaryEntity instanceof RichResource) {
-            return (RichResource) primaryEntity;
-        }
-        return null;
-    }
-
-    public Group getPrimaryAsGroup() {
-        if (primaryEntity instanceof Group) {
-            return (Group) primaryEntity;
-        }
-        return null;
-    }
-
-    public RichGroup getPrimaryAsRichGroup() {
-        if (primaryEntity instanceof RichGroup) {
-            return (RichGroup) primaryEntity;
-        }
-        return null;
-    }
-
-    public Facility getPrimaryAsFacility() {
-        if (primaryEntity instanceof Facility) {
-            return (Facility) primaryEntity;
-        }
-        return null;
-    }
-
-    public RichFacility getPrimaryAsRichFacility() {
-        if (primaryEntity instanceof RichFacility) {
-            return (RichFacility) primaryEntity;
-        }
-        return null;
-    }
-
-    /* GET SECONDARY */
-
-    public ExtSource getSecondaryAsExtSource() {
-        return null;
-    }
-
-    public RichExtSource getSecondaryAsRichExtSource() {
-        return null;
-    }
-
-    public Resource getSecondaryAsResource() {
-        return null;
-    }
-
-    public RichResource getSecondaryAsRichResource() {
-        return null;
-    }
-
-    public Service getSecondaryAsService() {
-        return null;
-    }
-
-    public RichService getSecondaryAsRichService() {
-        return null;
-    }
-
-    public Facility getSecondaryAsFacility() {
-        return null;
-    }
-
-    public RichFacility getSecondaryAsRichFacility() {
-        return null;
-    }
-
-    public Group getSecondaryAsGroup() {
-        return null;
-    }
-
-    public RichGroup getSecondaryAsRichGroup() {
-        return null;
-    }
-
-    public Member getSecondaryAsMember() {
-        return null;
-    }
-
-    public RichMember getSecondaryAsRichMember() {
-        return null;
-    }
-
-    public Owner getSecondaryAsOwner() {
-        return null;
-    }
-
 }
