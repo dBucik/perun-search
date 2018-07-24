@@ -10,6 +10,13 @@
   <packaging>war</packaging>
 
   <dependencies>
+    <!-- LOGBACK -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
     <!-- SPRING DATA -->
     <dependency>
       <groupId>org.springframework.data</groupId>
