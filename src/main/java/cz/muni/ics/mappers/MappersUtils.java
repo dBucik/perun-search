@@ -3,11 +3,12 @@ package cz.muni.ics.mappers;
 import cz.muni.ics.models.Relation;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -325,15 +326,15 @@ public class MappersUtils {
         return vo;
     }
 
-    public static Relation mapRelation(JSONObject json, Relation relation) {
-        log.debug("Mapping Relation from json: {}", json);
+    public static Relation mapRelation(ResultSet rs, Relation relation) throws SQLException {
+        log.debug("Mapping Relation from resultSet: {}", rs);
 
-        relation.setType(Relation.resolveType(json.getString("rel_type")));
-        String priEntityKey = Relation.resolvePrimaryEntityKeyFromRelationType(relation.getType());
-        String secEntityKey = Relation.resolveSecondaryEntityKeyFromRelationType(relation.getType());
+        relation.setType(rs.getString("rel_type"));
+        String priEntityKey = Relation.resolvePrimaryEntityKeyFromRelationType(relation.getTrueType());
+        String secEntityKey = Relation.resolveSecondaryEntityKeyFromRelationType(relation.getTrueType());
 
-        relation.setPrimaryEntityId(json.getLong(priEntityKey));
-        relation.setSecondaryEntity(json.getLong(secEntityKey));
+        relation.setPrimaryEntityId(rs.getLong(priEntityKey));
+        relation.setSecondaryEntityId(rs.getLong(secEntityKey));
 
         log.debug("Mapped Relation: {}", relation);
         return relation;

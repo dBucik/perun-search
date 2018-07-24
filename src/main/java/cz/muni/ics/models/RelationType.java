@@ -9,7 +9,6 @@ public enum RelationType {
     MEMBER_GROUP,
     GROUP_RESOURCE,
     GROUP_MEMBER,
-    GROUP_GROUP,
     GROUP_EXT_SOURCE,
     FACILITY_OWNER
 }

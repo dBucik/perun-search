@@ -26,6 +26,7 @@ public class Query implements GraphQLRootResolver {
     private final MemberDAO memberDAO;
     private final OwnerDAO ownerDAO;
     private final ResourceDAO resourceDAO;
+    private final RelationsDAO relationsDAO;
     private final ServiceDAO serviceDAO;
     private final UserDAO userDAO;
     private final UserExtSourceDAO userExtSourceDAO;
@@ -33,7 +34,7 @@ public class Query implements GraphQLRootResolver {
 
     public Query(ExtSourceDAO extSourceDAO, GroupDAO groupDAO, FacilityDAO facilityDAO,
                  HostDAO hostDAO, MemberDAO memberDAO,
-                 OwnerDAO ownerDAO, ResourceDAO resourceDAO,
+                 OwnerDAO ownerDAO, ResourceDAO resourceDAO, RelationsDAO relationsDAO,
                  ServiceDAO serviceDAO, UserDAO userDAO,
                  UserExtSourceDAO userExtSourceDAO, VoDAO voDAO) {
 
@@ -43,6 +44,7 @@ public class Query implements GraphQLRootResolver {
         this.hostDAO = hostDAO;
         this.memberDAO = memberDAO;
         this.ownerDAO = ownerDAO;
+        this.relationsDAO = relationsDAO;
         this.resourceDAO = resourceDAO;
         this.serviceDAO = serviceDAO;
         this.userDAO = userDAO;
@@ -234,6 +236,27 @@ public class Query implements GraphQLRootResolver {
     public List<RichVo> getCompleteRichVos(List<InputAttribute> core, List<InputAttribute> attrs) {
         log.info("getCompleteRichVos (core: {}, attrs: {})", core, attrs);
         return voDAO.getCompleteRichVos(core, attrs);
+    }
+
+    /* RELATIONS */
+
+    public List<Relation> getRelations(String type, InputAttribute primary, InputAttribute secondary) {
+        log.info("getRelations (type: {}, primary: {}, secondary: {})", type, primary, secondary);
+        return relationsDAO.getRelations(type, primary, secondary);
+    }
+
+    public List<Relation> getRichRelations(String type, InputAttribute primary, InputAttribute secondary,
+                                           List<String> attrsNames, List<InputAttribute> attrs) {
+        log.info("getRichRelations (type: {}, primary: {}, secondary: {}, attrsNames: {}, attrs: {})",
+                type, primary, secondary, attrsNames, attrs);
+        return relationsDAO.getRichRelations(type, primary, secondary, attrsNames, attrs);
+    }
+
+    public List<Relation> getCompleteRichRelations(String type, InputAttribute primary, InputAttribute secondary,
+                                                   List<InputAttribute> attrs) {
+        log.info("getCompleteRichRelations (type: {}, primary: {}, secondary: {}, attrs: {})",
+                type, primary, secondary, attrs);
+        return relationsDAO.getCompleteRichRelations(type, primary, secondary, attrs);
     }
 
 }

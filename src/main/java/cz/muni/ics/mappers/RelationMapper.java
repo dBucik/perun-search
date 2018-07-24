@@ -13,10 +13,10 @@ public class RelationMapper implements RowMapper<Relation> {
 	@NotNull
 	@Override
 	public Relation mapRow(@NotNull ResultSet rs, int i) throws SQLException {
-		JSONObject entityJson = new JSONObject(rs.getString("relation"));
-		Relation res = MappersUtils.mapRelation(entityJson, new Relation());
 
-		JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
+		Relation res = MappersUtils.mapRelation(rs, new Relation());
+
+		JSONObject attrsJson = new JSONObject(rs.getString("attributes"));
 		res.setAttributes(MappersUtils.getAttributes(attrsJson));
 
 		return res;

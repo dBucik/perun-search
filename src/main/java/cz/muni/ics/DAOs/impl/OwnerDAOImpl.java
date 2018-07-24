@@ -32,7 +32,7 @@ public class OwnerDAOImpl implements OwnerDAO {
 	public List<Owner> getOwners(List<InputAttribute> core) {
 		String where = DAOUtils.outerWhereBuilder(core, null);
 		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.OWNER);
-		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
+		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);

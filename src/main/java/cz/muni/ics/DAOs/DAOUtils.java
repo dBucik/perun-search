@@ -2,6 +2,8 @@ package cz.muni.ics.DAOs;
 
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
+import cz.muni.ics.models.Relation;
+import cz.muni.ics.models.RelationType;
 import cz.muni.ics.models.attributes.InputAttributeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,15 +46,38 @@ public class DAOUtils {
 
 	public static String simpleQueryBuilder(String where, PerunEntityType type) {
 		log.trace("Building simple query (where: {}, type: {})", where, type);
-		return queryBuilder(true, null, where, type);
+		return entityQueryBuilder(true, null, where, type);
 	}
 
 	public static String complexQueryBuilder(String innerWhere, String outerWhere, PerunEntityType type) {
 		log.trace("Building complex query (innerWhere: {}, outerWhere: {}, type: {})", innerWhere, outerWhere, type);
-		return queryBuilder(false, innerWhere, outerWhere, type);
+		return entityQueryBuilder(false, innerWhere, outerWhere, type);
 	}
 
-	private static String queryBuilder(boolean isSimple, String innerWhere, String outerWhere, PerunEntityType type) {
+	public static String relationQueryBuilder(String where, RelationType type) {
+		log.trace("Building relation query (where: {}, type: {}", where, type);
+		String prefix = getRelationPrefix(type);
+
+		String relationTable = dbTablesProperties.getProperty(prefix + ".relationTable");
+		String primaryEntityId = dbTablesProperties.getProperty(prefix + ".primaryEntityId");
+		String secondaryEntityId = dbTablesProperties.getProperty(prefix + ".secondaryEntityId");
+		String attrNames = dbTablesProperties.getProperty(prefix + ".attrNamesTable");
+
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT ? AS rel_type, ").append(primaryEntityId).append(", ").append(secondaryEntityId).append(",")
+				.append(" json_object_agg(friendly_name, json_build_object(")
+				.append("'value', attr_value, 'value_text', attr_value_text, 'type', type)) AS attributes")
+				.append(" FROM ").append(relationTable).append(" av JOIN ").append(attrNames).append(" an ON av.attr_id = an.id");
+		if (!Objects.equals(where, NO_WHERE)) {
+			query.append(' ').append(where);
+		}
+		query.append(" GROUP BY ").append(primaryEntityId).append(", ").append(secondaryEntityId);
+
+		log.trace("Built query: {}", query.toString());
+		return query.toString();
+	}
+
+	private static String entityQueryBuilder(boolean isSimple, String innerWhere, String outerWhere, PerunEntityType type) {
 		log.trace("Building query (isSimple: {}, innerWhere: {}, outerWhere: {}, type: {}",
 				isSimple, innerWhere, outerWhere, type);
 		String prefix = getEntityPrefix(type);
@@ -133,7 +158,49 @@ public class DAOUtils {
 		return query + sj.toString();
 	}
 
-	public static Object[] buildParams(List<String> attrsNames, List<InputAttribute> core, List<InputAttribute> attrs) {
+	public static String relationWhereBuilder(RelationType type, InputAttribute primary, InputAttribute secondary,
+											  int namesCount, List<InputAttribute> attrs) {
+		log.trace("Building relation where (type: {}, primary: {}, secondary: {}, attrs: {})", type, primary, secondary, attrs);
+		if ((primary == null) && (secondary == null) && (attrs == null || attrs.isEmpty())) {
+			log.trace("No attrs provided, returning NULL");
+			return null;
+		}
+
+		String query = "WHERE ";
+		StringJoiner sj = new StringJoiner(" AND ");
+		StringJoiner sub = new StringJoiner(" OR ");
+
+		if (primary != null) {
+			String primaryId = Relation.resolvePrimaryEntityKeyFromRelationType(type);
+			String op = resolveMatchOperator(primary.getAttributeType());
+			sj.add(primaryId + " " + op + " ?");
+		}
+
+		if (secondary != null) {
+			String secondaryId = Relation.resolveSecondaryEntityKeyFromRelationType(type);
+			String op = resolveMatchOperator(secondary.getAttributeType());
+			sj.add(secondaryId + " " + op + " ?");
+		}
+
+		if (namesCount > NO_ATTRS_NAMES_COUNT) {
+			for (int i = 0; i < namesCount; i++) {
+				sub.add("(friendly_name = ?)");
+			}
+		}
+
+		if (attrs != null) {
+			for (InputAttribute a : attrs) {
+				String op = resolveMatchOperator(a.getAttributeType());
+				sub.add("((friendly_name = ?) AND (attr_value" + op + "?) OR (attr_value_text" + op + "?))");
+			}
+		}
+
+		sj.add(sub.toString());
+		log.trace("Built outer WHERE: {}", query + sj.toString());
+		return query + sj.toString();
+	}
+
+	public static Object[] buildEntityParams(List<String> attrsNames, List<InputAttribute> core, List<InputAttribute> attrs) {
 		log.trace("Building params array (attrsNames: {}, core: {}, attrs: {})");
 
 		List<Object> params = new LinkedList<>();
@@ -157,6 +224,34 @@ public class DAOUtils {
 
 		log.trace("Built params: {}", params);
 		return params.toArray();
+	}
+
+	public static Object[] buildRelationParams(String type, InputAttribute primary, InputAttribute secondary, List<String> attrsNames,
+											   List<InputAttribute> attrs) {
+		List<Object> res = new LinkedList<>();
+
+		res.add(type);
+
+		if (primary != null) {
+			res.add(resolveTrueValue(primary.getAttributeType(), primary.getValue()));
+		}
+
+		if (secondary != null) {
+			res.add(resolveTrueValue(secondary.getAttributeType(), secondary.getValue()));
+		}
+
+		if (attrsNames != NO_ATTRS_NAMES) {
+			res.addAll(attrsNames);
+		}
+
+		if (attrs != NO_ATTRS) {
+			for (InputAttribute a: attrs) {
+				res.add(a.getKey());
+				res.add(resolveTrueValue(a.getAttributeType(), a.getValue()));
+			}
+		}
+
+		return res.toArray();
 	}
 
 	private static List<Object> addValuesFromInputAttrs(List<InputAttribute> attrs) {
@@ -201,6 +296,21 @@ public class DAOUtils {
 			case RESOURCE: return "resource";
 			case EXT_SOURCE: return "extSource";
 			case USER_EXT_SOURCE: return "userExtSource";
+			default: return "";
+		}
+	}
+
+	private static String getRelationPrefix(RelationType type) {
+		switch(type) {
+			case FACILITY_OWNER: return "facility_owner";
+			case GROUP_MEMBER: return "group_member";
+			case GROUP_RESOURCE: return "group_resource";
+			case MEMBER_GROUP: return "member_group";
+			case MEMBER_RESOURCE: return "member_resource";
+			case RESOURCE_SERVICE: return "resource_service";
+			case USER_FACILITY: return "user_facility";
+			case GROUP_EXT_SOURCE: return "group_ext_source";
+			case VO_EXT_SOURCE: return "vo_ext_source";
 			default: return "";
 		}
 	}

@@ -38,7 +38,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 		String where = DAOUtils.outerWhereBuilder(core, null);
 		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.FACILITY);
 
-		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
+		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
@@ -52,7 +52,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 		String innerWhere = DAOUtils.innerWhereBuilder(size);
 		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
 		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.FACILITY);
-		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
+		Object[] params = DAOUtils.buildEntityParams(attrsNames, core, attrs);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
@@ -62,7 +62,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 	public List<RichFacility> getCompleteRichFacilities(List<InputAttribute> core, List<InputAttribute> attrs) {
 		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
 		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.FACILITY);
-		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
+		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, attrs);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);

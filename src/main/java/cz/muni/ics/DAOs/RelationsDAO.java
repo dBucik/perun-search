@@ -10,11 +10,12 @@ public interface RelationsDAO {
 
     void setDataSource(DataSource dataSource);
 
-    List<Relation> getRelations(String relType, List<InputAttribute> core);
+    List<Relation> getRelations(String relType, InputAttribute primary, InputAttribute secondary);
 
-    List<Relation> getRichRelations(String relType,List<InputAttribute> core,
-                                    List<InputAttribute> attrs, List<String> attrsNames);
+    List<Relation> getRichRelations(String relType, InputAttribute primary, InputAttribute secondary,
+                                    List<String> attrsNames, List<InputAttribute> attrs);
 
-    List<Relation> getCompleteRichRelations(String relType, List<InputAttribute> core, List<InputAttribute> attrs);
+    List<Relation> getCompleteRichRelations(String relType, InputAttribute primary, InputAttribute secondary,
+                                            List<InputAttribute> attrs);
 
 }

@@ -37,7 +37,7 @@ public class MemberDAOImpl implements MemberDAO {
 	public List<Member> getMembers(List<InputAttribute> core) {
 		String where = DAOUtils.outerWhereBuilder(core, null);
 		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.MEMBER);
-		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
+		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
@@ -51,7 +51,7 @@ public class MemberDAOImpl implements MemberDAO {
 		String innerWhere = DAOUtils.innerWhereBuilder(size);
 		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
 		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.MEMBER);
-		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
+		Object[] params = DAOUtils.buildEntityParams(attrsNames, core, attrs);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
@@ -61,7 +61,7 @@ public class MemberDAOImpl implements MemberDAO {
 	public List<RichMember> getCompleteRichMembers(List<InputAttribute> core, List<InputAttribute> attrs) {
 		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
 		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.MEMBER);
-		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
+		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, attrs);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);

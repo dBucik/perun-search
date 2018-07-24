@@ -179,6 +179,13 @@ type RichVo {
     attributes: [PerunAttribute!]!
 }
 
+type Relation {
+    primaryEntityId: Long!
+    secondaryEntityId: Long!
+    type: String!
+    attributes: [PerunAttribute!]
+}
+
 type Query {
     # EXT_SOURCE
     getExtSources(core: [InputAttribute]): [ExtSource]
@@ -228,6 +235,10 @@ type Query {
     getRichVos(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichVo]
     getCompleteRichVos(core: [InputAttribute], attrs: [InputAttribute]): [RichVo]
 
+    # RELATIONS
+    getRelations(type: String!, primary: InputAttribute, secondary: InputAttribute): [Relation]
+    getRichRelations(type: String!, primary: InputAttribute, secondary: InputAttribute, attrsNames: [String!], attrs: [InputAttribute]): [Relation]
+    getCompleteRichRelations(type: String!, primary: InputAttribute, secondary: InputAttribute, attrs: [InputAttribute]): [Relation]
 }
 
 schema {

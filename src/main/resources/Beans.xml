@@ -61,6 +61,10 @@
         <property name = "dataSource" ref="dataSource" />
     </bean>
 
+    <bean id="relationDAO" class="cz.muni.ics.DAOs.impl.RelationsDAOImpl">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
     <bean id="query" class="cz.muni.ics.models.Query">
         <constructor-arg name="extSourceDAO" ref="extSourceDAO" />
         <constructor-arg name="facilityDAO" ref="facilityDAO" />
@@ -68,6 +72,7 @@
         <constructor-arg name="hostDAO" ref="hostDAO" />
         <constructor-arg name="memberDAO" ref="memberDAO" />
         <constructor-arg name="ownerDAO" ref="ownerDAO" />
+        <constructor-arg name="relationsDAO" ref="relationDAO" />
         <constructor-arg name="resourceDAO" ref="resourceDAO" />
         <constructor-arg name="serviceDAO" ref="serviceDAO" />
         <constructor-arg name="userExtSourceDAO" ref="userExtSourceDAO" />

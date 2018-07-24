@@ -25,8 +25,9 @@ import java.util.List;
 public class Relation {
 
     private Long primaryEntityId;
-    private Long secondaryEntity;
-    private RelationType type;
+    private Long secondaryEntityId;
+    private String type;
+    private RelationType trueType;
     private List<PerunAttribute> attributes;
 
     public Long getPrimaryEntityId() {
@@ -37,20 +38,30 @@ public class Relation {
         this.primaryEntityId = primaryEntityId;
     }
 
-    public Long getSecondaryEntity() {
-        return secondaryEntity;
+    public Long getSecondaryEntityId() {
+        return secondaryEntityId;
     }
 
-    public void setSecondaryEntity(Long secondaryEntity) {
-        this.secondaryEntity = secondaryEntity;
+    public void setSecondaryEntityId(Long secondaryEntityId) {
+        this.secondaryEntityId = secondaryEntityId;
     }
 
-    public RelationType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(RelationType type) {
+    public void setType(String type) {
         this.type = type;
+        this.trueType = resolveType(type);
+    }
+
+    public RelationType getTrueType() {
+        return trueType;
+    }
+
+    public void setTrueType(RelationType trueType) {
+        this.trueType = trueType;
+        this.type = trueType.toString();
     }
 
     public List<PerunAttribute> getAttributes() {
@@ -77,8 +88,6 @@ public class Relation {
                 return RelationType.GROUP_RESOURCE;
             case "MEMBER_GROUP":
                 return RelationType.MEMBER_GROUP;
-            case "GROUP_GROUP":
-                return RelationType.GROUP_GROUP;
             case "GROUP_MEMBER":
                 return RelationType.GROUP_MEMBER;
             case "FACILITY_OWNER":
@@ -100,7 +109,6 @@ public class Relation {
             case MEMBER_RESOURCE:
                 return "member_id";
             case GROUP_EXT_SOURCE:
-            case GROUP_GROUP:
             case GROUP_MEMBER:
             case GROUP_RESOURCE:
                 return "group_id";
@@ -124,7 +132,6 @@ public class Relation {
             case GROUP_RESOURCE:
                 return "resource_id";
             case MEMBER_GROUP:
-            case GROUP_GROUP:
                 return "group_id";
             case GROUP_MEMBER:
                 return "member_id";

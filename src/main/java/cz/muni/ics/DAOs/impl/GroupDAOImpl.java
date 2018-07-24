@@ -37,7 +37,7 @@ public class GroupDAOImpl implements GroupDAO {
 	public List<Group> getGroups(List<InputAttribute> core) {
 		String where = DAOUtils.outerWhereBuilder(core, null);
 		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.GROUP);
-		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, NO_ATTRS);
+		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, NO_ATTRS);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
@@ -51,7 +51,7 @@ public class GroupDAOImpl implements GroupDAO {
 		String innerWhere = DAOUtils.innerWhereBuilder(size);
 		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
 		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.GROUP);
-		Object[] params = DAOUtils.buildParams(attrsNames, core, attrs);
+		Object[] params = DAOUtils.buildEntityParams(attrsNames, core, attrs);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
@@ -61,7 +61,7 @@ public class GroupDAOImpl implements GroupDAO {
 	public List<RichGroup> getCompleteRichGroups(List<InputAttribute> core, List<InputAttribute> attrs) {
 		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
 		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.GROUP);
-		Object[] params = DAOUtils.buildParams(NO_ATTRS_NAMES, core, attrs);
+		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, attrs);
 
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, RICH_MAPPER);
