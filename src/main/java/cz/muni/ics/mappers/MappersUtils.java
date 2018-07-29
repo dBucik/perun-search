@@ -20,14 +20,14 @@ public class MappersUtils {
         log.debug("Mapping ExtSource from json: {}", json);
         extSource.setId(json.getLong("id"));
 
-        if (!(json.get("name") instanceof String)) {
-            extSource.setName(json.get("name").toString());
+        if (JSONObject.NULL.equals(json.get("name"))) {
+            extSource.setName(null);
         } else {
             extSource.setName(json.getString("name"));
         }
 
-        if (!(json.get("type") instanceof String)) {
-            extSource.setType(json.get("type").toString());
+        if (JSONObject.NULL.equals(json.get("type"))) {
+            extSource.setType(null);
         } else {
             extSource.setType(json.getString("type"));
         }
@@ -41,14 +41,14 @@ public class MappersUtils {
 
         facility.setId(json.getLong("id"));
 
-        if (!(json.get("name") instanceof String)) {
-            facility.setName(json.get("name").toString());
+        if (JSONObject.NULL.equals(json.get("name"))) {
+            facility.setName(null);
         } else {
             facility.setName(json.getString("name"));
         }
 
-        if (!(json.get("dsc") instanceof String)) {
-            facility.setDescription(json.get("dsc").toString());
+        if (JSONObject.NULL.equals(json.get("dsc"))) {
+            facility.setDescription(null);
         } else {
             facility.setDescription(json.getString("dsc"));
         }
@@ -62,25 +62,25 @@ public class MappersUtils {
 
         group.setId(json.getLong("id"));
 
-        if (!(json.get("name") instanceof String)) {
+        if (JSONObject.NULL.equals(json.get("name"))) {
             group.setName(null);
         } else {
             group.setName(json.getString("name"));
         }
 
-        if (!(json.get("dsc") instanceof String)) {
+        if (JSONObject.NULL.equals(json.get("dsc"))) {
             group.setDescription(null);
         } else {
             group.setDescription(json.getString("dsc"));
         }
 
-        if (!(json.get("vo_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("vo_id"))) {
             group.setVoId(null);
         } else {
             group.setVoId(json.getLong("vo_id"));
         }
 
-        if (!(json.get("parent_group_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("parent_group_id"))) {
             group.setParentGroupId(null);
         } else {
             group.setParentGroupId(json.getLong("parent_group_id"));
@@ -95,19 +95,19 @@ public class MappersUtils {
 
         host.setId(json.getLong("id"));
 
-        if (!(json.get("hostname") instanceof String)) {
-            host.setHostname(json.get("hostname").toString());
+        if (JSONObject.NULL.equals(json.get("hostname"))) {
+            host.setHostname(null);
         } else {
             host.setHostname(json.getString("hostname"));
         }
 
-        if (!(json.get("dsc") instanceof String)) {
-            host.setDescription(json.get("dsc").toString());
+        if (JSONObject.NULL.equals(json.get("dsc"))) {
+            host.setDescription(null);
         } else {
             host.setDescription(json.getString("dsc"));
         }
 
-        if (!(json.get("facility_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("facility_id"))) {
             host.setFacilityId(null);
         } else {
             host.setFacilityId(json.getLong("facility_id"));
@@ -122,8 +122,8 @@ public class MappersUtils {
 
         member.setId(json.getLong("id"));
 
-        if (!(json.get("status") instanceof String)) {
-            member.setStatus(json.get("status").toString());
+        if (JSONObject.NULL.equals(json.get("status"))) {
+            member.setStatus(null);
         } else {
             if (json.get("status").equals('0')) {
                 member.setStatus("EXPIRED");
@@ -132,19 +132,19 @@ public class MappersUtils {
             }
         }
 
-        if (!(json.get("vo_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("vo_id"))) {
             member.setVoId(null);
         } else {
             member.setVoId(json.getLong("vo_id"));
         }
 
-        if (!(json.get("user_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("user_id"))) {
             member.setUserId(null);
         } else {
             member.setUserId(json.getLong("user_id"));
         }
 
-        if (json.getString("sponsored").equals("f")) {
+        if (JSONObject.NULL.equals(json.getString("sponsored")) || json.getString("sponsored").equals("f")) {
             member.setSponsored(false);
         } else {
             member.setSponsored(true);
@@ -172,25 +172,25 @@ public class MappersUtils {
 
         resource.setId(json.getLong("id"));
 
-        if (!(json.get("name") instanceof String)) {
-            resource.setName(json.get("name").toString());
+        if (JSONObject.NULL.equals(json.get("name"))) {
+            resource.setName(null);
         } else {
             resource.setName(json.getString("name"));
         }
 
-        if (!(json.get("dsc") instanceof String)) {
-            resource.setDescription(json.get("dsc").toString());
+        if (JSONObject.NULL.equals(json.get("dsc"))) {
+            resource.setDescription(null);
         } else {
             resource.setDescription(json.getString("dsc"));
         }
 
-        if (!(json.get("facility_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("facility_id"))) {
             resource.setFacilityId(null);
         } else {
             resource.setFacilityId(json.getLong("facility_id"));
         }
 
-        if (!(json.get("vo_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("vo_id"))) {
             resource.setVoId(null);
         } else {
             resource.setVoId(json.getLong("vo_id"));
@@ -205,13 +205,13 @@ public class MappersUtils {
 
         service.setId(json.getLong("id"));
 
-        if (!(json.get("name") instanceof String)) {
-            service.setName(json.get("name").toString());
+        if (JSONObject.NULL.equals(json.get("name"))) {
+            service.setName(null);
         } else {
             service.setName(json.getString("name"));
         }
 
-        if (!(json.get("owner_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("owner_id"))) {
             service.setOwnerId(null);
         } else {
             service.setOwnerId(json.getLong("owner_id"));
@@ -226,25 +226,25 @@ public class MappersUtils {
 
         ues.setId(json.getLong("id"));
 
-        if (!(json.get("login_ext") instanceof String)) {
-            ues.setLoginExt(json.get("login_ext").toString());
+        if (JSONObject.NULL.equals(json.get("login_ext"))) {
+            ues.setLoginExt(null);
         } else {
             ues.setLoginExt(json.getString("login_ext"));
         }
 
-        if (!(json.get("user_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("user_id"))) {
             ues.setUserId(null);
         } else {
             ues.setUserId(json.getLong("user_id"));
         }
 
-        if (!(json.get("ext_sources_id") instanceof Long)) {
+        if (JSONObject.NULL.equals(json.get("ext_sources_id"))) {
             ues.setExtSourcesId(null);
         } else {
             ues.setExtSourcesId(json.getLong("ext_sources_id"));
         }
 
-        if (!(json.get("loa") instanceof Short)) {
+        if (JSONObject.NULL.equals(json.get("loa"))) {
             ues.setLoa(null);
         } else {
             ues.setLoa(json.getNumber("loa").shortValue());
@@ -259,43 +259,43 @@ public class MappersUtils {
 
         user.setId(json.getLong("id"));
 
-        if (!(json.get("first_name") instanceof String)) {
-            user.setFirstName(json.get("first_name").toString());
+        if (JSONObject.NULL.equals(json.get("first_name"))) {
+            user.setFirstName(null);
         } else {
             user.setFirstName(json.getString("first_name"));
         }
 
-        if (!(json.get("last_name") instanceof String)) {
-            user.setLastName(json.get("last_name").toString());
+        if (JSONObject.NULL.equals(json.get("last_name"))) {
+            user.setLastName(null);
         } else {
             user.setLastName(json.getString("last_name"));
         }
 
-        if (!(json.get("middle_name") instanceof String)) {
-            user.setMiddleName(json.get("middle_name").toString());
+        if (JSONObject.NULL.equals(json.get("middle_name"))) {
+            user.setMiddleName(null);
         } else {
             user.setMiddleName(json.getString("middle_name"));
         }
 
-        if (!(json.get("title_before") instanceof String)) {
-            user.setTitleBefore(json.get("title_before").toString());
+        if (JSONObject.NULL.equals(json.get("title_before"))) {
+            user.setTitleBefore(null);
         } else {
             user.setTitleBefore(json.getString("title_before"));
         }
 
-        if (!(json.get("title_after") instanceof String)) {
-            user.setTitleAfter(json.get("title_after").toString());
+        if (JSONObject.NULL.equals(json.get("title_after"))) {
+            user.setTitleAfter(null);
         } else {
             user.setTitleAfter(json.getString("title_after"));
         }
 
-        if (json.getString("service_acc").equals("0")) {
+        if (JSONObject.NULL.equals(json.getString("service_acc")) || json.getString("service_acc").equals("0")) {
             user.setServiceAcc(false);
         } else {
             user.setServiceAcc(true);
         }
 
-        if (json.getString("sponsored_acc").equals("0")) {
+        if (JSONObject.NULL.equals(json.getString("sponsored_acc")) || json.getString("sponsored_acc").equals("0")) {
             user.setSponsoredAcc(false);
         } else {
             user.setSponsoredAcc(true);
@@ -310,14 +310,14 @@ public class MappersUtils {
 
         vo.setId(json.getLong("id"));
 
-        if (!(json.get("name") instanceof String)) {
-            vo.setName(json.get("name").toString());
+        if (JSONObject.NULL.equals(json.get("name"))) {
+            vo.setName(null);
         } else {
             vo.setName(json.getString("name"));
         }
 
-        if (!(json.get("short_name") instanceof String)) {
-            vo.setShortName(json.get("short_name").toString());
+        if (JSONObject.NULL.equals(json.get("short_name"))) {
+            vo.setShortName(null);
         } else {
             vo.setShortName(json.getString("short_name"));
         }
