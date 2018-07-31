@@ -13,15 +13,40 @@ public abstract class PerunAttribute {
 	private final static String LSTRING_TYPE = "java.lang.LargeString";
 	private final static String LARRAY_LIST_TYPE = "java.lang.LargeArrayList";
 
-	private String key;
+	private String friendlyName;
+	private String name;
+	private String namespace;
 	private AttributeType type;
 
-	public String getKey() {
-		return key;
+	public PerunAttribute(String friendlyName, String name, String namespace, AttributeType type) {
+		this.friendlyName = friendlyName;
+		this.name = name;
+		this.namespace = namespace;
+		this.type = type;
 	}
 
-	public void setKey(String attrName) {
-		this.key = attrName;
+	public String getFriendlyName() {
+		return friendlyName;
+	}
+
+	public void setFriendlyName(String attrName) {
+		this.friendlyName = attrName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 
 	public AttributeType getType() {
@@ -34,29 +59,31 @@ public abstract class PerunAttribute {
 
 	public abstract String getValue();
 
-	public static PerunAttribute parse(String key, String type, Object value) {
+	public static PerunAttribute parse(String friendlyName, String name, String namespace, String type, Object value) {
 		if (value == null || value.equals(JSONObject.NULL)) {
 			return null;
 		}
+
 		String val = (String) value;
 		if (val.isEmpty()) {
 			return null;
 		}
+
 		switch (type) {
 			case STRING_TYPE:
-				return new StringAttribute(key, val);
+				return new StringAttribute(friendlyName, name, namespace, val);
 			case INT_TYPE:
-				return new IntegerAttribute(key, val);
+				return new IntegerAttribute(friendlyName, name, namespace, val);
 			case BOOL_TYPE:
-				return new BooleanAttribute(key, val);
+				return new BooleanAttribute(friendlyName, name, namespace, val);
 			case LSTRING_TYPE:
-				return new LargeStringAttribute(key, val);
+				return new LargeStringAttribute(friendlyName, name, namespace, val);
 			case ARRAY_TYPE:
-				return new ArrayAttribute(key, val);
+				return new ArrayAttribute(friendlyName, name, namespace, val);
 			case MAP_TYPE:
-				return new MapAttribute(key, val);
+				return new MapAttribute(friendlyName, name, namespace, val);
 			case LARRAY_LIST_TYPE:
-				return new LargeArrayListAttribute(key, val);
+				return new LargeArrayListAttribute(friendlyName, name, namespace, val);
 			default:
 				return null;
 		}

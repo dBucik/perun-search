@@ -11,9 +11,8 @@ public class StringAttribute extends PerunAttribute {
 
 	private String value;
 
-	public StringAttribute(String key, String value) {
-		super.setKey(key);
-		super.setType(AttributeType.STRING);
+	public StringAttribute(String friendlyName, String name, String namespace, String value) {
+		super(friendlyName, name, namespace, AttributeType.STRING);
 		this.value = value;
 	}
 

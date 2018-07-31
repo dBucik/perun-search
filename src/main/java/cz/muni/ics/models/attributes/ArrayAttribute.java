@@ -14,9 +14,8 @@ public class ArrayAttribute extends PerunAttribute {
 
 	private ArrayList<String> value;
 
-	public ArrayAttribute(String key, String value) {
-		super.setKey(key);
-		super.setType(AttributeType.ARRAY);
+	public ArrayAttribute(String friendlyName, String name, String namespace, String value) {
+		super(friendlyName, name, namespace, AttributeType.ARRAY);
 		this.value = parseValue(value);
 	}
 

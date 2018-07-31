@@ -12,9 +12,8 @@ public class BooleanAttribute extends PerunAttribute {
 
 	private Boolean value;
 
-	public BooleanAttribute(String key, String value) {
-		super.setKey(key);
-		super.setType(AttributeType.BOOLEAN);
+	public BooleanAttribute(String friendlyName, String name, String namespace, String value) {
+		super(friendlyName, name, namespace, AttributeType.BOOLEAN);
 		setValue(value);
 	}
 

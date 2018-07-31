@@ -12,9 +12,8 @@ public class IntegerAttribute extends PerunAttribute {
 
 	private Integer value;
 
-	public IntegerAttribute(String key, String value) {
-		super.setKey(key);
-		super.setType(AttributeType.INTEGER);
+	public IntegerAttribute(String friendlyName, String name, String namespace, String value) {
+		super(friendlyName, name, namespace, AttributeType.INTEGER);
 		setValue(value);
 	}
 

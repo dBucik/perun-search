@@ -11,9 +11,8 @@ public class LargeStringAttribute extends PerunAttribute {
 
 	private String value;
 
-	public LargeStringAttribute(String key, String value) {
-		super.setKey(key);
-		super.setType(AttributeType.LARGE_STRING);
+	public LargeStringAttribute(String friendlyName, String name, String namespace, String value) {
+		super(friendlyName, name, namespace, AttributeType.LARGE_STRING);
 		this.value = value;
 	}
 

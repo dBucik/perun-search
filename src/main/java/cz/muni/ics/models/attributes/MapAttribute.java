@@ -13,9 +13,8 @@ public class MapAttribute extends PerunAttribute {
 
 	private LinkedHashMap<String, String> value;
 
-	public MapAttribute(String key, String value) {
-		super.setKey(key);
-		super.setType(AttributeType.MAP);
+	public MapAttribute(String friendlyName, String name, String namespace, String value) {
+		super(friendlyName, name, namespace, AttributeType.MAP);
 		this.value = parseValue(value);
 	}
 

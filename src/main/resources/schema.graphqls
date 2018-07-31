@@ -1,5 +1,7 @@
 type PerunAttribute {
-    key: String!
+    friendlyName: String!
+    name: String!
+    namespace: String!
     value: String
 }
 

@@ -66,7 +66,7 @@ public class DAOUtils {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ? AS rel_type, ").append(primaryEntityId).append(", ").append(secondaryEntityId).append(",")
 				.append(" json_object_agg(friendly_name, json_build_object(")
-				.append("'value', attr_value, 'value_text', attr_value_text, 'type', type)) AS attributes")
+				.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS attributes")
 				.append(" FROM ").append(relationTable).append(" av JOIN ").append(attrNames).append(" an ON av.attr_id = an.id");
 		if (!Objects.equals(where, NO_WHERE)) {
 			query.append(' ').append(where);
@@ -96,7 +96,7 @@ public class DAOUtils {
 		if (! isSimple) {
 			query.append(" JOIN (") // select attributes and build JSON
 					.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
-					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type)) AS data")
+					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS data")
 					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
 					.append(" an ON av.attr_id = an.id");
 			if (!Objects.equals(innerWhere, NO_WHERE)) { // select specific attributes by names

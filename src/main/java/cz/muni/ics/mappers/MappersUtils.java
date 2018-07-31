@@ -344,17 +344,19 @@ public class MappersUtils {
         log.debug("Get attributes from json: {}", json);
         List<PerunAttribute> attrs = new ArrayList<>();
 
-        for (String key: json.keySet()) {
-            JSONObject attrJson = json.getJSONObject(key);
+        for (String friendlyName: json.keySet()) {
+            JSONObject attrJson = json.getJSONObject(friendlyName);
+            String name = attrJson.getString("name");
+            String namespace = attrJson.getString("namespace");
             String type = attrJson.getString("type");
             Object value = attrJson.get("value");
             Object valueText = attrJson.get("value_text");
             
             PerunAttribute attr;
             if (value != null && !value.equals(JSONObject.NULL)) {
-                attr = PerunAttribute.parse(key, type, value);
+                attr = PerunAttribute.parse(friendlyName, name, namespace, type, value);
             } else {
-                attr = PerunAttribute.parse(key, type, valueText);
+                attr = PerunAttribute.parse(friendlyName, name, namespace, type, valueText);
             }
             
             if (attr != null) {

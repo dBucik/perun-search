@@ -14,9 +14,8 @@ public class LargeArrayListAttribute extends PerunAttribute {
 
 	private ArrayList<String> value;
 
-	public LargeArrayListAttribute(String key, String value) {
-		super.setKey(key);
-		super.setType(AttributeType.ARRAY);
+	public LargeArrayListAttribute(String friendlyName, String name, String namespace, String value) {
+		super(friendlyName, name, namespace, AttributeType.LARGE_LIST);
 		this.value = parseValue(value);
 	}
 
