@@ -10,5 +10,4 @@ public interface RichPerunEntity {
 
 	void setAttributes(List<PerunAttribute> attributes);
 
-	List<PerunAttribute> getAttributesByKeys(List<String> keys);
 }

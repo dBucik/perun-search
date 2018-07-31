@@ -28,48 +28,4 @@ public class RichUser extends User implements RichPerunEntity {
         this.attributes = attributes;
     }
 
-    public List<PerunAttribute> getAttributesByKeys(List<String> keys) {
-        List<PerunAttribute> res = new ArrayList<>();
-
-        if (keys.contains("id")) {
-            res.add(new IntegerAttribute("id", super.getId().toString()));
-        }
-
-        if (keys.contains("firstName")) {
-            res.add(new StringAttribute("firstName", super.getFirstName()));
-        }
-
-        if (keys.contains("middleName")) {
-            res.add(new StringAttribute("middleName", super.getMiddleName()));
-        }
-
-        if (keys.contains("lastName")) {
-            res.add(new StringAttribute("lastName", super.getLastName()));
-        }
-
-        if (keys.contains("titleBefore")) {
-            res.add(new StringAttribute("titleBefore", super.getTitleBefore()));
-        }
-
-        if (keys.contains("titleAfter")) {
-            res.add(new StringAttribute("titleAfter", super.getTitleAfter()));
-        }
-
-        if (keys.contains("serviceAcc")) {
-            res.add(new BooleanAttribute("serviceAcc", super.isServiceAcc().toString()));
-        }
-
-        if (keys.contains("sponsoredAcc")) {
-            res.add(new BooleanAttribute("sponsoredAcc", super.isSponsoredAcc().toString()));
-        }
-
-        for (PerunAttribute attr: attributes) {
-            if (keys.contains(attr.getKey())) {
-                res.add(attr);
-            }
-        }
-
-        return res;
-    }
-
 }
