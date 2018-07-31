@@ -30,38 +30,38 @@ public class RelationsDAOImpl implements RelationsDAO {
 	}
 
 	@Override
-	public List<Relation> getRelations(String relType, InputAttribute primary, InputAttribute secondary) {
+	public List<Relation> getRelations(String relType, Long primaryId, Long secondaryId) {
 		RelationType type = Relation.resolveType(relType);
-		String where = DAOUtils.relationWhereBuilder(type, primary, secondary, DAOUtils.NO_ATTRS_NAMES_COUNT,
+		String where = DAOUtils.relationWhereBuilder(type, primaryId, secondaryId, DAOUtils.NO_ATTRS_NAMES_COUNT,
 				DAOUtils.NO_ATTRS);
 		String query = DAOUtils.relationQueryBuilder(where, type);
 
-		Object[] params = DAOUtils.buildRelationParams(relType, primary, secondary, NO_ATTRS_NAMES, DAOUtils.NO_ATTRS);
+		Object[] params = DAOUtils.buildRelationParams(relType, primaryId, secondaryId, NO_ATTRS_NAMES, DAOUtils.NO_ATTRS);
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
 	}
 
 	@Override
-	public List<Relation> getRichRelations(String relType, InputAttribute primary, InputAttribute secondary,
+	public List<Relation> getRichRelations(String relType, Long primaryId, Long secondaryId,
 										   List<String> attrsNames, List<InputAttribute> attrs) {
 		RelationType type = Relation.resolveType(relType);
 		int attrsNamesCount = attrsNames == null ? NO_ATTRS_NAMES_COUNT : attrsNames.size();
-		String where = DAOUtils.relationWhereBuilder(type, primary, secondary, attrsNamesCount, attrs);
+		String where = DAOUtils.relationWhereBuilder(type, primaryId, secondaryId, attrsNamesCount, attrs);
 		String query = DAOUtils.relationQueryBuilder(where, type);
 
-		Object[] params = DAOUtils.buildRelationParams(relType, primary, secondary, attrsNames, attrs);
+		Object[] params = DAOUtils.buildRelationParams(relType, primaryId, secondaryId, attrsNames, attrs);
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
 	}
 
 	@Override
-	public List<Relation> getCompleteRichRelations(String relType, InputAttribute primary, InputAttribute secondary,
+	public List<Relation> getCompleteRichRelations(String relType, Long primaryId, Long secondaryId,
 												   List<InputAttribute> attrs) {
 		RelationType type = Relation.resolveType(relType);
-		String where = DAOUtils.relationWhereBuilder(type, primary, secondary, NO_ATTRS_NAMES_COUNT, attrs);
+		String where = DAOUtils.relationWhereBuilder(type, primaryId, secondaryId, NO_ATTRS_NAMES_COUNT, attrs);
 		String query = DAOUtils.relationQueryBuilder(where, type);
 
-		Object[] params = DAOUtils.buildRelationParams(relType, primary, secondary, NO_ATTRS_NAMES, attrs);
+		Object[] params = DAOUtils.buildRelationParams(relType, primaryId, secondaryId, NO_ATTRS_NAMES, attrs);
 		log.info("Executing query: {}, with params: {}", query, params);
 		return jdbcTemplate.query(query, params, MAPPER);
 	}

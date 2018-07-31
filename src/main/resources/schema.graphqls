@@ -238,9 +238,9 @@ type Query {
     getCompleteRichVos(core: [InputAttribute], attrs: [InputAttribute]): [RichVo]
 
     # RELATIONS
-    getRelations(type: String!, primary: InputAttribute, secondary: InputAttribute): [Relation]
-    getRichRelations(type: String!, primary: InputAttribute, secondary: InputAttribute, attrsNames: [String!], attrs: [InputAttribute]): [Relation]
-    getCompleteRichRelations(type: String!, primary: InputAttribute, secondary: InputAttribute, attrs: [InputAttribute]): [Relation]
+    getRelations(type: String!, primary: Long, secondary: Long): [Relation]
+    getRichRelations(type: String!, primary: Long, secondary: Long, attrsNames: [String!], attrs: [InputAttribute]): [Relation]
+    getCompleteRichRelations(type: String!, primary: Long, secondary: Long, attrs: [InputAttribute]): [Relation]
 }
 
 schema {

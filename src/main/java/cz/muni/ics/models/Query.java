@@ -240,19 +240,19 @@ public class Query implements GraphQLRootResolver {
 
     /* RELATIONS */
 
-    public List<Relation> getRelations(String type, InputAttribute primary, InputAttribute secondary) {
+    public List<Relation> getRelations(String type, Long primary, Long secondary) {
         log.info("getRelations (type: {}, primary: {}, secondary: {})", type, primary, secondary);
         return relationsDAO.getRelations(type, primary, secondary);
     }
 
-    public List<Relation> getRichRelations(String type, InputAttribute primary, InputAttribute secondary,
+    public List<Relation> getRichRelations(String type, Long primary, Long secondary,
                                            List<String> attrsNames, List<InputAttribute> attrs) {
         log.info("getRichRelations (type: {}, primary: {}, secondary: {}, attrsNames: {}, attrs: {})",
                 type, primary, secondary, attrsNames, attrs);
         return relationsDAO.getRichRelations(type, primary, secondary, attrsNames, attrs);
     }
 
-    public List<Relation> getCompleteRichRelations(String type, InputAttribute primary, InputAttribute secondary,
+    public List<Relation> getCompleteRichRelations(String type, Long primary, Long secondary,
                                                    List<InputAttribute> attrs) {
         log.info("getCompleteRichRelations (type: {}, primary: {}, secondary: {}, attrs: {})",
                 type, primary, secondary, attrs);

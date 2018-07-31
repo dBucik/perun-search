@@ -158,10 +158,10 @@ public class DAOUtils {
 		return query + sj.toString();
 	}
 
-	public static String relationWhereBuilder(RelationType type, InputAttribute primary, InputAttribute secondary,
+	public static String relationWhereBuilder(RelationType type, Long primaryId, Long secondaryId,
 											  int namesCount, List<InputAttribute> attrs) {
-		log.trace("Building relation where (type: {}, primary: {}, secondary: {}, attrs: {})", type, primary, secondary, attrs);
-		if ((primary == null) && (secondary == null) && (attrs == null || attrs.isEmpty())) {
+		log.trace("Building relation where (type: {}, primaryId: {}, secondaryId: {}, attrs: {})", type, primaryId, secondaryId, attrs);
+		if ((primaryId == null) && (secondaryId == null) && (attrs == null || attrs.isEmpty())) {
 			log.trace("No attrs provided, returning NULL");
 			return null;
 		}
@@ -170,16 +170,14 @@ public class DAOUtils {
 		StringJoiner sj = new StringJoiner(" AND ");
 		StringJoiner sub = new StringJoiner(" OR ");
 
-		if (primary != null) {
-			String primaryId = Relation.resolvePrimaryEntityKeyFromRelationType(type);
-			String op = resolveMatchOperator(primary.getAttributeType());
-			sj.add(primaryId + " " + op + " ?");
+		if (primaryId != null) {
+			String primary = Relation.resolvePrimaryEntityKeyFromRelationType(type);
+			sj.add(primary + " = ?");
 		}
 
-		if (secondary != null) {
-			String secondaryId = Relation.resolveSecondaryEntityKeyFromRelationType(type);
-			String op = resolveMatchOperator(secondary.getAttributeType());
-			sj.add(secondaryId + " " + op + " ?");
+		if (secondaryId != null) {
+			String secondary = Relation.resolveSecondaryEntityKeyFromRelationType(type);
+			sj.add(secondary + " = ?");
 		}
 
 		if (namesCount > NO_ATTRS_NAMES_COUNT) {
@@ -194,8 +192,10 @@ public class DAOUtils {
 				sub.add("((friendly_name = ?) AND (attr_value" + op + "?) OR (attr_value_text" + op + "?))");
 			}
 		}
+		if (sub.length() > 0) {
+			sj.add(sub.toString());
+		}
 
-		sj.add(sub.toString());
 		log.trace("Built outer WHERE: {}", query + sj.toString());
 		return query + sj.toString();
 	}
@@ -226,18 +226,18 @@ public class DAOUtils {
 		return params.toArray();
 	}
 
-	public static Object[] buildRelationParams(String type, InputAttribute primary, InputAttribute secondary, List<String> attrsNames,
+	public static Object[] buildRelationParams(String type, Long primaryId, Long secondaryId, List<String> attrsNames,
 											   List<InputAttribute> attrs) {
 		List<Object> res = new LinkedList<>();
 
 		res.add(type);
 
-		if (primary != null) {
-			res.add(resolveTrueValue(primary.getAttributeType(), primary.getValue()));
+		if (primaryId != null) {
+			res.add(primaryId);
 		}
 
-		if (secondary != null) {
-			res.add(resolveTrueValue(secondary.getAttributeType(), secondary.getValue()));
+		if (secondaryId != null) {
+			res.add(secondaryId);
 		}
 
 		if (attrsNames != NO_ATTRS_NAMES) {
