@@ -4,7 +4,7 @@ import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.Relation;
 import cz.muni.ics.models.RelationType;
-import cz.muni.ics.models.attributes.InputAttributeType;
+import cz.muni.ics.models.attributes.enums.InputAttributeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

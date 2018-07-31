@@ -1,4 +1,4 @@
-package cz.muni.ics.models.attributes;
+package cz.muni.ics.models.attributes.enums;
 
 public enum InputAttributeType {
 

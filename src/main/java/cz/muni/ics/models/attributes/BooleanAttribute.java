@@ -1,6 +1,7 @@
 package cz.muni.ics.models.attributes;
 
 import cz.muni.ics.exceptions.AttributeTypeException;
+import cz.muni.ics.models.attributes.enums.AttributeType;
 
 /**
  * Class representing attribute of type Boolean in Perun

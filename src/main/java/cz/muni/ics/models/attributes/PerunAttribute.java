@@ -1,5 +1,6 @@
 package cz.muni.ics.models.attributes;
 
+import cz.muni.ics.models.attributes.enums.AttributeType;
 import org.json.JSONObject;
 
 public abstract class PerunAttribute {

@@ -1,5 +1,7 @@
 package cz.muni.ics.models.attributes;
 
+import cz.muni.ics.models.attributes.enums.AttributeType;
+
 /**
  * Class representing attribute of type LargeString in Perun
  *
