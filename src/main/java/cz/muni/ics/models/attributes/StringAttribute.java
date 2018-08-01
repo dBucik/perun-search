@@ -33,4 +33,14 @@ public class StringAttribute extends PerunAttribute {
 		return value;
 	}
 
+	@Override
+	public String toString() {
+		return "StringAttribute [" +
+				"name: " + getName() +
+				", friendlyName: " + getFriendlyName() +
+				", namespace: " + getNamespace() +
+				", value: " + value +
+				"]";
+	}
+
 }

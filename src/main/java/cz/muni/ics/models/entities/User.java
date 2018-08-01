@@ -71,4 +71,18 @@ public class User extends PerunEntity {
         this.sponsoredAcc = sponsoredAcc;
     }
 
+    @Override
+    public String toString() {
+        return "User [" +
+                "id: " + getId() +
+                ", titleBefore: " + titleBefore +
+                ", firstName: " + firstName +
+                ", middleName: " + middleName +
+                ", lastName: " + lastName +
+                ", titleAfter: " + titleAfter +
+                ", serviceAcc: " + serviceAcc +
+                ", sponsored: " + sponsoredAcc +
+                "]";
+    }
+
 }

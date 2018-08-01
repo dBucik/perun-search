@@ -26,4 +26,13 @@ public class Vo extends PerunEntity {
         this.shortName = shortName;
     }
 
+    @Override
+    public String toString() {
+        return "VO [" +
+                "id: " + getId() +
+                ", name: " + name +
+                ", shortName: " + shortName +
+                "]";
+    }
+
 }

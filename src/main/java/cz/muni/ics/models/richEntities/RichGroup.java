@@ -24,4 +24,10 @@ public class RichGroup extends Group implements RichPerunEntity {
         this.attributes = attributes;
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("Group", "RichGroup") +
+                "{ attributes: " + attributes.toString() + '}';
+    }
+
 }

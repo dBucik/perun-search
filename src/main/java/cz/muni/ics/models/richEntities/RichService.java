@@ -24,4 +24,10 @@ public class RichService extends Service implements RichPerunEntity {
         this.attributes = attributes;
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("Service", "RichService") +
+                "{ attributes: " + attributes.toString() + '}';
+    }
+
 }

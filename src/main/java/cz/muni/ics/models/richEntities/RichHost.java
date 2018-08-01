@@ -24,4 +24,10 @@ public class RichHost extends Host implements RichPerunEntity {
         this.attributes = attributes;
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("Host", "RichHost") +
+                "{ attributes: " + attributes.toString() + '}';
+    }
+
 }

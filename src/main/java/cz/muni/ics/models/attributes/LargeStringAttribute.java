@@ -33,4 +33,14 @@ public class LargeStringAttribute extends PerunAttribute {
 		return value;
 	}
 
+	@Override
+	public String toString() {
+		return "LargeStringAttribute [" +
+				"name: " + getName() +
+				", friendlyName: " + getFriendlyName() +
+				", namespace: " + getNamespace() +
+				", value: " + value +
+				"]";
+	}
+
 }

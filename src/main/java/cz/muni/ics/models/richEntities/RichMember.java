@@ -24,4 +24,10 @@ public class RichMember extends Member implements RichPerunEntity {
         this.attributes = attributes;
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("Member", "RichMember") +
+                "{ attributes: " + attributes.toString() + '}';
+    }
+
 }

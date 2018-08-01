@@ -38,4 +38,16 @@ public class Owner extends PerunEntity {
     public void setType(String type) {
         this.type = type;
     }
+
+	@Override
+	public String toString() {
+		return "Owner [" +
+				"id: " + getId() +
+				", name: " + name +
+				", contact: " + contact +
+				", status: " + status +
+				", type: " + type +
+				"]";
+	}
+
 }

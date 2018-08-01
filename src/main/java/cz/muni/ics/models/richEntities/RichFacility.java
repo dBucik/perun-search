@@ -24,4 +24,10 @@ public class RichFacility extends Facility implements RichPerunEntity {
         this.attributes = attributes;
     }
 
+	@Override
+	public String toString() {
+		return super.toString().replaceFirst("Facility", "RichFacility") +
+				"{ attributes: " + attributes.toString() + '}';
+	}
+
 }

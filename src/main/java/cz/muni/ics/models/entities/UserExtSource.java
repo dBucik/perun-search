@@ -44,4 +44,15 @@ public class UserExtSource extends PerunEntity {
         this.loa = loa;
     }
 
+    @Override
+    public String toString() {
+        return "UserExtSource [" +
+                "id: " + getId() +
+                ", userId: " + userId +
+                ", loginExt: " + loginExt +
+				", extSourcesId: " + extSourcesId +
+				", loa: " + loa +
+                "]";
+    }
+
 }

@@ -35,4 +35,14 @@ public class Host extends PerunEntity {
         this.facilityId = facilityId;
     }
 
+    @Override
+    public String toString() {
+        return "Host [" +
+                "id: " + getId() +
+                ", description: " + description +
+				", hostname: " + hostname +
+				", facilityId: " + facilityId +
+                "]";
+    }
+
 }

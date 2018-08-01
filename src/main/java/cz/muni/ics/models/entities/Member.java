@@ -44,4 +44,15 @@ public class Member extends PerunEntity {
         this.sponsored = sponsored;
     }
 
+    @Override
+    public String toString() {
+        return "Member [" +
+                "id: " + getId() +
+                ", userId: " + userId +
+                ", voId: " + voId +
+				", status: " + status +
+				", sponsored: " + sponsored +
+                "]";
+    }
+
 }

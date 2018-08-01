@@ -24,4 +24,10 @@ public class RichResource extends Resource implements RichPerunEntity {
         this.attributes = attributes;
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("Resource", "RichResource") +
+                "{ attributes: " + attributes.toString() + '}';
+    }
+
 }

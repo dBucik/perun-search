@@ -46,4 +46,15 @@ public class MapAttribute extends PerunAttribute {
 
 		return val;
 	}
+
+	@Override
+	public String toString() {
+		return "MapAttribute [" +
+				"name: " + getName() +
+				", friendlyName: " + getFriendlyName() +
+				", namespace: " + getNamespace() +
+				", value: " + value +
+				"]";
+	}
+
 }

@@ -97,4 +97,13 @@ public class InputAttribute {
         return res;
     }
 
+    @Override
+    public String toString() {
+        return "InputAttribute [" +
+				"key: " + key +
+				", type: " + type +
+				", attrType: " + attrType +
+				", value: " + value +
+				"]";
+    }
 }

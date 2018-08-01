@@ -7,7 +7,6 @@ package cz.muni.ics.models.entities;
  */
 public class Service extends PerunEntity {
 
-    private Long id;
     private String name;
     private Long ownerId;
 
@@ -25,6 +24,15 @@ public class Service extends PerunEntity {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    @Override
+    public String toString() {
+        return "Service [" +
+                "id: " + getId() +
+                ", name: " + name +
+                ", ownerId: " + ownerId +
+                "]";
     }
 
 }

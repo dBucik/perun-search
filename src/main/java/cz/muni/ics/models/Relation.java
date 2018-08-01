@@ -141,4 +141,14 @@ public class Relation {
                 return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Relation [" +
+                "primaryEntityId=" + resolvePrimaryEntityKeyFromRelationType(trueType) + ": " + primaryEntityId +
+				", secondaryEntityId=" + resolveSecondaryEntityKeyFromRelationType(trueType) + ": " + secondaryEntityId +
+				", trueType: " + trueType +
+				", type: " + type +
+				"]{attributes: " + attributes.toString() + '}';
+    }
 }

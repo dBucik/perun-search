@@ -25,4 +25,14 @@ public class ExtSource extends PerunEntity {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "ExtSource [" +
+                "id: " + getId() +
+                ", name: " + name +
+                ", type: " + type +
+                "]";
+    }
+
 }

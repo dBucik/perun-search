@@ -24,5 +24,10 @@ public class RichVo extends Vo implements RichPerunEntity {
         this.attributes = attributes;
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("VO", "RichVo") +
+                "{ attributes: " + attributes.toString() + '}';
+    }
 
 }

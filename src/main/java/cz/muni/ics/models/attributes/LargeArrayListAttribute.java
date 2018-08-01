@@ -41,4 +41,15 @@ public class LargeArrayListAttribute extends PerunAttribute {
 		String[] parts = value.split(",");
 		return new ArrayList<>(Arrays.asList(parts));
 	}
+
+	@Override
+	public String toString() {
+		return "LargeListAttribute [" +
+				"name: " + getName() +
+				", friendlyName: " + getFriendlyName() +
+				", namespace: " + getNamespace() +
+				", value: " + value +
+				"]";
+	}
+
 }

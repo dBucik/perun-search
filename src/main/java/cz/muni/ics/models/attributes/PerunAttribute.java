@@ -88,4 +88,14 @@ public abstract class PerunAttribute {
 				return null;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "ArrayAttribute [" +
+				"name: " + getName() +
+				", friendlyName: " + getFriendlyName() +
+				", namespace: " + getNamespace() +
+				"]";
+	}
+
 }

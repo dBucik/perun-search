@@ -43,4 +43,16 @@ public class Group extends PerunEntity {
     public void setParentGroupId(Long parentGroupId) {
         this.parentGroupId = parentGroupId;
     }
+
+    @Override
+    public String toString() {
+        return "Group [" +
+                "id: " + getId() +
+                ", name: " + name +
+                ", description: " + description +
+				", parentGroupId: " + parentGroupId +
+				", voId: " + voId +
+                "]";
+    }
+
 }

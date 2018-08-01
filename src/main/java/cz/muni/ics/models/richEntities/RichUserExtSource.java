@@ -24,4 +24,10 @@ public class RichUserExtSource extends UserExtSource implements RichPerunEntity 
         this.attributes = attributes;
     }
 
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("UserExtSource", "RichUserExtSource") +
+                "{ attributes: " + attributes.toString() + '}';
+    }
+
 }

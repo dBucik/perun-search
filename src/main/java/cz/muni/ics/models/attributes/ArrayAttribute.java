@@ -36,9 +36,18 @@ public class ArrayAttribute extends PerunAttribute {
 		return value;
 	}
 
-
 	private ArrayList<String> parseValue(String value) {
 		String[] parts = value.split(",");
 		return new ArrayList<>(Arrays.asList(parts));
+	}
+
+	@Override
+	public String toString() {
+		return "ArrayAttribute [" +
+				"name: " + getName() +
+				", friendlyName: " + getFriendlyName() +
+				", namespace: " + getNamespace() +
+				", value: " + value +
+				"]";
 	}
 }

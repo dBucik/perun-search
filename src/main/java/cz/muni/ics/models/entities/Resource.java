@@ -44,4 +44,14 @@ public class Resource extends PerunEntity {
         this.voId = voId;
     }
 
+    @Override
+    public String toString() {
+        return "Resource [" +
+                "id: " + getId() +
+                ", name: " + name +
+                ", description: " + description +
+				", voId: " + voId +
+                "]";
+    }
+
 }

@@ -38,4 +38,14 @@ public class BooleanAttribute extends PerunAttribute {
 		return value;
 	}
 
+	@Override
+	public String toString() {
+		return "BooleanAttribute [" +
+				"name: " + getName() +
+				", friendlyName: " + getFriendlyName() +
+				", namespace: " + getNamespace() +
+				", value: " + value +
+				"]";
+	}
+
 }
