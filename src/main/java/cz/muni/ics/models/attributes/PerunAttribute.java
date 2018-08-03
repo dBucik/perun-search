@@ -3,6 +3,8 @@ package cz.muni.ics.models.attributes;
 import cz.muni.ics.models.attributes.enums.AttributeType;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public abstract class PerunAttribute {
 
 	private final static String STRING_TYPE = "java.lang.String";
@@ -98,4 +100,21 @@ public abstract class PerunAttribute {
 				"]";
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof PerunAttribute)) {
+			return false;
+		}
+		PerunAttribute a = (PerunAttribute) o;
+		return Objects.equals(this.name, a.name) && Objects.equals(this.type, a.type);
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		if (name != null) hash *= name.hashCode() * 31;
+		if (type != null) hash *= type.hashCode() * 31;
+
+		return hash;
+	}
 }

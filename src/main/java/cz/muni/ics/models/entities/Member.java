@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * Member entity from Perun.
  *
@@ -53,6 +55,31 @@ public class Member extends PerunEntity {
 				", status: " + status +
 				", sponsored: " + sponsored +
                 "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof Member)) {
+            return false;
+        }
+
+        Member member = (Member) o;
+        return super.equals(o) &&
+                Objects.equals(userId, member.userId) &&
+                Objects.equals(voId, member.voId) &&
+				Objects.equals(status, member.status) &&
+				Objects.equals(sponsored, member.sponsored);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (userId != null) hash *= 31 * userId.hashCode();
+        if (voId != null) hash  *= 31 * voId.hashCode();
+        if (status != null) hash *= 31 * status.hashCode();
+        if (sponsored != null) hash *= 31 * sponsored.hashCode();
+
+        return hash;
     }
 
 }

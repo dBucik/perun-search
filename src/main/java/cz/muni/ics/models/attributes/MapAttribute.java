@@ -3,6 +3,7 @@ package cz.muni.ics.models.attributes;
 import cz.muni.ics.models.attributes.enums.AttributeType;
 
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 /**
  * Class representing attribute of type LinkedHashMap in Perun
@@ -55,6 +56,24 @@ public class MapAttribute extends PerunAttribute {
 				", namespace: " + getNamespace() +
 				", value: " + value +
 				"]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof MapAttribute)) {
+			return false;
+		}
+
+		MapAttribute a = (MapAttribute) o;
+		return super.equals(o) && Objects.equals(this.getTrueValue(), a.getTrueValue());
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = super.hashCode();
+		if (getTrueValue() != null) hash *= 31 * getTrueValue().hashCode();
+
+		return hash;
 	}
 
 }

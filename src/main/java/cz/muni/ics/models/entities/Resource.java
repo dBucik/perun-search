@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * Resource entity from Perun.
  *
@@ -53,5 +55,28 @@ public class Resource extends PerunEntity {
 				", voId: " + voId +
                 "]";
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Resource)) {
+			return false;
+		}
+
+		Resource resource = (Resource) o;
+		return super.equals(o) &&
+				Objects.equals(name, resource.name) &&
+				Objects.equals(description, resource.description) &&
+				Objects.equals(voId, resource.voId);
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = super.hashCode();
+		if (name != null) hash *= 31 * name.hashCode();
+		if (description != null) hash *= 31 * description.hashCode();
+		if (voId != null) hash *= 31 * voId.hashCode();
+
+		return hash;
+	}
 
 }

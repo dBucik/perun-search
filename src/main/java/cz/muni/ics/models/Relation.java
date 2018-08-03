@@ -1,26 +1,9 @@
 package cz.muni.ics.models;
 
 import cz.muni.ics.models.attributes.PerunAttribute;
-import cz.muni.ics.models.entities.ExtSource;
-import cz.muni.ics.models.entities.Facility;
-import cz.muni.ics.models.entities.Group;
-import cz.muni.ics.models.entities.Member;
-import cz.muni.ics.models.entities.PerunEntity;
-import cz.muni.ics.models.entities.Resource;
-import cz.muni.ics.models.entities.Service;
-import cz.muni.ics.models.entities.User;
-import cz.muni.ics.models.entities.Vo;
-import cz.muni.ics.models.richEntities.RichExtSource;
-import cz.muni.ics.models.richEntities.RichFacility;
-import cz.muni.ics.models.richEntities.RichGroup;
-import cz.muni.ics.models.richEntities.RichMember;
-import cz.muni.ics.models.richEntities.RichResource;
-import cz.muni.ics.models.richEntities.RichService;
-import cz.muni.ics.models.richEntities.RichUser;
-import cz.muni.ics.models.richEntities.RichVo;
 
-import java.security.acl.Owner;
 import java.util.List;
+import java.util.Objects;
 
 public class Relation {
 
@@ -150,5 +133,32 @@ public class Relation {
 				", trueType: " + trueType +
 				", type: " + type +
 				"]{attributes: " + attributes.toString() + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof Relation)) {
+            return false;
+        }
+
+        Relation r = (Relation) o;
+        return super.equals(o) &&
+                Objects.equals(primaryEntityId, r.primaryEntityId) &&
+                Objects.equals(secondaryEntityId, r.secondaryEntityId) &&
+                Objects.equals(trueType, r.trueType) &&
+                Objects.equals(type, r.type) &&
+                Objects.equals(attributes, r.attributes);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (primaryEntityId != null) hash *= 31 * primaryEntityId.hashCode();
+        if (secondaryEntityId != null) hash *= 31 * secondaryEntityId.hashCode();
+        if (type != null) hash *= 31 * type.hashCode();
+        if (trueType != null) hash *= 31 * trueType.hashCode();
+        if (attributes != null) hash *= 31 * attributes.hashCode();
+
+        return hash;
     }
 }

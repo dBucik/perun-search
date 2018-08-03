@@ -4,6 +4,7 @@ import cz.muni.ics.models.attributes.enums.AttributeType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Class representing attribute of type Array in Perun
@@ -50,4 +51,23 @@ public class ArrayAttribute extends PerunAttribute {
 				", value: " + value +
 				"]";
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof ArrayAttribute)) {
+			return false;
+		}
+
+		ArrayAttribute a = (ArrayAttribute) o;
+		return super.equals(o) && Objects.equals(this.getTrueValue(), a.getTrueValue());
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = super.hashCode();
+		if (getTrueValue() != null) hash *= 31 * getTrueValue().hashCode();
+
+		return hash;
+	}
+
 }

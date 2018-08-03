@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * Vo entity from Perun.
  *
@@ -33,6 +35,27 @@ public class Vo extends PerunEntity {
                 ", name: " + name +
                 ", shortName: " + shortName +
                 "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof Vo)) {
+            return false;
+        }
+
+        Vo vo = (Vo) o;
+        return super.equals(o) &&
+                Objects.equals(name, vo.name) &&
+                Objects.equals(shortName, vo.shortName);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (name != null) hash *= 31 * name.hashCode();
+        if (shortName != null)  hash *= 31 * shortName.hashCode();
+
+        return hash;
     }
 
 }

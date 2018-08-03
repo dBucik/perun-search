@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 public class Owner extends PerunEntity {
 
     private String name;
@@ -48,6 +50,31 @@ public class Owner extends PerunEntity {
 				", status: " + status +
 				", type: " + type +
 				"]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Owner)) {
+			return false;
+		}
+
+		Owner owner = (Owner) o;
+		return super.equals(o) &&
+				Objects.equals(name, owner.name) &&
+				Objects.equals(contact, owner.contact) &&
+				Objects.equals(status, owner.status) &&
+				Objects.equals(type, owner.type);
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = super.hashCode();
+		if (name != null) hash *= 31 * name.hashCode();
+		if (contact != null) hash *= 31 * contact.hashCode();
+		if (status != null) hash *= 31 * status.hashCode();
+		if (type != null) hash *= 31 * type.hashCode();
+
+		return hash;
 	}
 
 }

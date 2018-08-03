@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * ExtSource entity from Perun.
  *
@@ -35,4 +37,24 @@ public class ExtSource extends PerunEntity {
                 "]";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ExtSource)) {
+            return false;
+        }
+
+        ExtSource es = (ExtSource) o;
+        return super.equals(o) &&
+				Objects.equals(this.name, es.name) &&
+				Objects.equals(this.type, es.type);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (name != null) hash *= 31 * name.hashCode();
+        if (type != null) hash *= 31 * type.hashCode();
+
+        return hash;
+    }
 }

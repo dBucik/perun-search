@@ -4,6 +4,8 @@ import cz.muni.ics.models.attributes.enums.InputAttributeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * Attribute read from input for GraphQL.
  *
@@ -106,4 +108,30 @@ public class InputAttribute {
 				", value: " + value +
 				"]";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof InputAttribute)) {
+            return false;
+        }
+
+        InputAttribute a = (InputAttribute) o;
+        return super.equals(o) &&
+                Objects.equals(key, a.key) &&
+                Objects.equals(type, a.type) &&
+                Objects.equals(attrType, a.attrType) &&
+                Objects.equals(value, a.value);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (key != null) hash *= 31 * key.hashCode();
+        if (type != null) hash *= 31 * type.hashCode();
+        if (attrType != null) hash *= 31 * attrType.hashCode();
+        if (value != null) hash *= 31 * value.hashCode();
+
+        return hash;
+    }
+    
 }

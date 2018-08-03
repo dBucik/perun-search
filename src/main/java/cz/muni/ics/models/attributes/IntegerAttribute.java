@@ -3,6 +3,8 @@ package cz.muni.ics.models.attributes;
 import cz.muni.ics.exceptions.AttributeTypeException;
 import cz.muni.ics.models.attributes.enums.AttributeType;
 
+import java.util.Objects;
+
 /**
  * Class representing attribute of type Integer in Perun
  *
@@ -46,6 +48,24 @@ public class IntegerAttribute extends PerunAttribute {
 				", namespace: " + getNamespace() +
 				", value: " + value +
 				"]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof IntegerAttribute)) {
+			return false;
+		}
+
+		IntegerAttribute a = (IntegerAttribute) o;
+		return super.equals(o) && Objects.equals(this.getTrueValue(), a.getTrueValue());
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = super.hashCode();
+		if (getTrueValue() != null) hash *= 31 * getTrueValue().hashCode();
+
+		return hash;
 	}
 
 }

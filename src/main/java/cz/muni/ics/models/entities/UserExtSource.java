@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * UserExtSource entity from Perun.
  *
@@ -54,5 +56,30 @@ public class UserExtSource extends PerunEntity {
 				", loa: " + loa +
                 "]";
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof UserExtSource)) {
+			return false;
+		}
+
+		UserExtSource ues = (UserExtSource) o;
+		return super.equals(o) &&
+				Objects.equals(userId, ues.userId) &&
+				Objects.equals(loginExt, ues.loginExt) &&
+				Objects.equals(extSourcesId, ues.extSourcesId) &&
+				Objects.equals(loa, ues.loa);
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = super.hashCode();
+		if (userId != null) hash *= 31 * userId.hashCode();
+		if (loginExt != null) hash *= 31 * loginExt.hashCode();
+		if (extSourcesId != null) hash *= 31 * extSourcesId.hashCode();
+		if (loa != null) hash *= 31 * loa.hashCode();
+
+		return hash;
+	}
 
 }

@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * Host entity from Perun.
  *
@@ -43,6 +45,29 @@ public class Host extends PerunEntity {
 				", hostname: " + hostname +
 				", facilityId: " + facilityId +
                 "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof Host)) {
+            return false;
+        }
+
+        Host host = (Host) o;
+        return super.equals(o) &&
+                Objects.equals(description, host.description) &&
+				Objects.equals(hostname, host.hostname) &&
+				Objects.equals(facilityId, host.facilityId);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (description != null) hash *= 31 * description.hashCode();
+        if (hostname != null) hash *= 31 * hostname.hashCode();
+        if (facilityId != null) facilityId *= 31 *facilityId.hashCode();
+
+        return hash;
     }
 
 }

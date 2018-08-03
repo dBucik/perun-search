@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * User entity from Perun.
  *
@@ -83,6 +85,37 @@ public class User extends PerunEntity {
                 ", serviceAcc: " + serviceAcc +
                 ", sponsored: " + sponsoredAcc +
                 "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof User)) {
+            return false;
+        }
+
+        User user = (User) o;
+        return super.equals(o) &&
+                Objects.equals(titleBefore, user.titleAfter) &&
+                Objects.equals(firstName, user.titleAfter) &&
+				Objects.equals(middleName, user.middleName) &&
+				Objects.equals(lastName, user.lastName) &&
+				Objects.equals(titleAfter, user.titleAfter) &&
+				Objects.equals(serviceAcc, user.serviceAcc) &&
+				Objects.equals(sponsoredAcc, user.sponsoredAcc);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (titleBefore != null) hash *= 31 * titleBefore.hashCode();
+        if (firstName != null)  hash *= 31 * firstName.hashCode();
+        if (middleName != null)  hash *= 31 * middleName.hashCode();
+        if (lastName != null)  hash *= 31 * lastName.hashCode();
+        if (titleAfter != null)  hash *= 31 * titleAfter.hashCode();
+        if (serviceAcc != null)  hash *= 31 * serviceAcc.hashCode();
+        if (sponsoredAcc != null)  hash *= 31 * sponsoredAcc.hashCode();
+
+        return hash;
     }
 
 }

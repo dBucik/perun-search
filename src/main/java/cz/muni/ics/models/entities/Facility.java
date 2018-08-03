@@ -1,5 +1,7 @@
 package cz.muni.ics.models.entities;
 
+import java.util.Objects;
+
 /**
  * Facility entity from Perun.
  *
@@ -35,4 +37,24 @@ public class Facility extends PerunEntity {
                 "]";
     }
 
+	@Override
+	public boolean equals(Object o) {
+		if (! (o instanceof Facility)) {
+			return false;
+		}
+
+		Facility facility = (Facility) o;
+		return super.equals(o) &&
+				Objects.equals(name, facility.name) &&
+				Objects.equals(description, facility.description);
+	}
+
+	@Override
+	public int hashCode() {
+    	int hash = super.hashCode();
+    	if (name != null) hash *= 31 * name.hashCode();
+    	if (description != null) hash *= 31 * description.hashCode();
+
+    	return hash;
+	}
 }
