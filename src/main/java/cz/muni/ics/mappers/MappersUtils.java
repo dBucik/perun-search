@@ -144,10 +144,10 @@ public class MappersUtils {
             member.setUserId(json.getLong("user_id"));
         }
 
-        if (JSONObject.NULL.equals(json.getString("sponsored")) || json.getString("sponsored").equals("f")) {
+        if (JSONObject.NULL.equals(json.getBoolean("sponsored"))) {
             member.setSponsored(false);
         } else {
-            member.setSponsored(true);
+            member.setSponsored(json.getBoolean("sponsored"));
         }
 
         log.debug("Mapped Member: {}", member);
