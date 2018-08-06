@@ -1,6 +1,6 @@
 package cz.muni.ics.models;
 
-import com.coxautodev.graphql.tools.GraphQLRootResolver;
+import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import cz.muni.ics.DAOs.*;
 import cz.muni.ics.models.entities.*;
 import cz.muni.ics.models.richEntities.*;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
 @SuppressWarnings("unused")
-public class Query implements GraphQLRootResolver {
+public class Query implements GraphQLQueryResolver {
 
     private static final Logger log = LoggerFactory.getLogger(Query.class);
 
