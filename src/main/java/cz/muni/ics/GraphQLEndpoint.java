@@ -2,7 +2,6 @@ package cz.muni.ics;
 
 import com.coxautodev.graphql.tools.SchemaParser;
 import cz.muni.ics.models.Query;
-import graphql.execution.ExecutionStrategy;
 import graphql.schema.GraphQLSchema;
 import graphql.servlet.AbstractGraphQLHttpServlet;
 import graphql.servlet.GraphQLInvocationInputFactory;

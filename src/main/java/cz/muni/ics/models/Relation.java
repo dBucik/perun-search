@@ -2,6 +2,8 @@ package cz.muni.ics.models;
 
 import cz.muni.ics.models.attributes.PerunAttribute;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +13,7 @@ public class Relation {
     private Long secondaryEntityId;
     private String type;
     private RelationType trueType;
-    private List<PerunAttribute> attributes;
+    private List<PerunAttribute> attributes = new ArrayList<>();
 
     public Long getPrimaryEntityId() {
         return primaryEntityId;
@@ -48,11 +50,11 @@ public class Relation {
     }
 
     public List<PerunAttribute> getAttributes() {
-        return attributes;
+        return Collections.unmodifiableList(attributes);
     }
 
     public void setAttributes(List<PerunAttribute> attributes) {
-        this.attributes = attributes;
+        this.attributes = new ArrayList<>(attributes);
     }
 
     public static RelationType resolveType(String type) {
@@ -132,7 +134,7 @@ public class Relation {
 				", secondaryEntityId=" + resolveSecondaryEntityKeyFromRelationType(trueType) + ": " + secondaryEntityId +
 				", trueType: " + trueType +
 				", type: " + type +
-				"]{attributes: " + attributes.toString() + '}';
+				"]{attributes: " + attributes + '}';
     }
 
     @Override

@@ -3,6 +3,8 @@ package cz.muni.ics.models.richEntities;
 import cz.muni.ics.models.attributes.PerunAttribute;
 import cz.muni.ics.models.entities.UserExtSource;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,22 +15,22 @@ import java.util.Objects;
  */
 public class RichUserExtSource extends UserExtSource implements RichPerunEntity {
 
-    private List<PerunAttribute> attributes;
+    private List<PerunAttribute> attributes = new ArrayList<>();
 
     @Override
     public List<PerunAttribute> getAttributes() {
-        return attributes;
+        return Collections.unmodifiableList(attributes);
     }
 
     @Override
     public void setAttributes(List<PerunAttribute> attributes) {
-        this.attributes = attributes;
+        this.attributes = new ArrayList<>(attributes);
     }
 
     @Override
     public String toString() {
         return super.toString().replaceFirst("UserExtSource", "RichUserExtSource") +
-                "{ attributes: " + attributes.toString() + '}';
+                "{ attributes: " + attributes + '}';
     }
 
     @Override
