@@ -2,7 +2,6 @@ package cz.muni.ics.mappers.richEntities;
 
 import cz.muni.ics.mappers.MappersUtils;
 import cz.muni.ics.models.richEntities.RichExtSource;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,9 +10,8 @@ import java.sql.SQLException;
 
 public class RichExtSourceMapper implements RowMapper<RichExtSource> {
 
-    @NotNull
     @Override
-    public RichExtSource mapRow(@NotNull ResultSet rs, int i) throws SQLException {
+    public RichExtSource mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
         RichExtSource res = MappersUtils.mapExtSource(entityJson, new RichExtSource());
 

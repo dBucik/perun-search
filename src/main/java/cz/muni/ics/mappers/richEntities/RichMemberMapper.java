@@ -2,7 +2,6 @@ package cz.muni.ics.mappers.richEntities;
 
 import cz.muni.ics.mappers.MappersUtils;
 import cz.muni.ics.models.richEntities.RichMember;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,9 +10,8 @@ import java.sql.SQLException;
 
 public class RichMemberMapper implements RowMapper<RichMember> {
 
-    @NotNull
     @Override
-    public RichMember mapRow(@NotNull ResultSet rs, int i) throws SQLException {
+    public RichMember mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
         RichMember res = MappersUtils.mapMember(entityJson, new RichMember());
 

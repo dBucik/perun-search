@@ -1,7 +1,18 @@
 package cz.muni.ics.models;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import cz.muni.ics.DAOs.*;
+
+import cz.muni.ics.DAOs.ExtSourceDAO;
+import cz.muni.ics.DAOs.FacilityDAO;
+import cz.muni.ics.DAOs.GroupDAO;
+import cz.muni.ics.DAOs.HostDAO;
+import cz.muni.ics.DAOs.MemberDAO;
+import cz.muni.ics.DAOs.OwnerDAO;
+import cz.muni.ics.DAOs.RelationsDAO;
+import cz.muni.ics.DAOs.ResourceDAO;
+import cz.muni.ics.DAOs.ServiceDAO;
+import cz.muni.ics.DAOs.UserDAO;
+import cz.muni.ics.DAOs.UserExtSourceDAO;
+import cz.muni.ics.DAOs.VoDAO;
 import cz.muni.ics.models.entities.*;
 import cz.muni.ics.models.richEntities.*;
 import org.slf4j.Logger;
@@ -15,7 +26,7 @@ import java.util.List;
  * @author Dominik Frantisek Bucik <bucik@ics.muni.cz>
  */
 @SuppressWarnings("unused")
-public class Query implements GraphQLQueryResolver {
+public class Query {
 
     private static final Logger log = LoggerFactory.getLogger(Query.class);
 
