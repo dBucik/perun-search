@@ -1,6 +1,6 @@
 package cz.muni.ics;
 
-import cz.muni.ics.DAOs.VoDAO;
+import cz.muni.ics.models.Query;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
@@ -13,6 +13,7 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import graphql.schema.idl.TypeRuntimeWiring;
 import org.dataloader.DataLoaderRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -36,17 +37,17 @@ public class MainController {
 	private GraphQLSchema schema;
 
 	@Autowired
-	VoDAO voDAO;
+	private Query query;
 
 	@Autowired
 	ResourceLoader resourceLoader;
 
 	@RequestMapping("/graphql")
-	public String process(@RequestParam(value = "query") String query) {
+	public String process(@RequestParam(value = "query") String queryString) {
 		ExecutionInput.Builder executionInput = newExecutionInput()
-				.query(query);
+				.query(queryString);
 
-		AppWiring.Context context = new AppWiring.Context(voDAO);
+		AppWiring.Context context = new AppWiring.Context(query);
 		executionInput.context(context);
 
 		GraphQLSchema schema = buildSchema();
@@ -60,10 +61,8 @@ public class MainController {
 				Arrays.asList(new TracingInstrumentation(), dlInstrumentation)
 		);
 
-		// finally you build a runtime graphql object and execute the query
 		GraphQL graphQL = GraphQL
 				.newGraphQL(schema)
-				// instrumentation is pluggable
 				.instrumentation(instrumentation)
 				.build();
 		ExecutionResult executionResult = graphQL.execute(executionInput.build());
@@ -84,12 +83,49 @@ public class MainController {
 				//TODO
 			}
 
-			RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring().build();
-			//TODO write wiring
+			RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
+					.type(typeRuntimeWiring()
+					).build();
 
 			schema = new SchemaGenerator().makeExecutableSchema(typeRegistry, wiring);
 		}
 		return schema;
+	}
+
+	private TypeRuntimeWiring typeRuntimeWiring() {
+		return newTypeWiring("Query")
+				.dataFetcher("getExtSources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichExtSources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichExtSources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getFacilities", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichFacilities", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichFacilities", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getGroups", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichGroups", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichGroups", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getHosts", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichHosts", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichHosts", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getMembers", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichMembers", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichMembers", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getOwners", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getResources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichResources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichResources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getServices", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichServices", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichServices", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getUsers", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichUsers", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichUsers", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getUserExtSources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichUserExtSources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichUserExtSources", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getVos", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getRichVos", AppWiring.getEntitiesFetcher())
+				.dataFetcher("getCompleteRichVos", AppWiring.getEntitiesFetcher())
+				.build();
 	}
 
 	private Reader loadSchemaFile() throws IOException {
