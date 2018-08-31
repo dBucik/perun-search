@@ -9,11 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.StringJoiner;
+import java.util.StringTokenizer;
 
 public class DAOUtils {
 
@@ -44,42 +45,24 @@ public class DAOUtils {
 		}
 	}
 
-	public static String simpleQueryBuilder(String where, PerunEntityType type) {
-		log.trace("Building simple query (where: {}, type: {})", where, type);
-		return entityQueryBuilder(true, null, where, type);
+	public static JDBCQuery simpleQueryBuilder(PerunEntityType entityType, List<InputAttribute> core) {
+		log.trace("Building simple query (entityType: {}, core: {}", entityType, core);
+		return entityQueryBuilder(true, NO_ATTRS_NAMES, core, NO_ATTRS, entityType);
 	}
 
-	public static String complexQueryBuilder(String innerWhere, String outerWhere, PerunEntityType type) {
-		log.trace("Building complex query (innerWhere: {}, outerWhere: {}, type: {})", innerWhere, outerWhere, type);
-		return entityQueryBuilder(false, innerWhere, outerWhere, type);
+	public static JDBCQuery complexQueryBuilder(PerunEntityType entityType, List<String> attrsNames,
+											   List<InputAttribute> core, List<InputAttribute> attrs) {
+		log.trace("Building query (entityType: {}, attrsNames: {}, core: {}, attrs: {}",
+				entityType, attrsNames, core, attrs);
+
+		return entityQueryBuilder(false, attrsNames, core, attrs, entityType);
 	}
 
-	public static String relationQueryBuilder(String where, RelationType type) {
-		log.trace("Building relation query (where: {}, type: {}", where, type);
-		String prefix = getRelationPrefix(type);
-
-		String relationTable = dbTablesProperties.getProperty(prefix + ".relationTable");
-		String primaryEntityId = dbTablesProperties.getProperty(prefix + ".primaryEntityId");
-		String secondaryEntityId = dbTablesProperties.getProperty(prefix + ".secondaryEntityId");
-		String attrNames = dbTablesProperties.getProperty(prefix + ".attrNamesTable");
-
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT ? AS rel_type, ").append(primaryEntityId).append(", ").append(secondaryEntityId).append(",")
-				.append(" json_object_agg(friendly_name, json_build_object(")
-				.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS attributes")
-				.append(" FROM ").append(relationTable).append(" av JOIN ").append(attrNames).append(" an ON av.attr_id = an.id");
-		if (!Objects.equals(where, NO_WHERE)) {
-			query.append(' ').append(where);
-		}
-		query.append(" GROUP BY ").append(primaryEntityId).append(", ").append(secondaryEntityId);
-
-		log.trace("Built query: {}", query.toString());
-		return query.toString();
-	}
-
-	private static String entityQueryBuilder(boolean isSimple, String innerWhere, String outerWhere, PerunEntityType type) {
-		log.trace("Building query (isSimple: {}, innerWhere: {}, outerWhere: {}, type: {}",
-				isSimple, innerWhere, outerWhere, type);
+	private static JDBCQuery entityQueryBuilder(boolean isSimple, List<String> attrsNames, List<InputAttribute> core,
+												List<InputAttribute> attrs, PerunEntityType type) {
+		JDBCQuery query = new JDBCQuery();
+		log.trace("Building query (isSimple: {}, attrsNames: {}, core: {}, attrs: {}, type: {}",
+				isSimple, attrsNames, core, attrs, type);
 		String prefix = getEntityPrefix(type);
 
 		String entityTable = dbTablesProperties.getProperty(prefix + ".entityTable");
@@ -87,62 +70,81 @@ public class DAOUtils {
 		String entityId = dbTablesProperties.getProperty(prefix + ".attrValuesEntityId");
 		String attrNames = dbTablesProperties.getProperty(prefix + ".attrNamesTable");
 
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT to_json(ent) AS entity"); //select entity
+		StringBuilder queryString = new StringBuilder();
+		queryString.append("SELECT to_json(ent) AS entity"); //select entity
 		if (! isSimple) {
-			query.append(", attributes.data AS attrs"); //select also attributes
+			queryString.append(", attributes.data AS attrs"); //select also attributes
 		}
-		query.append(" FROM ").append(entityTable).append(" ent"); //entity table
+		queryString.append(" FROM ").append(entityTable).append(" ent"); //entity table
 		if (! isSimple) {
-			query.append(" JOIN (") // select attributes and build JSON
+			queryString.append(" JOIN (") // select attributes and build JSON
 					.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
 					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS data")
 					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
 					.append(" an ON av.attr_id = an.id");
-			if (!Objects.equals(innerWhere, NO_WHERE)) { // select specific attributes by names
-				query.append(' ').append(innerWhere);
+			String innerWhere = buildInnerWhere(query, attrsNames);
+			if (!Objects.equals(NO_WHERE, innerWhere)) { // select specific attributes by names
+				queryString.append(' ').append(innerWhere);
 			}
-			query.append(" GROUP BY ").append(entityId) // group attributes by entity id and add join condition
+			queryString.append(" GROUP BY ").append(entityId) // group attributes by entity id and add join condition
 					.append(") AS attributes ON ent.id = attributes.").append(entityId);
 		}
+
+		String outerWhere = buildOuterWhere(query, core, attrs);
 		if (!Objects.equals(NO_WHERE, outerWhere)) { // add conditions for entity and attributes
-			query.append(' ').append(outerWhere);
+			queryString.append(' ').append(outerWhere);
 		}
 
-		log.trace("Built query: {}", query.toString());
-		return query.toString();
+
+		query.setQueryString(queryString.toString());
+		log.trace("Built query: {}", query.getQueryString());
+		return query;
 	}
 
-	public static String innerWhereBuilder(int namesCount) {
-		log.trace("Building inner where (namesCount: {})", namesCount);
-		if (namesCount <= NO_ATTRS_NAMES_COUNT) {
-			log.trace("No attrs_names provided, returning NULL");
+	public static JDBCQuery relationQueryBuilder(Long primaryId, Long secondaryId, List<String> attrsNames,
+												 List<InputAttribute> attrs , RelationType type) {
+		JDBCQuery query = new JDBCQuery();
+		log.trace("Building query (primaryId: {}, secondaryId: {}, attrsNames: {}, attrs: {}, type: {}",
+				primaryId, secondaryId, attrsNames, attrs, type);
+		String prefix = getRelationPrefix(type);
+
+		String relationTable = dbTablesProperties.getProperty(prefix + ".relationTable");
+		String primaryEntityId = dbTablesProperties.getProperty(prefix + ".primaryEntityId");
+		String secondaryEntityId = dbTablesProperties.getProperty(prefix + ".secondaryEntityId");
+		String attrNames = dbTablesProperties.getProperty(prefix + ".attrNamesTable");
+
+		StringBuilder queryString = new StringBuilder();
+
+		queryString.append("SELECT ? AS rel_type, ").append(primaryEntityId).append(", ").append(secondaryEntityId).append(",")
+				.append(" json_object_agg(friendly_name, json_build_object(")
+				.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS attributes")
+				.append(" FROM ").append(relationTable).append(" av JOIN ").append(attrNames).append(" an ON av.attr_id = an.id");
+		String where = buildRelationWhere(query, type, primaryId, secondaryId, attrsNames, attrs);
+
+		if (!Objects.equals(where, NO_WHERE)) {
+			queryString.append(' ').append(where);
+		}
+		queryString.append(" GROUP BY ").append(primaryEntityId).append(", ").append(secondaryEntityId);
+
+		query.setQueryString(queryString.toString());
+		log.trace("Built query: {}", query.getQueryString());
+		return query;
+	}
+
+	private static String buildOuterWhere(JDBCQuery query, List<InputAttribute> core, List<InputAttribute> attrs) {
+		log.trace("Building outer where (query: {}, core: {}, attrs: {})", query, core, attrs);
+		if ((core == null || core.isEmpty()) && (attrs == null || attrs.isEmpty())) {
+			log.trace("No attrs provided, returning NULL");
 			return NO_WHERE;
 		}
 
-		String query = "WHERE ";
-		StringJoiner sj = new StringJoiner(" OR ");
-		for (int i = 0; i < namesCount; i++) {
-			sj.add("friendly_name = ?");
-		}
-
-		log.trace("Built inner WHERE: {}", query + sj.toString());
-		return query + sj.toString();
-	}
-
-	public static String outerWhereBuilder(List<InputAttribute> core, List<InputAttribute> attrs) {
-		log.trace("Building outer where (core: {}, attrs: {})", core, attrs);
-		if ((core == null || core.isEmpty()) && (attrs == null || attrs.isEmpty())) {
-			log.trace("No attrs provided, returning NULL");
-			return null;
-		}
-
-		String query = "WHERE ";
+		String queryString = "WHERE ";
 		StringJoiner sj = new StringJoiner(" AND ");
 		if (core != null) {
 			for (InputAttribute a : core) {
 				String op = resolveMatchOperator(a.getAttributeType());
-				sj.add("ent." + a.getKey() + ' ' + op + " ?"); // TODO: escape name to prevent SQL injection
+				sj.add("ent." + a.getKey() + ' ' + op + " (" + query.getNextParamName() + ')'); // TODO: escape name to prevent SQL injection
+				query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
 			}
 		}
 
@@ -150,46 +152,77 @@ public class DAOUtils {
 			for (InputAttribute a : attrs) {
 				String op1 = resolveFetchOperator(a.getAttributeType());
 				String op2 = resolveMatchOperator(a.getAttributeType());
-				sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " ?"); // TODO: escape name to prevent SQL injection
+				sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
+				query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
 			}
 		}
 
 		log.trace("Built outer WHERE: {}", query + sj.toString());
-		return query + sj.toString();
+		return queryString + sj.toString();
 	}
 
-	public static String relationWhereBuilder(RelationType type, Long primaryId, Long secondaryId,
-											  int namesCount, List<InputAttribute> attrs) {
-		log.trace("Building relation where (type: {}, primaryId: {}, secondaryId: {}, attrs: {})", type, primaryId, secondaryId, attrs);
+	private static String buildInnerWhere(JDBCQuery query, List<String> attrsNames) {
+		log.trace("Building inner where (query: {}, attrsNames: {})", query, attrsNames);
+		if (attrsNames == null || attrsNames.size() <= NO_ATTRS_NAMES_COUNT) {
+			log.trace("No attrs_names provided, returning NULL");
+			return NO_WHERE;
+		}
+
+		String queryString = "WHERE ";
+		StringJoiner sj = new StringJoiner(" OR ");
+		for (String attr: attrsNames) {
+			sj.add("friendly_name = " + query.getNextParamName());
+			query.addParam(attr);
+		}
+
+		log.trace("Built inner WHERE: {}", query + sj.toString());
+		return queryString + sj.toString();
+	}
+
+	private static String buildRelationWhere(JDBCQuery query, RelationType type, Long primaryId, Long secondaryId,
+											List<String> attrsNames, List<InputAttribute> attrs) {
+		log.trace("Building relation where (query: {}, type: {}, primaryId: {}, secondaryId: {}, attrsNames: {}, attrs: {})",
+				query, type, primaryId, secondaryId, attrsNames, attrs);
 		if ((primaryId == null) && (secondaryId == null) && (attrs == null || attrs.isEmpty())) {
 			log.trace("No attrs provided, returning NULL");
 			return null;
 		}
 
-		String query = "WHERE ";
+		String queryString = "WHERE ";
 		StringJoiner sj = new StringJoiner(" AND ");
 		StringJoiner sub = new StringJoiner(" OR ");
 
 		if (primaryId != null) {
 			String primary = Relation.resolvePrimaryEntityKeyFromRelationType(type);
-			sj.add(primary + " = ?");
+			sj.add(primary + " = " + query.getNextParamName());
+			query.addParam(primaryId);
 		}
 
 		if (secondaryId != null) {
 			String secondary = Relation.resolveSecondaryEntityKeyFromRelationType(type);
-			sj.add(secondary + " = ?");
+			sj.add(secondary + " = " + query.getNextParamName());
+			query.addParam(secondaryId);
 		}
-
-		if (namesCount > NO_ATTRS_NAMES_COUNT) {
-			for (int i = 0; i < namesCount; i++) {
-				sub.add("(friendly_name = ?)");
+		
+		if (attrsNames != null) {
+			for (String attrName : attrsNames) {
+				sub.add("(friendly_name = " + query.getNextParamName() + ')');
+				query.addParam(attrName);
 			}
 		}
 
 		if (attrs != null) {
 			for (InputAttribute a : attrs) {
 				String op = resolveMatchOperator(a.getAttributeType());
-				sub.add("((friendly_name = ?) AND (attr_value" + op + "?) OR (attr_value_text" + op + "?))");
+				String partial = "";
+				Object value = resolveTrueValue(a.getAttributeType(), a.getValue());
+				partial += "((friendly_name = " + query.getNextParamName();
+				query.addParam(a.getKey());
+				partial += ") AND (attr_value" + op + query.getNextParamName();
+				query.addParam(value);
+				partial += ") OR (attr_value_text" + op + query.getNextParamName() + "))";
+				query.addParam(value);
+				sub.add(partial);
 			}
 		}
 		if (sub.length() > 0) {
@@ -197,80 +230,10 @@ public class DAOUtils {
 		}
 
 		log.trace("Built outer WHERE: {}", query + sj.toString());
-		return query + sj.toString();
+		queryString += sj.toString();
+		return queryString;
 	}
-
-	public static Object[] buildEntityParams(List<String> attrsNames, List<InputAttribute> core, List<InputAttribute> attrs) {
-		log.trace("Building params array (attrsNames: {}, core: {}, attrs: {})");
-
-		List<Object> params = new LinkedList<>();
-		if (attrsNames != NO_ATTRS_NAMES) {
-			params.addAll(attrsNames); // add attributes names to be fetched
-		}
-
-		if (attrs != NO_ATTRS) {
-			for (InputAttribute a: attrs) {
-				params.add(a.getKey()); // add attributes names to be fetched and later used in outer WHERE
-			}
-		}
-
-		if (core != NO_ATTRS) { // add core attributes values to outer WHERE
-			params.addAll(addValuesFromInputAttrs(core));
-		}
-
-		if (attrs != NO_ATTRS) { // add attributes values to outer WHERE
-			params.addAll(addValuesFromInputAttrs(attrs));
-		}
-
-		log.trace("Built params: {}", params);
-		return params.toArray();
-	}
-
-	public static Object[] buildRelationParams(String type, Long primaryId, Long secondaryId, List<String> attrsNames,
-											   List<InputAttribute> attrs) {
-		List<Object> res = new LinkedList<>();
-
-		res.add(type);
-
-		if (primaryId != null) {
-			res.add(primaryId);
-		}
-
-		if (secondaryId != null) {
-			res.add(secondaryId);
-		}
-
-		if (attrsNames != NO_ATTRS_NAMES) {
-			res.addAll(attrsNames);
-		}
-
-		if (attrs != NO_ATTRS) {
-			for (InputAttribute a: attrs) {
-				res.add(a.getKey());
-				res.add(resolveTrueValue(a.getAttributeType(), a.getValue()));
-			}
-		}
-
-		return res.toArray();
-	}
-
-	private static List<Object> addValuesFromInputAttrs(List<InputAttribute> attrs) {
-		List<Object> res = new LinkedList<>();
-		for (InputAttribute a: attrs) {
-			String op = resolveMatchOperator(a.getAttributeType());
-			if (op.equals(MATCH_TEXT)) {
-				res.add('%' + a.getValue() + '%');
-
-			} else {
-				Object val = resolveTrueValue(a.getAttributeType(), a.getValue());
-
-				res.add(val);
-			}
-		}
-
-		return res;
-	}
-
+	
 	private static Object resolveTrueValue(InputAttributeType type, String value) {
 		if (type == null) {
 			return value;
@@ -279,6 +242,13 @@ public class DAOUtils {
 		switch (type) {
 			case INTEGER: return Integer.parseInt(value);
 			case BOOLEAN: return Boolean.parseBoolean(value);
+			case ID: {
+				List<Long> arr = new ArrayList<>();
+				StringTokenizer st = new StringTokenizer(value, ",");
+				while(st.hasMoreTokens())
+					arr.add(Long.parseLong(st.nextToken()));
+				return arr.toArray();
+			}
 			default: return value;
 		}
 	}
@@ -342,6 +312,8 @@ public class DAOUtils {
 		}
 
 		switch (type) {
+			case ID:
+				return "IN";
 			case STRING:
 			case MAP:
 			case ARRAY:

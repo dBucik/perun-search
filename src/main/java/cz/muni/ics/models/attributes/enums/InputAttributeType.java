@@ -10,6 +10,6 @@ public enum InputAttributeType {
 	MAP,
 	LARGE_STRING,
 	EXACT_LARGE_STRING,
-	LARGE_LIST
-
+	LARGE_LIST,
+	ID
 }

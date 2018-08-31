@@ -2,22 +2,21 @@ package cz.muni.ics.DAOs.impl;
 
 import cz.muni.ics.DAOs.DAOUtils;
 import cz.muni.ics.DAOs.HostDAO;
+import cz.muni.ics.DAOs.JDBCQuery;
 import cz.muni.ics.mappers.entities.HostMapper;
 import cz.muni.ics.mappers.richEntities.RichHostMapper;
 import cz.muni.ics.models.InputAttribute;
 import cz.muni.ics.models.PerunEntityType;
 import cz.muni.ics.models.entities.Host;
 import cz.muni.ics.models.richEntities.RichHost;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.List;
 
-import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS;
 import static cz.muni.ics.DAOs.DAOUtils.NO_ATTRS_NAMES;
-import static cz.muni.ics.DAOs.DAOUtils.NO_WHERE;
 
 public class HostDAOImpl implements HostDAO {
 
@@ -26,45 +25,36 @@ public class HostDAOImpl implements HostDAO {
 	private static final HostMapper MAPPER = new HostMapper();
 	private static final RichHostMapper RICH_MAPPER = new RichHostMapper();
 
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate jdbcTemplate;
 
 	@Override
 	public void setDataSource(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
 
 	@Override
 	public List<Host> getHosts(List<InputAttribute> core) {
-		String where = DAOUtils.outerWhereBuilder(core, null);
-		String query = DAOUtils.simpleQueryBuilder(where, PerunEntityType.HOST);
-		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, NO_ATTRS);
+		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.HOST, core);
 
-		log.info("Executing query: {}, with params: {}", query, params);
-		return jdbcTemplate.query(query, params, MAPPER);
+		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
+		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), MAPPER);
 	}
 
 	@Override
 	public List<RichHost> getRichHosts(List<InputAttribute> core, List<InputAttribute> attrs,
-												 List<String> attrsNames) {
-		int size = attrs == null ? 0 : attrs.size();
-		size += attrsNames == null ? 0 : attrsNames.size();
-		String innerWhere = DAOUtils.innerWhereBuilder(size);
-		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
-		String query = DAOUtils.complexQueryBuilder(innerWhere, outerWhere, PerunEntityType.HOST);
-		Object[] params = DAOUtils.buildEntityParams(attrsNames, core, attrs);
+								   List<String> attrsNames) {
+		JDBCQuery query = DAOUtils.complexQueryBuilder(PerunEntityType.HOST, attrsNames, core, attrs);
 
-		log.info("Executing query: {}, with params: {}", query, params);
-		return jdbcTemplate.query(query, params, RICH_MAPPER);
+		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
+		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), RICH_MAPPER);
 	}
 
 	@Override
 	public List<RichHost> getCompleteRichHosts(List<InputAttribute> core, List<InputAttribute> attrs) {
-		String outerWhere = DAOUtils.outerWhereBuilder(core, attrs);
-		String query = DAOUtils.complexQueryBuilder(NO_WHERE, outerWhere, PerunEntityType.HOST);
-		Object[] params = DAOUtils.buildEntityParams(NO_ATTRS_NAMES, core, attrs);
+		JDBCQuery query = DAOUtils.complexQueryBuilder(PerunEntityType.HOST, NO_ATTRS_NAMES, core, attrs);
 
-		log.info("Executing query: {}, with params: {}", query, params);
-		return jdbcTemplate.query(query, params, RICH_MAPPER);
+		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
+		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), RICH_MAPPER);
 	}
-	
+
 }
