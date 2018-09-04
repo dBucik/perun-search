@@ -24,8 +24,6 @@ public class DAOUtils {
 
 	private static final String MATCH_TEXT = "LIKE";
 	private static final String MATCH_TYPE = "=";
-	private static final String GET_AS_TEXT = "->>";
-	private static final String GET_AS_TYPE = "->";
 
 	public static final String NO_WHERE = null;
 	public static final List<String> NO_ATTRS_NAMES = null;
@@ -150,9 +148,10 @@ public class DAOUtils {
 
 		if (attrs != null) {
 			for (InputAttribute a : attrs) {
-				String op1 = resolveFetchOperator(a.getAttributeType());
-				String op2 = resolveMatchOperator(a.getAttributeType());
-				sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
+				String match = resolveMatchOperator(a.getAttributeType());
+				sj.add("COALLESCE(attributes.data->'" + a.getKey() + "'->>'value', attributes.data->'" + a.getKey() +
+						"'->>'value_text')" + match + " (" + query.getNextParamName() + "))");
+				// TODO: escape name to prevent SQL injection
 				query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
 			}
 		}
@@ -229,7 +228,7 @@ public class DAOUtils {
 			sj.add(sub.toString());
 		}
 
-		log.trace("Built outer WHERE: {}", query + sj.toString());
+		log.trace("Built relation WHERE: {}", query + sj.toString());
 		queryString += sj.toString();
 		return queryString;
 	}
@@ -282,27 +281,6 @@ public class DAOUtils {
 			case GROUP_EXT_SOURCE: return "group_ext_source";
 			case VO_EXT_SOURCE: return "vo_ext_source";
 			default: return "";
-		}
-	}
-
-	private static String resolveFetchOperator(InputAttributeType type) {
-		if (type == null) {
-			return GET_AS_TEXT;
-		}
-
-		switch (type) {
-			case STRING:
-			case MAP:
-			case ARRAY:
-			case LARGE_LIST:
-			case LARGE_STRING:
-			case EXACT_STRING:
-			case EXACT_LARGE_STRING:
-				return GET_AS_TEXT;
-			case BOOLEAN:
-			case INTEGER:
-			default:
-				return GET_AS_TYPE;
 		}
 	}
 
