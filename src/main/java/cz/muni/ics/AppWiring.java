@@ -36,20 +36,11 @@ public class AppWiring {
 
 	}
 
-	private static Map<String, Method> getMethodMap = new HashMap<>();
-	private static Map<String, Method> getRichMethodMap = new HashMap<>();
-	private static Map<String, Method> getCompleteRichMethodMap = new HashMap<>();
+	private static Map<String, Method> queriesMap = new HashMap<>();
 
 	static {
 		for (Method m: Query.class.getMethods()) {
-			String name = m.getName();
-			if (name.startsWith("getCompleteRich")) {
-				getCompleteRichMethodMap.put(m.getName(), m);
-			} else if (name.startsWith("getRich")) {
-				getRichMethodMap.put(m.getName(), m);
-			} else if (name.startsWith("get")) {
-				getMethodMap.put(m.getName(), m);
-			}
+			queriesMap.put(m.getName(), m);
 		}
 	}
 
@@ -57,33 +48,18 @@ public class AppWiring {
 		Context ctx = env.getContext();
 		String action = env.getField().getName();
 		Map<String, Object> args = env.getArguments();
-		List<InputAttribute> core = convertInputAttributes(args.get("core"));
-		List<InputAttribute> attrs = convertInputAttributes(args.get("attrs"));
+		List<InputAttribute> attrs = convertInputAttributes(args.get("attributes"));
 		List<String> attrsNames = convertAttrsNames(args.get("attrsNames"));
 
-		return invokeFetchMethod(ctx, action, core, attrs, attrsNames);
+		return invokeFetchMethod(ctx, action, attrsNames, attrs);
 	};
 
-	private static Object invokeFetchMethod(Context ctx, String action, List<InputAttribute> core,
-											List<InputAttribute> attrs, List<String> attrsNames) {
-		if (action.startsWith("getCompleteRich")) {
-			Method m = getCompleteRichMethodMap.get(action);
+	private static Object invokeFetchMethod(Context ctx, String action, List<String> attrsNames,
+											List<InputAttribute> attrs) {
+		if (action.startsWith("get")) {
+			Method m = queriesMap.get(action);
 			try {
-				return m.invoke(ctx.getQuery(), core, attrsNames);
-			} catch (IllegalAccessException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		} else if (action.startsWith("getRich")) {
-			Method m = getRichMethodMap.get(action);
-			try {
-				return m.invoke(ctx.getQuery(), core, attrs, attrsNames);
-			} catch (IllegalAccessException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		} else if (action.startsWith("get")) {
-			Method m = getMethodMap.get(action);
-			try {
-				return m.invoke(ctx.getQuery(), core);
+				return m.invoke(ctx.getQuery(), attrsNames, attrs);
 			} catch (IllegalAccessException | InvocationTargetException e) {
 				e.printStackTrace();
 			}

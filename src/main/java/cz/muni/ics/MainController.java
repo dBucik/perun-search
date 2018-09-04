@@ -44,6 +44,11 @@ public class MainController {
 
 	@RequestMapping("/graphql")
 	public String process(@RequestParam(value = "query") String queryString) {
+		queryString = "{getGroups(" +
+				"attributes: [{key: \"id\", type: \"INTEGER\", value: \"1\"}])" +
+				"{ attributes " +
+					"{ value }" +
+				"}} ";
 		ExecutionInput.Builder executionInput = newExecutionInput()
 				.query(queryString);
 
@@ -95,36 +100,16 @@ public class MainController {
 	private TypeRuntimeWiring typeRuntimeWiring() {
 		return newTypeWiring("Query")
 				.dataFetcher("getExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichExtSources", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getFacilities", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichFacilities", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichFacilities", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getGroups", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichGroups", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichGroups", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getHosts", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichHosts", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichHosts", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getMembers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichMembers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichMembers", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getOwners", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getResources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichResources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichResources", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getServices", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichServices", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichServices", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getUsers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichUsers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichUsers", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getUserExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichUserExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichUserExtSources", AppWiring.getEntitiesFetcher())
 				.dataFetcher("getVos", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichVos", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichVos", AppWiring.getEntitiesFetcher())
 				.build();
 	}
 

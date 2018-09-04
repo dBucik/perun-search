@@ -1,6 +1,9 @@
 package cz.muni.ics.models.entities;
 
-import java.util.Objects;
+import cz.muni.ics.models.PerunEntityType;
+import cz.muni.ics.models.attributes.PerunAttribute;
+
+import java.util.Map;
 
 /**
  * UserExtSource entity from Perun.
@@ -9,77 +12,8 @@ import java.util.Objects;
  */
 public class UserExtSource extends PerunEntity {
 
-    private Long userId;
-    private String loginExt;
-    private Long extSourcesId;
-    private Short loa;
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getLoginExt() {
-        return loginExt;
-    }
-
-    public void setLoginExt(String loginExt) {
-        this.loginExt = loginExt;
-    }
-
-    public Long getExtSourcesId() {
-        return extSourcesId;
-    }
-
-    public void setExtSourcesId(Long extSourcesId) {
-        this.extSourcesId = extSourcesId;
-    }
-
-    public Short getLoa() {
-        return loa;
-    }
-
-    public void setLoa(Short loa) {
-        this.loa = loa;
-    }
-
-    @Override
-    public String toString() {
-        return "UserExtSource [" +
-                "id: " + getId() +
-                ", userId: " + userId +
-                ", loginExt: " + loginExt +
-				", extSourcesId: " + extSourcesId +
-				", loa: " + loa +
-                "]";
-    }
-
-	@Override
-	public boolean equals(Object o) {
-		if (! (o instanceof UserExtSource)) {
-			return false;
-		}
-
-		UserExtSource ues = (UserExtSource) o;
-		return super.equals(o) &&
-				Objects.equals(userId, ues.userId) &&
-				Objects.equals(loginExt, ues.loginExt) &&
-				Objects.equals(extSourcesId, ues.extSourcesId) &&
-				Objects.equals(loa, ues.loa);
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = super.hashCode();
-		if (userId != null) hash *= 31 * userId.hashCode();
-		if (loginExt != null) hash *= 31 * loginExt.hashCode();
-		if (extSourcesId != null) hash *= 31 * extSourcesId.hashCode();
-		if (loa != null) hash *= 31 * loa.hashCode();
-
-		return hash;
+	public UserExtSource(Map<String,PerunAttribute> attributes) {
+		super(PerunEntityType.USER_EXT_SOURCE, attributes);
 	}
 
 }

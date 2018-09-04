@@ -11,174 +11,49 @@ input InputAttribute {
     value: String
 }
 
-type Destination {
-    id: Long!
-    name: String!
-    description: String!
-}
-
 type ExtSource {
-    id: Long!
-    name: String!
-    type: String!
-}
-
-type RichExtSource {
-    id: Long!
-    name: String!
-    type: String!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Facility {
-    id: Long!
-    name: String!
-    description: String!
-}
-
-type RichFacility {
-    id: Long!
-    name: String!
-    description: String!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Group {
-    id: Long!
-    name: String!
-    description: String!
-    parentGroupId: Long!
-    voId: Long!
-}
-
-type RichGroup {
-    id: Long!
-    name: String!
-    description: String!
-    parentGroupId: Long!
-    voId: Long!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Host {
-    id: Long!
-    description: String!
-    hostname: String!
-    facilityId: Long!
-}
-
-type RichHost {
-    id: Long!
-    description: String!
-    hostname: String!
-    facilityId: Long!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Member {
-    id: Long!
-    userId: Long!
-    voId: Long!
-    status: String!
-    sponsored: Boolean!
-}
-
-type RichMember {
-    id: Long!
-    userId: Long!
-    voId: Long!
-    status: String!
-    sponsored: Boolean!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Owner {
-    id: Long!
-    name: String!
-    type: String!
+    attributes: [PerunAttribute!]
 }
+
 
 type Resource {
-    id: Long!
-    facilityId: Long!
-    name: String!
-    description: String!
-    voId: Long!
-}
-
-type RichResource {
-    id: Long!
-    facilityId: Long!
-    name: String!
-    description: String!
-    voId: Long!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Service {
-    id: Long!
-    name: String!
-    ownerId: Long!
-}
-
-type RichService {
-    id: Long!
-    name: String!
-    ownerId: Long!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type User {
-    id: Long!
-    firstName: String!
-    lastName: String!
-    middleName: String!
-    titleBefore: String!
-    titleAfter: String!
-    serviceAcc: Boolean!
-    sponsoredAcc: Boolean!
-}
-
-type RichUser {
-    id: Long!
-    firstName: String!
-    lastName: String!
-    middleName: String!
-    titleBefore: String!
-    titleAfter: String!
-    serviceAcc: Boolean!
-    sponsoredAcc: Boolean!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type UserExtSource {
-    id: Long!
-    userId: Long!
-    loginExt: String!
-    extSourcesId: Long!
-    loa: Short!
-}
-
-type RichUserExtSource {
-    id: Long!
-    userId: Long!
-    loginExt: String!
-    extSourcesId: Long!
-    loa: Short!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Vo {
-    id: Long
-    name: String!
-    shortName: String!
-}
-
-type RichVo {
-    id: Long
-    name: String!
-    shortName: String!
-    attributes: [PerunAttribute!]!
+    attributes: [PerunAttribute!]
 }
 
 type Relation {
@@ -190,52 +65,34 @@ type Relation {
 
 type Query {
     # EXT_SOURCE
-    getExtSources(core: [InputAttribute]): [ExtSource]
-    getRichExtSources(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichExtSource]
-    getCompleteRichExtSources(core: [InputAttribute], attrs: [InputAttribute]): [RichExtSource]
+    getExtSources(attrsNames: [String], attributes: [InputAttribute!]!): [ExtSource]
 
     # FACILITY
-    getFacilities(core: [InputAttribute]): [Facility]
-    getRichFacilities(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichFacility]
-    getCompleteRichFacilities(core: [InputAttribute], attrs: [InputAttribute]): [RichFacility]
+    getFacilities(attrsNames: [String], attributes: [InputAttribute!]!): [Facility]
 
     # GROUP
-    getGroups(core: [InputAttribute]): [Group]
-    getRichGroups(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichGroup]
-    getCompleteRichGroups(core: [InputAttribute], attrs: [InputAttribute]): [RichGroup]
+    getGroups(attrsNames: [String], attributes: [InputAttribute!]!): [Group]
 
     # MEMBER
-    getMembers(core: [InputAttribute]): [Member]
-    getRichMembers(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichMember]
-    getCompleteRichMembers(core: [InputAttribute], attrs: [InputAttribute]): [RichMember]
+    getMembers(attrsNames: [String], attributes: [InputAttribute!]!): [Member]
 
     # OWNER
-    getOwners(core: [InputAttribute]): [Owner]
+    getOwners(attrsNames: [String], attributes: [InputAttribute!]!): [Owner]
 
     # RESOURCE
-    getResources(core: [InputAttribute]): [Resource]
-    getRichResources(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichResource]
-    getCompleteRichResources(core: [InputAttribute], attrs: [InputAttribute]): [RichResource]
+    getResources(attrsNames: [String], attributes: [InputAttribute!]!): [Resource]
 
     # SERVICE
-    getServices(core: [InputAttribute]): [Service]
-    getRichServices(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichService]
-    getCompleteRichServices(core: [InputAttribute], attrs: [InputAttribute]): [RichService]
+    getServices(attrsNames: [String], attributes: [InputAttribute!]!): [Service]
 
     # USER
-    getUsers(core: [InputAttribute]): [User]
-    getRichUsers(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichUser]
-    getCompleteRichUsers(core: [InputAttribute], attrs: [InputAttribute]): [RichUser]
+    getUsers(attrsNames: [String], attributes: [InputAttribute!]!): [User]
 
     # USER_EXT_SOURCE
-    getUserExtSources(core: [InputAttribute]): [UserExtSource]
-    getRichUserExtSources(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichUserExtSource]
-    getCompleteRichUserExtSources(core: [InputAttribute], attrs: [InputAttribute]): [RichUserExtSource]
+    getUserExtSources(attrsNames: [String], attributes: [InputAttribute!]!): [UserExtSource]
 
     # VO
-    getVos(core: [InputAttribute]): [Vo]
-    getRichVos(core: [InputAttribute], attrs: [InputAttribute], attrsNames: [String]): [RichVo]
-    getCompleteRichVos(core: [InputAttribute], attrs: [InputAttribute]): [RichVo]
+    getVos(attrsNames: [String], attributes: [InputAttribute!]!): [Vo]
 
     # RELATIONS
     getRelations(type: String!, primary: Long, secondary: Long): [Relation]

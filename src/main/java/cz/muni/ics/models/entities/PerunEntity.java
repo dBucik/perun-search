@@ -1,5 +1,13 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.PerunEntityType;
+import cz.muni.ics.models.attributes.PerunAttribute;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -9,37 +17,34 @@ import java.util.Objects;
  */
 public class PerunEntity {
 
-    private Long id;
+	private PerunEntityType type;
+	private Map<String, PerunAttribute> attributes;
 
-    public Long getId() {
-        return id;
-    }
+	public PerunEntity(PerunEntityType type, Map<String, PerunAttribute> attributes) {
+		this.type = type;
+		this.attributes = attributes;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Map<String, PerunAttribute> getAttributesMap() {
+		return attributes;
+	}
+
+	public void setAttributes(Map<String, PerunAttribute> attributes) {
+		this.attributes = attributes;
+	}
+
+	public PerunAttribute getAttributeByKey(String key) {
+		return attributes.get(key);
+	}
+
+	public List<PerunAttribute> getAttributes() {
+		return new ArrayList<>(attributes.values());
+	}
 
     @Override
     public String toString() {
-        return "PerunEntity [" +
-                "id: " + getId() +
+        return "PerunEntity: " + type + " [" +
+				"attributes: "+ attributes +
                 "]";
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof  PerunEntity)) {
-            return false;
-        }
-
-        PerunEntity e = (PerunEntity) o;
-        return Objects.equals(this.id, e.id);
-    }
-
-	@Override
-	public int hashCode() {
-		int hash = 1;
-		if (id != null) hash *= 31 * id.hashCode();
-		return hash;
-	}
 }

@@ -5,6 +5,7 @@ import cz.muni.ics.models.attributes.PerunAttribute;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Relation {
@@ -13,7 +14,7 @@ public class Relation {
     private Long secondaryEntityId;
     private String type;
     private RelationType trueType;
-    private List<PerunAttribute> attributes = new ArrayList<>();
+    private Map<String, PerunAttribute> attributes;
 
     public Long getPrimaryEntityId() {
         return primaryEntityId;
@@ -49,12 +50,20 @@ public class Relation {
         this.type = trueType.toString();
     }
 
-    public List<PerunAttribute> getAttributes() {
-        return Collections.unmodifiableList(attributes);
+    public Map<String, PerunAttribute> getAttributes() {
+        return attributes;
     }
 
-    public void setAttributes(List<PerunAttribute> attributes) {
-        this.attributes = new ArrayList<>(attributes);
+    public void setAttributes(Map<String, PerunAttribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public PerunAttribute getAttributeByKey(String key) {
+        return attributes.get(key);
+    }
+
+    public List<PerunAttribute> getAttributesAsList() {
+        return new ArrayList<>(attributes.values());
     }
 
     public static RelationType resolveType(String type) {

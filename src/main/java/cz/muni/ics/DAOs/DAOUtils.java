@@ -45,56 +45,42 @@ public class DAOUtils {
 		}
 	}
 
-	public static JDBCQuery simpleQueryBuilder(PerunEntityType entityType, List<InputAttribute> core) {
-		log.trace("Building simple query (entityType: {}, core: {}", entityType, core);
-		return entityQueryBuilder(true, NO_ATTRS_NAMES, core, NO_ATTRS, entityType);
+	public static JDBCQuery entityQueryBuilder(PerunEntityType entityType, List<String> attrsNames,
+												List<InputAttribute> attrs) {
+		log.trace("Building query (entityType: {}, attrsNames: {}, attrs: {}",
+				entityType, attrsNames, attrs);
+
+		return entityQueryBuilder(attrsNames, attrs, entityType);
 	}
 
-	public static JDBCQuery complexQueryBuilder(PerunEntityType entityType, List<String> attrsNames,
-											   List<InputAttribute> core, List<InputAttribute> attrs) {
-		log.trace("Building query (entityType: {}, attrsNames: {}, core: {}, attrs: {}",
-				entityType, attrsNames, core, attrs);
-
-		return entityQueryBuilder(false, attrsNames, core, attrs, entityType);
-	}
-
-	private static JDBCQuery entityQueryBuilder(boolean isSimple, List<String> attrsNames, List<InputAttribute> core,
-												List<InputAttribute> attrs, PerunEntityType type) {
+	private static JDBCQuery entityQueryBuilder(List<String> attrsNames, List<InputAttribute> attrs,
+												PerunEntityType type) {
 		JDBCQuery query = new JDBCQuery();
-		log.trace("Building query (isSimple: {}, attrsNames: {}, core: {}, attrs: {}, type: {}",
-				isSimple, attrsNames, core, attrs, type);
+		log.trace("Building query (attrsNames: {}, attrs: {}, type: {}", attrsNames, attrs, type);
 		String prefix = getEntityPrefix(type);
 
-		String entityTable = dbTablesProperties.getProperty(prefix + ".entityTable");
 		String attrValues = dbTablesProperties.getProperty(prefix + ".attrValuesTable");
 		String entityId = dbTablesProperties.getProperty(prefix + ".attrValuesEntityId");
 		String attrNames = dbTablesProperties.getProperty(prefix + ".attrNamesTable");
 
 		StringBuilder queryString = new StringBuilder();
-		queryString.append("SELECT to_json(ent) AS entity"); //select entity
-		if (! isSimple) {
-			queryString.append(", attributes.data AS attrs"); //select also attributes
+		queryString.append("SELECT attributes.data AS attrs");
+		queryString.append(" FROM ")
+				.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
+				.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS data")
+				.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
+				.append(" an ON av.attr_id = an.id");
+		String innerWhere = buildInnerWhere(query, attrsNames);
+		if (!Objects.equals(NO_WHERE, innerWhere)) { // select specific attributes by names
+			queryString.append(' ').append(innerWhere);
 		}
-		queryString.append(" FROM ").append(entityTable).append(" ent"); //entity table
-		if (! isSimple) {
-			queryString.append(" JOIN (") // select attributes and build JSON
-					.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
-					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS data")
-					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
-					.append(" an ON av.attr_id = an.id");
-			String innerWhere = buildInnerWhere(query, attrsNames);
-			if (!Objects.equals(NO_WHERE, innerWhere)) { // select specific attributes by names
-				queryString.append(' ').append(innerWhere);
-			}
-			queryString.append(" GROUP BY ").append(entityId) // group attributes by entity id and add join condition
-					.append(") AS attributes ON ent.id = attributes.").append(entityId);
-		}
+		queryString.append(" GROUP BY ").append(entityId) // group attributes by entity id and add join condition
+				.append(") AS attributes ON ent.id = attributes.").append(entityId);
 
-		String outerWhere = buildOuterWhere(query, core, attrs);
+		String outerWhere = buildOuterWhere(query, attrs);
 		if (!Objects.equals(NO_WHERE, outerWhere)) { // add conditions for entity and attributes
 			queryString.append(' ').append(outerWhere);
 		}
-
 
 		query.setQueryString(queryString.toString());
 		log.trace("Built query: {}", query.getQueryString());
@@ -131,30 +117,20 @@ public class DAOUtils {
 		return query;
 	}
 
-	private static String buildOuterWhere(JDBCQuery query, List<InputAttribute> core, List<InputAttribute> attrs) {
-		log.trace("Building outer where (query: {}, core: {}, attrs: {})", query, core, attrs);
-		if ((core == null || core.isEmpty()) && (attrs == null || attrs.isEmpty())) {
+	private static String buildOuterWhere(JDBCQuery query, List<InputAttribute> attrs) {
+		log.trace("Building outer where (query: {}, core: {}, attrs: {})", query, attrs);
+		if (attrs == null || attrs.isEmpty()) {
 			log.trace("No attrs provided, returning NULL");
 			return NO_WHERE;
 		}
 
 		String queryString = "WHERE ";
 		StringJoiner sj = new StringJoiner(" AND ");
-		if (core != null) {
-			for (InputAttribute a : core) {
-				String op = resolveMatchOperator(a.getAttributeType());
-				sj.add("ent." + a.getKey() + ' ' + op + " (" + query.getNextParamName() + ')'); // TODO: escape name to prevent SQL injection
-				query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
-			}
-		}
-
-		if (attrs != null) {
-			for (InputAttribute a : attrs) {
-				String op1 = resolveFetchOperator(a.getAttributeType());
-				String op2 = resolveMatchOperator(a.getAttributeType());
-				sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
-				query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
-			}
+		for (InputAttribute a : attrs) {
+			String op1 = resolveFetchOperator(a.getAttributeType());
+			String op2 = resolveMatchOperator(a.getAttributeType());
+			sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
+			query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
 		}
 
 		log.trace("Built outer WHERE: {}", query + sj.toString());
