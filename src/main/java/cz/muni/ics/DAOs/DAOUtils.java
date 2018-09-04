@@ -66,16 +66,16 @@ public class DAOUtils {
 		StringBuilder queryString = new StringBuilder();
 		queryString.append("SELECT attributes.data AS attrs");
 		queryString.append(" FROM ")
-				.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
+				.append("(SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
 				.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS data")
 				.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
 				.append(" an ON av.attr_id = an.id");
 		String innerWhere = buildInnerWhere(query, attrsNames);
-		if (!Objects.equals(NO_WHERE, innerWhere)) { // select specific attributes by names
+		if (!Objects.equals(NO_WHERE, innerWhere)) {
 			queryString.append(' ').append(innerWhere);
 		}
-		queryString.append(" GROUP BY ").append(entityId) // group attributes by entity id and add join condition
-				.append(") AS attributes ON ent.id = attributes.").append(entityId);
+		queryString.append(" GROUP BY ").append(entityId)
+				.append(") AS attributes ");
 
 		String outerWhere = buildOuterWhere(query, attrs);
 		if (!Objects.equals(NO_WHERE, outerWhere)) { // add conditions for entity and attributes
@@ -129,7 +129,7 @@ public class DAOUtils {
 		for (InputAttribute a : attrs) {
 			String op1 = resolveFetchOperator(a.getAttributeType());
 			String op2 = resolveMatchOperator(a.getAttributeType());
-			sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
+			sj.add("attributes.data->" + '\'' + a.getKey() + '\'' + op1 + "'value'" + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
 			query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
 		}
 
