@@ -1,4 +1,4 @@
-package cz.muni.ics.models.attributes.enums;
+package cz.muni.ics.models.enums;
 
 public enum AttributeType {
 

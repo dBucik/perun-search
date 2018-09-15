@@ -13,8 +13,12 @@ public class VoMapper implements RowMapper<Vo> {
     @Override
     public Vo mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
 
-        return MappersUtils.mapVo(entityJson, new Vo());
+        Vo res = MappersUtils.mapVo(entityJson);
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+
+        return res;
     }
 
 }

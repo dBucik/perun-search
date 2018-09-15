@@ -1,6 +1,6 @@
 package cz.muni.ics.models.attributes;
 
-import cz.muni.ics.models.attributes.enums.AttributeType;
+import cz.muni.ics.models.enums.AttributeType;
 
 import java.util.LinkedHashMap;
 import java.util.Objects;

@@ -1,5 +1,9 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.attributes.PerunAttribute;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,6 +17,7 @@ public class UserExtSource extends PerunEntity {
     private String loginExt;
     private Long extSourcesId;
     private Short loa;
+    private List<PerunAttribute> attributes = new ArrayList<>();
 
     public Long getUserId() {
         return userId;
@@ -45,6 +50,14 @@ public class UserExtSource extends PerunEntity {
     public void setLoa(Short loa) {
         this.loa = loa;
     }
+
+	public List<PerunAttribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<PerunAttribute> attributes) {
+		this.attributes = attributes;
+	}
 
     @Override
     public String toString() {

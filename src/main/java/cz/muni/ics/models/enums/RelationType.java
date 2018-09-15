@@ -1,4 +1,4 @@
-package cz.muni.ics.models;
+package cz.muni.ics.models.enums;
 
 public enum RelationType {
 

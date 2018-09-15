@@ -1,6 +1,6 @@
 package cz.muni.ics.DAOs;
 
-import cz.muni.ics.models.InputAttribute;
+import cz.muni.ics.models.attributes.InputAttribute;
 import cz.muni.ics.models.Relation;
 
 import javax.sql.DataSource;

@@ -14,7 +14,7 @@ public class OwnerMapper implements RowMapper<Owner> {
     public Owner mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
 
-        return MappersUtils.mapOwner(entityJson, new Owner());
+        return MappersUtils.mapOwner(entityJson);
     }
 
 }

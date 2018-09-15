@@ -1,136 +1,24 @@
 package cz.muni.ics;
 
-import cz.muni.ics.models.Query;
-import graphql.ExecutionInput;
-import graphql.ExecutionResult;
-import graphql.GraphQL;
-import graphql.execution.instrumentation.ChainedInstrumentation;
-import graphql.execution.instrumentation.Instrumentation;
-import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
-import graphql.execution.instrumentation.tracing.TracingInstrumentation;
-import graphql.schema.GraphQLSchema;
-import graphql.schema.idl.RuntimeWiring;
-import graphql.schema.idl.SchemaGenerator;
-import graphql.schema.idl.SchemaParser;
-import graphql.schema.idl.TypeDefinitionRegistry;
-import graphql.schema.idl.TypeRuntimeWiring;
-import org.dataloader.DataLoaderRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Arrays;
-
-import static graphql.ExecutionInput.newExecutionInput;
-import static graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentationOptions.newOptions;
-import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
-
 @RestController
 public class MainController {
 
-	private GraphQLSchema schema;
-
-	@Autowired
-	private Query query;
-
-	@Autowired
-	ResourceLoader resourceLoader;
+	private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
 	@RequestMapping("/graphql")
 	public String process(@RequestParam(value = "query") String queryString) {
-		ExecutionInput.Builder executionInput = newExecutionInput()
-				.query(queryString);
+		JSONObject queryJson = new JSONObject(queryString);
 
-		AppWiring.Context context = new AppWiring.Context(query);
-		executionInput.context(context);
+		//TODO: walk through the JSON and create query from it
+		//TODO: execute query and return the result
 
-		GraphQLSchema schema = buildSchema();
-		DataLoaderRegistry dataLoaderRegistry = context.getDataLoaderRegistry();
-
-
-		DataLoaderDispatcherInstrumentation dlInstrumentation =
-				new DataLoaderDispatcherInstrumentation(dataLoaderRegistry, newOptions().includeStatistics(true));
-
-		Instrumentation instrumentation = new ChainedInstrumentation(
-				Arrays.asList(new TracingInstrumentation(), dlInstrumentation)
-		);
-
-		GraphQL graphQL = GraphQL
-				.newGraphQL(schema)
-				.instrumentation(instrumentation)
-				.build();
-		ExecutionResult executionResult = graphQL.execute(executionInput.build());
-
-		if (executionResult.getErrors() != null && executionResult.getErrors().size() > 0) {
-			return executionResult.getErrors().toString();
-		}
-
-		return executionResult.getData().toString();
+		return null;
 	}
-
-	private GraphQLSchema buildSchema() {
-		if (schema == null) {
-			TypeDefinitionRegistry typeRegistry = new TypeDefinitionRegistry();
-			try (Reader streamReader = loadSchemaFile()) {
-				typeRegistry = new SchemaParser().parse(streamReader);
-			} catch (IOException e) {
-				//TODO
-			}
-
-			RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
-					.type(typeRuntimeWiring()
-					).build();
-
-			schema = new SchemaGenerator().makeExecutableSchema(typeRegistry, wiring);
-		}
-		return schema;
-	}
-
-	private TypeRuntimeWiring typeRuntimeWiring() {
-		return newTypeWiring("Query")
-				.dataFetcher("getExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getFacilities", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichFacilities", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichFacilities", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getGroups", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichGroups", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichGroups", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getHosts", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichHosts", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichHosts", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getMembers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichMembers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichMembers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getOwners", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getResources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichResources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichResources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getServices", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichServices", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichServices", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getUsers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichUsers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichUsers", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getUserExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichUserExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichUserExtSources", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getVos", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getRichVos", AppWiring.getEntitiesFetcher())
-				.dataFetcher("getCompleteRichVos", AppWiring.getEntitiesFetcher())
-				.build();
-	}
-
-	private Reader loadSchemaFile() throws IOException {
-		Resource resource = resourceLoader.getResource("classpath:schema.graphqls");
-		return new InputStreamReader(resource.getInputStream());
-	}
-
 }

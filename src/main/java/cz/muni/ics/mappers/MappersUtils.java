@@ -16,8 +16,10 @@ public class MappersUtils {
 
     private static final Logger log = LoggerFactory.getLogger(MappersUtils.class);
 
-    public static <T extends ExtSource> T mapExtSource(JSONObject json, T extSource) {
+    public static ExtSource mapExtSource(JSONObject json) {
         log.debug("Mapping ExtSource from json: {}", json);
+        ExtSource extSource = new ExtSource();
+
         extSource.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("name"))) {
@@ -36,9 +38,10 @@ public class MappersUtils {
         return extSource;
     }
 
-    public static <T extends Facility> T mapFacility(JSONObject json, T facility) {
+    public static Facility mapFacility(JSONObject json) {
         log.debug("Mapping ExtSource from json: {}", json);
 
+        Facility facility = new Facility();
         facility.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("name"))) {
@@ -57,9 +60,10 @@ public class MappersUtils {
         return facility;
     }
 
-    public static <T extends Group> T  mapGroup(JSONObject json, T group) {
+    public static Group mapGroup(JSONObject json) {
         log.debug("Mapping Group from json: {}", json);
 
+        Group group = new Group();
         group.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("name"))) {
@@ -90,9 +94,10 @@ public class MappersUtils {
         return group;
     }
 
-    public static <T extends Host> T  mapHost(JSONObject json, T host) {
+    public static Host mapHost(JSONObject json) {
         log.debug("Mapping Host from json: {}", json);
 
+        Host host = new Host();
         host.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("hostname"))) {
@@ -117,9 +122,10 @@ public class MappersUtils {
         return host;
     }
 
-    public static <T extends Member> T  mapMember(JSONObject json, T member) {
+    public static Member mapMember(JSONObject json) {
         log.debug("Mapping Member from json: {}", json);
 
+        Member member = new Member();
         member.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("status"))) {
@@ -154,9 +160,10 @@ public class MappersUtils {
         return member;
     }
 
-    public static Owner mapOwner(JSONObject json, Owner owner) {
+    public static Owner mapOwner(JSONObject json) {
         log.debug("Mapping Owner from json: {}", json);
 
+        Owner owner = new Owner(); // TODO: check if fields are not null
         owner.setId(json.getLong("id"));
         owner.setName(json.getString("name"));
         owner.setContact(json.getString("contact"));
@@ -167,9 +174,10 @@ public class MappersUtils {
         return owner;
     }
 
-    public static <T extends Resource> T  mapResource(JSONObject json, T resource) {
+    public static Resource mapResource(JSONObject json) {
         log.debug("Mapping Resource from json: {}", json);
 
+        Resource resource = new Resource();
         resource.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("name"))) {
@@ -200,9 +208,10 @@ public class MappersUtils {
         return resource;
     }
 
-    public static <T extends Service> T  mapService(JSONObject json, T service) {
+    public static Service mapService(JSONObject json) {
         log.debug("Mapping Service from json: {}", json);
 
+        Service service = new Service();
         service.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("name"))) {
@@ -221,9 +230,10 @@ public class MappersUtils {
         return service;
     }
 
-    public static <T extends UserExtSource> T  mapUserExtSource(JSONObject json, T ues) {
+    public static UserExtSource mapUserExtSource(JSONObject json) {
         log.debug("Mapping UserExtSource from json: {}", json);
 
+        UserExtSource ues = new UserExtSource();
         ues.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("login_ext"))) {
@@ -254,9 +264,10 @@ public class MappersUtils {
         return ues;
     }
 
-    public static <T extends User> T  mapUser(JSONObject json, T user) {
+    public static User mapUser(JSONObject json) {
         log.debug("Mapping User from json: {}", json);
 
+        User user = new User();
         user.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("first_name"))) {
@@ -305,9 +316,10 @@ public class MappersUtils {
         return user;
     }
 
-    public static <T extends Vo> T  mapVo(JSONObject json, T vo) {
+    public static Vo mapVo(JSONObject json) {
         log.debug("Mapping Vo from json: {}", json);
 
+        Vo vo = new Vo();
         vo.setId(json.getLong("id"));
 
         if (JSONObject.NULL.equals(json.get("name"))) {

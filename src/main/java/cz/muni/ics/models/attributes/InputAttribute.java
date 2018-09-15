@@ -1,6 +1,6 @@
-package cz.muni.ics.models;
+package cz.muni.ics.models.attributes;
 
-import cz.muni.ics.models.attributes.enums.InputAttributeType;
+import cz.muni.ics.models.enums.InputAttributeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

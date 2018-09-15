@@ -13,8 +13,12 @@ public class GroupMapper implements RowMapper<Group> {
     @Override
     public Group mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
+		JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
 
-        return MappersUtils.mapGroup(entityJson, new Group());
+        Group res = MappersUtils.mapGroup(entityJson);
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+
+        return res;
     }
 
 }

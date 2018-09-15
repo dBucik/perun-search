@@ -13,8 +13,12 @@ public class MemberMapper implements RowMapper<Member> {
     @Override
     public Member mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
 
-        return MappersUtils.mapMember(entityJson, new Member());
+        Member res = MappersUtils.mapMember(entityJson);
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+
+        return res;
     }
 
 }

@@ -17,67 +17,12 @@
 
     <!-- Definition JdbcTemplate beans -->
 
-    <bean id="extSourceDAO" class="cz.muni.ics.DAOs.impl.ExtSourceDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-     <bean id="facilityDAO" class="cz.muni.ics.DAOs.impl.FacilityDAOImpl">
-         <property name="dataSource" ref="dataSource" />
-     </bean>
-
-    <bean id="groupDAO" class="cz.muni.ics.DAOs.impl.GroupDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="hostDAO" class="cz.muni.ics.DAOs.impl.HostDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="memberDAO" class="cz.muni.ics.DAOs.impl.MemberDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="ownerDAO" class="cz.muni.ics.DAOs.impl.OwnerDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="resourceDAO" class="cz.muni.ics.DAOs.impl.ResourceDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="serviceDAO" class="cz.muni.ics.DAOs.impl.ServiceDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="userDAO" class="cz.muni.ics.DAOs.impl.UserDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="userExtSourceDAO" class="cz.muni.ics.DAOs.impl.UserExtSourceDAOImpl">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="voDAO" class="cz.muni.ics.DAOs.impl.VoDAOImpl">
+    <bean id="perunEntitiesDAO" class="cz.muni.ics.DAOs.impl.PerunEntitiesDAOImpl">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
     <bean id="relationDAO" class="cz.muni.ics.DAOs.impl.RelationsDAOImpl">
         <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="query" class="cz.muni.ics.models.Query">
-        <constructor-arg name="extSourceDAO" ref="extSourceDAO" />
-        <constructor-arg name="facilityDAO" ref="facilityDAO" />
-        <constructor-arg name="groupDAO" ref="groupDAO" />
-        <constructor-arg name="hostDAO" ref="hostDAO" />
-        <constructor-arg name="memberDAO" ref="memberDAO" />
-        <constructor-arg name="ownerDAO" ref="ownerDAO" />
-        <constructor-arg name="relationsDAO" ref="relationDAO" />
-        <constructor-arg name="resourceDAO" ref="resourceDAO" />
-        <constructor-arg name="serviceDAO" ref="serviceDAO" />
-        <constructor-arg name="userExtSourceDAO" ref="userExtSourceDAO" />
-        <constructor-arg name="userDAO" ref="userDAO" />
-        <constructor-arg name="voDAO" ref="voDAO" />
     </bean>
 
 </beans>

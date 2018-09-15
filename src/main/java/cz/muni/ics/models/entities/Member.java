@@ -1,5 +1,9 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.attributes.PerunAttribute;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,6 +17,7 @@ public class Member extends PerunEntity {
     private Long voId;
     private String status;
     private Boolean sponsored;
+    private List<PerunAttribute> attributes = new ArrayList<>();
 
     public Long getUserId() {
         return userId;
@@ -44,6 +49,14 @@ public class Member extends PerunEntity {
 
     public void setSponsored(Boolean sponsored) {
         this.sponsored = sponsored;
+    }
+
+    public List<PerunAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<PerunAttribute> attributes) {
+        this.attributes = attributes;
     }
 
     @Override

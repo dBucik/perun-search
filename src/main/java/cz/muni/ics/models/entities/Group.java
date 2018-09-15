@@ -1,5 +1,9 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.attributes.PerunAttribute;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,6 +17,7 @@ public class Group extends PerunEntity {
     private String description;
     private Long parentGroupId;
     private Long voId;
+    private List<PerunAttribute> attributes = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -44,6 +49,14 @@ public class Group extends PerunEntity {
 
     public void setParentGroupId(Long parentGroupId) {
         this.parentGroupId = parentGroupId;
+    }
+
+    public List<PerunAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<PerunAttribute> attributes) {
+        this.attributes = attributes;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cz.muni.ics.models;
 
 import cz.muni.ics.models.attributes.PerunAttribute;
+import cz.muni.ics.models.enums.RelationType;
 
 import java.util.ArrayList;
 import java.util.Collections;

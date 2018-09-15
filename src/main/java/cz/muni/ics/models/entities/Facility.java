@@ -1,5 +1,9 @@
 package cz.muni.ics.models.entities;
 
+import cz.muni.ics.models.attributes.PerunAttribute;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,6 +15,7 @@ public class Facility extends PerunEntity {
 
     private String name;
     private String description;
+    private List<PerunAttribute> attributes = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -27,6 +32,14 @@ public class Facility extends PerunEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public List<PerunAttribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<PerunAttribute> attributes) {
+		this.attributes = attributes;
+	}
 
     @Override
     public String toString() {

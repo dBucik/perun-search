@@ -13,8 +13,12 @@ public class HostMapper implements RowMapper<Host> {
     @Override
     public Host mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
 
-        return MappersUtils.mapHost(entityJson, new Host());
+        Host res = MappersUtils.mapHost(entityJson);
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+
+        return res;
     }
 
 }

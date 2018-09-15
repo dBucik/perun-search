@@ -1,10 +1,10 @@
 package cz.muni.ics.DAOs;
 
-import cz.muni.ics.models.InputAttribute;
-import cz.muni.ics.models.PerunEntityType;
+import cz.muni.ics.models.attributes.InputAttribute;
+import cz.muni.ics.models.enums.PerunEntityType;
 import cz.muni.ics.models.Relation;
-import cz.muni.ics.models.RelationType;
-import cz.muni.ics.models.attributes.enums.InputAttributeType;
+import cz.muni.ics.models.enums.RelationType;
+import cz.muni.ics.models.enums.InputAttributeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

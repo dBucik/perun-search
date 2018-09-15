@@ -13,8 +13,12 @@ public class ResourceMapper implements RowMapper<Resource> {
     @Override
     public Resource mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
 
-        return MappersUtils.mapResource(entityJson, new Resource());
+        Resource res = MappersUtils.mapResource(entityJson);
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+
+        return res;
     }
 
 }

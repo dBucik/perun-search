@@ -13,8 +13,12 @@ public class FacilityMapper implements RowMapper<Facility> {
     @Override
     public Facility mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
 
-        return MappersUtils.mapFacility(entityJson, new Facility());
+        Facility res = MappersUtils.mapFacility(entityJson);
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+
+        return res;
     }
 
 }

@@ -13,8 +13,12 @@ public class ServiceMapper implements RowMapper<Service> {
     @Override
     public Service mapRow(ResultSet rs, int i) throws SQLException {
         JSONObject entityJson = new JSONObject(rs.getString("entity"));
+        JSONObject attrsJson = new JSONObject(rs.getString("attrs"));
 
-        return MappersUtils.mapService(entityJson, new Service());
+        Service res = MappersUtils.mapService(entityJson);
+        res.setAttributes(MappersUtils.getAttributes(attrsJson));
+
+        return res;
     }
 
 }
