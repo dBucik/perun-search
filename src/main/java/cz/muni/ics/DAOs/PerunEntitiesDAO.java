@@ -1,6 +1,5 @@
 package cz.muni.ics.DAOs;
 
-import cz.muni.ics.models.attributes.InputAttribute;
 import cz.muni.ics.models.entities.ExtSource;
 import cz.muni.ics.models.entities.Facility;
 import cz.muni.ics.models.entities.Group;
@@ -20,26 +19,26 @@ public interface PerunEntitiesDAO {
 
 	void setDataSource(DataSource dataSource);
 
-	List<ExtSource> getExtSources(List<InputAttribute> core);
+	List<ExtSource> getExtSources(JDBCQuery query);
 
-	List<Facility> getFacilities(List<InputAttribute> core);
+	List<Facility> getFacilities(JDBCQuery query);
 
-	List<Group> getGroups(List<InputAttribute> core);
+	List<Group> getGroups(JDBCQuery query);
 
-	List<Host> getHosts(List<InputAttribute> core);
+	List<Host> getHosts(JDBCQuery query);
 
-	List<Member> getMembers(List<InputAttribute> core);
+	List<Member> getMembers(JDBCQuery query);
 
-	List<Owner> getOwners(List<InputAttribute> core);
+	List<Owner> getOwners(JDBCQuery query);
 
-	List<Resource> getResources(List<InputAttribute> core);
+	List<Resource> getResources(JDBCQuery query);
 
-	List<Service> getServices(List<InputAttribute> core);
+	List<Service> getServices(JDBCQuery query);
 
-	List<User> getUsers(List<InputAttribute> core);
+	List<User> getUsers(JDBCQuery query);
 
-	List<UserExtSource> getUserExtSources(List<InputAttribute> core);
+	List<UserExtSource> getUserExtSources(JDBCQuery query);
 
-	List<Vo> getVos(List<InputAttribute> core);
+	List<Vo> getVos(JDBCQuery query);
 
 }

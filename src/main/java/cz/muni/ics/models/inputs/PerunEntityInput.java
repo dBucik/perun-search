@@ -4,7 +4,9 @@ import cz.muni.ics.DAOs.JDBCQuery;
 import cz.muni.ics.models.attributes.InputAttribute;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class PerunEntityInput {
 
@@ -17,7 +19,7 @@ public abstract class PerunEntityInput {
 	private List<InputAttribute> core = new ArrayList<>();
 	private List<InputAttribute> attributes = new ArrayList<>();
 	private List<String> attributesNames = new ArrayList<>();
-	private List<PerunEntityInput> entities = new ArrayList<>();
+	private Map<String, PerunEntityInput> entities = new HashMap<>();
 
 	public PerunEntityInput(String entityIdField, String entityTable, String attributesTable,
 							String attributesNamesTable, boolean isTopLevel) {
@@ -52,17 +54,15 @@ public abstract class PerunEntityInput {
 		this.attributesNames = attributesNames;
 	}
 
-	public List<PerunEntityInput> getEntities() {
+	public Map<String, PerunEntityInput> getEntities() {
 		return entities;
 	}
 
-	public void setEntities(List<PerunEntityInput> entities) {
+	public void setEntities(Map<String, PerunEntityInput> entities) {
 		this.entities = entities;
 	}
 
-	public JDBCQuery toQuery() {
-
-	}
+	public abstract JDBCQuery toQuery();
 
 	public void addAttribute(InputAttribute attribute) {
 		this.attributes.add(attribute);
@@ -72,4 +72,5 @@ public abstract class PerunEntityInput {
 		this.attributesNames.add(attributeName);
 	}
 
+	public abstract String getName();
 }

@@ -1,5 +1,6 @@
 package cz.muni.ics.models.attributes;
 
+import cz.muni.ics.exceptions.InputParsingException;
 import cz.muni.ics.models.enums.InputAttributeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,15 @@ public class InputAttribute {
 
     public InputAttribute() {}
 
-    public InputAttribute(String key, String type, String value) {
+    public InputAttribute(String key, String type, String value) throws InputParsingException {
+        if (key == null || key.trim().length() <= 0) {
+            throw new InputParsingException("Attribute key undefined.");
+        } else if (type == null || type.trim().length() <= 0) {
+            throw new InputParsingException("Attribute type undefined");
+        } else if (value == null || value.trim().length() <= 0) {
+            throw new InputParsingException("Attribute value undefined");
+        }
+
         this.key = key;
         this.type = type;
         this.attrType = resolveType(type);
@@ -41,7 +50,7 @@ public class InputAttribute {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(String type) throws InputParsingException {
         this.type = type;
         this.attrType = resolveType(type);
     }
@@ -50,7 +59,7 @@ public class InputAttribute {
         return attrType;
     }
 
-    public void setAttributeType(String type) {
+    public void setAttributeType(String type) throws InputParsingException {
         this.type = type;
         this.attrType = resolveType(type);
     }
@@ -63,11 +72,10 @@ public class InputAttribute {
         this.value = value;
     }
 
-    private InputAttributeType resolveType(String type) {
+    private InputAttributeType resolveType(String type) throws InputParsingException {
         log.debug("Resolving InputAttributeType from String: {}", type);
         if (type == null || type.isEmpty()) {
-            log.debug("Resolved type: {}" , InputAttributeType.STRING);
-            return InputAttributeType.STRING;
+            throw new InputParsingException("Attribute type cannot be decided.");
         }
 
         InputAttributeType res;

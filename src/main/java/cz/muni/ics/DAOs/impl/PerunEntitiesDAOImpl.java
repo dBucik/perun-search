@@ -58,89 +58,67 @@ public class PerunEntitiesDAOImpl implements PerunEntitiesDAO {
 	}
 
 	@Override
-	public List<ExtSource> getExtSources(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.EXT_SOURCE, core);
-
+	public List<ExtSource> getExtSources(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), EXT_SOURCE_MAPPER);
 	}
 
 	@Override
-	public List<Facility> getFacilities(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.FACILITY, core);
-
+	public List<Facility> getFacilities(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), FACILITY_MAPPER);
 	}
 
 	@Override
-	public List<Group> getGroups(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.GROUP, core);
-
+	public List<Group> getGroups(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), GROUP_MAPPER);
 	}
 
 	@Override
-	public List<Host> getHosts(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.HOST, core);
-
+	public List<Host> getHosts(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), HOST_MAPPER);
 	}
 
 	@Override
-	public List<Member> getMembers(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.MEMBER, core);
-
+	public List<Member> getMembers(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), MEMBER_MAPPER);
 	}
 
 	@Override
-	public List<Owner> getOwners(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.OWNER, core);
-
+	public List<Owner> getOwners(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), OWNER_MAPPER);
 	}
 
 	@Override
-	public List<Resource> getResources(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.RESOURCE, core);
-
+	public List<Resource> getResources(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), RESOURCE_MAPPER);
 	}
 
 	@Override
-	public List<Service> getServices(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.SERVICE, core);
-
+	public List<Service> getServices(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), SERVICE_MAPPER);
 	}
 
 	@Override
-	public List<User> getUsers(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.USER, core);
-
+	public List<User> getUsers(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), USER_MAPPER);
 	}
 
 	@Override
-	public List<UserExtSource> getUserExtSources(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.USER_EXT_SOURCE, core);
-
+	public List<UserExtSource> getUserExtSources(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), USER_EXT_SOURCE_MAPPER);
 	}
 
 	@Override
-	public List<Vo> getVos(List<InputAttribute> core) {
-		JDBCQuery query = DAOUtils.simpleQueryBuilder(PerunEntityType.VO, core);
-
+	public List<Vo> getVos(JDBCQuery query) {
 		log.info("Executing query: {}, with params: {}", query.getQueryString(), query.getParamsMap());
 		return jdbcTemplate.query(query.getQueryString(), query.getParamsMap(), VO_MAPPER);
 	}

@@ -1,16 +1,13 @@
 package cz.muni.ics.DAOs;
 
-import cz.muni.ics.models.attributes.InputAttribute;
-import cz.muni.ics.models.entities.PerunEntity;
-import cz.muni.ics.models.enums.PerunEntityType;
 import cz.muni.ics.models.Relation;
-import cz.muni.ics.models.enums.RelationType;
+import cz.muni.ics.models.attributes.InputAttribute;
 import cz.muni.ics.models.enums.InputAttributeType;
+import cz.muni.ics.models.enums.RelationType;
 import cz.muni.ics.models.inputs.PerunEntityInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,60 +23,20 @@ public class DAOUtils {
 
 	private static final String MATCH_TEXT = "LIKE";
 	private static final String MATCH_TYPE = "=";
+	private static final String MATCH_ARRAY = "IN";
 	private static final String GET_AS_TEXT = "->>";
 	private static final String GET_AS_TYPE = "->";
 
-	public static final String NO_WHERE = null;
 	public static final List<String> NO_ATTRS_NAMES = null;
-	public static final int NO_ATTRS_NAMES_COUNT = 0;
 	public static final List<InputAttribute> NO_ATTRS = null;
+	private static final String NO_WHERE = null;
+	private static final int NO_ATTRS_COUNT = 0;
+	private static final int NO_ATTRS_NAMES_COUNT = 0;
 
 	public static JDBCQuery queryBuilder(boolean isTopLevel, PerunEntityInput input) {
 		log.trace("Building query (isTopLevel: {}, input: {})", isTopLevel, input);
 
-		if (isTopLevel) {
-			return entityQueryBuilderTopLevel(input);
-		} else {
-			return entityQueryBuilderInnerLevel(input);
-		}
-	}
-
-	private static JDBCQuery entityQueryBuilderInnerLevel(PerunEntityInput entity) {
-		JDBCQuery query = new JDBCQuery();
-		boolean isSimple = !(entity.getAttributes().isEmpty() && entity.getAttributesNames().isEmpty());
-
-		String entityId = entity.ENTITY_ID_FIELD;
-		String entityTable = entity.ENTITY_TABLE;
-		String attrNames = entity.ATTRIBUTES_NAMES_TABLE;
-		String attrValues = entity.ATTRIBUTES_TABLE;
-
-
-		StringBuilder queryString = new StringBuilder();
-		queryString.append("SELECT ent.id as entity_id")
-				.append(" FROM ").append(entityTable).append(" ent"); //entity table
-		if (! isSimple) {
-			queryString.append(" JOIN (") // select attributes and build JSON
-					.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
-					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS data")
-					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
-					.append(" an ON av.attr_id = an.id");
-			String innerWhere = buildInnerWhere(query, entity.getAttributesNames());
-			if (!Objects.equals(NO_WHERE, innerWhere)) { // select specific attributes by names
-				queryString.append(' ').append(innerWhere);
-			}
-			queryString.append(" GROUP BY ").append(entityId) // group attributes by entity id and add join condition
-					.append(") AS attributes ON ent.id = attributes.").append(entityId);
-		}
-
-		String outerWhere = buildOuterWhere(query, entity.getCore(), entity.getAttributes());
-		if (!Objects.equals(NO_WHERE, outerWhere)) { // add conditions for entity and attributes
-			queryString.append(' ').append(outerWhere);
-		}
-
-
-		query.setQueryString(queryString.toString());
-		log.trace("Built query: {}", query.getQueryString());
-		return query;
+		return entityQueryBuilderTopLevel(input);
 	}
 
 	private static JDBCQuery entityQueryBuilderTopLevel(PerunEntityInput entity) {
@@ -91,20 +48,26 @@ public class DAOUtils {
 		String attrNames = entity.ATTRIBUTES_NAMES_TABLE;
 		String attrValues = entity.ATTRIBUTES_TABLE;
 
-
 		StringBuilder queryString = new StringBuilder();
-		queryString.append("SELECT to_json(ent) AS entity"); //select entity
-		if (! isSimple) {
-			queryString.append(", attributes.data AS attrs"); //select also attributes
+
+		if (entity.isTopLevel) {
+			queryString.append("SELECT to_json(ent) AS entity"); //select entity
+			if (!isSimple) {
+				queryString.append(", attributes.data AS attrs"); //select also attributes
+			}
+			queryString.append(" FROM ").append(entityTable).append(" ent"); //entity table
+		} else {
+			queryString.append("SELECT ent.id as entity_id")
+					.append(" FROM ").append(entityTable).append(" ent"); //entity table
 		}
-		queryString.append(" FROM ").append(entityTable).append(" ent"); //entity table
+
 		if (! isSimple) {
 			queryString.append(" JOIN (") // select attributes and build JSON
 					.append("SELECT ").append(entityId).append(", json_object_agg(friendly_name, json_build_object(")
 					.append("'value', attr_value, 'value_text', attr_value_text, 'type', type, 'name', attr_name, 'namespace', an.namespace)) AS data")
 					.append(" FROM ").append(attrValues).append(" av JOIN ").append(attrNames)
 					.append(" an ON av.attr_id = an.id");
-			String innerWhere = buildInnerWhere(query, entity.getAttributesNames());
+			String innerWhere = buildInnerWhere(query, entity.getAttributesNames(), entity.getAttributes());
 			if (!Objects.equals(NO_WHERE, innerWhere)) { // select specific attributes by names
 				queryString.append(' ').append(innerWhere);
 			}
@@ -153,9 +116,9 @@ public class DAOUtils {
 		return query;
 	}
 
-	private static String buildOuterWhere(JDBCQuery query, List<InputAttribute> core, List<InputAttribute> attrs) {
-		log.trace("Building outer where (query: {}, core: {}, attrs: {})", query, core, attrs);
-		if ((core == null || core.isEmpty()) && (attrs == null || attrs.isEmpty())) {
+	private static String buildOuterWhere(JDBCQuery query, List<InputAttribute> core, List<InputAttribute> attributes) {
+		log.trace("Building outer where (query: {}, core: {}, attrs: {})", query, core, attributes);
+		if ((core == null || core.isEmpty()) && (attributes == null || attributes.isEmpty())) {
 			log.trace("No attrs provided, returning NULL");
 			return NO_WHERE;
 		}
@@ -170,13 +133,11 @@ public class DAOUtils {
 			}
 		}
 
-		if (attrs != null) {
-			for (InputAttribute a : attrs) {
-				String op1 = resolveFetchOperator(a.getAttributeType());
-				String op2 = resolveMatchOperator(a.getAttributeType());
-				sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
-				query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
-			}
+		for (InputAttribute a : attributes) {
+			String op1 = resolveFetchOperator(a.getAttributeType());
+			String op2 = resolveMatchOperator(a.getAttributeType());
+			sj.add("attributes.data" + op1 + '\'' + a.getKey() + "' " + op2 + " (" + query.getNextParamName() + ')');// TODO: escape name to prevent SQL injection
+			query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
 		}
 
 		log.trace("Built outer WHERE: {}", query + sj.toString());
@@ -185,20 +146,27 @@ public class DAOUtils {
 
 	private static String buildInnerWhere(JDBCQuery query, List<String> attrsNames, List<InputAttribute> attributes) {
 		log.trace("Building inner where (query: {}, attrsNames: {})", query, attrsNames);
-		if (attrsNames == null || attrsNames.size() <= NO_ATTRS_NAMES_COUNT) {
+		if ((attrsNames == null || attrsNames.size() <= NO_ATTRS_NAMES_COUNT) && (attributes == null || attributes.size() <= NO_ATTRS_COUNT)) {
 			log.trace("No attrs_names provided, returning NULL");
 			return NO_WHERE;
 		}
 
 		String queryString = "WHERE ";
 		StringJoiner sj = new StringJoiner(" OR ");
-		for (String attr: attrsNames) {
-			sj.add("friendly_name = " + query.getNextParamName());
-			query.addParam(attr);
+		if (attrsNames != null) {
+			for (String attr : attrsNames) {
+				sj.add("friendly_name = " + query.getNextParamName());
+				query.addParam(attr);
+			}
 		}
 
 		for (InputAttribute a : attributes) {
-			String total = "((friendly_name = ?) AND (COALLESCE(attr_value, attr_value_text) MATCH ?)";
+			String total = "((friendly_name = " + query.getNextParamName();
+			query.addParam(a.getKey());
+			total += ") AND (COALLESCE('attr_value', 'attr_value_text') "
+					+ resolveMatchOperator(a.getAttributeType()) + ' ' + query.getNextParamName() + ")";
+			query.addParam(resolveTrueValue(a.getAttributeType(), a.getValue()));
+			sj.add(total);
 		}
 
 		log.trace("Built inner WHERE: {}", query + sj.toString());
@@ -279,23 +247,6 @@ public class DAOUtils {
 		}
 	}
 
-	private static String getEntityPrefix(PerunEntityType type) {
-		switch (type) {
-			case VO: return "vo";
-			case HOST: return "host";
-			case USER: return "user";
-			case GROUP: return "group";
-			case OWNER: return "owner";
-			case MEMBER: return "member";
-			case SERVICE: return "service";
-			case FACILITY: return "facility";
-			case RESOURCE: return "resource";
-			case EXT_SOURCE: return "extSource";
-			case USER_EXT_SOURCE: return "userExtSource";
-			default: return "";
-		}
-	}
-
 	private static String getRelationPrefix(RelationType type) {
 		switch(type) {
 			case FACILITY_OWNER: return "facility_owner";
@@ -339,7 +290,7 @@ public class DAOUtils {
 
 		switch (type) {
 			case ID:
-				return "IN";
+				return MATCH_ARRAY;
 			case STRING:
 			case MAP:
 			case ARRAY:
