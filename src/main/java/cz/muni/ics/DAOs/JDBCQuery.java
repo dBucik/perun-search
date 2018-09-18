@@ -1,6 +1,9 @@
 package cz.muni.ics.DAOs;
 
+import cz.muni.ics.models.entities.PerunEntity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
+import java.util.List;
 
 public class JDBCQuery {
 
@@ -38,5 +41,13 @@ public class JDBCQuery {
 	public String getNextParamName() {
 		paramCounter++;
 		return String.valueOf(':' + paramCounter);
+	}
+
+	public List<PerunEntity> execute() {
+		return null;
+	}
+
+	public List<Long> executeForIds() {
+		return null;
 	}
 }
